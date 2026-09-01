@@ -13,6 +13,16 @@
 		overflow: hidden;
 	}
 
+	.wp-block-navigation .wp-block-navigation-item__content {
+		border-radius: var( --wp--custom--radius--control );
+		padding: var( --wp--preset--spacing--sm ) var( --wp--preset--spacing--md );
+	}
+
+	.wp-block-navigation .wp-block-navigation-item.current-menu-item > .wp-block-navigation-item__content {
+		background: var( --wp--preset--color--accent-soft );
+		color: var( --wp--preset--color--accent-700 );
+	}
+
 	.fs-placeholder-tile {
 		--fs-placeholder-line: var( --wp--preset--color--border );
 

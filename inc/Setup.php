@@ -15,6 +15,18 @@ add_action( 'after_setup_theme', function (): void {
 	add_theme_support( 'responsive-embeds' );
 	add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption', 'style', 'script', 'navigation-widgets' ) );
 
+	/**
+	 * Логотип-марка в шапке/футере (`wp:site-logo`, паттерны Фазы 3). Квадрат
+	 * под мокап («ШБ» на синем фоне) — редактор загружает картинку сам, без
+	 * жёстко зашитых инициалов в паттерне.
+	 */
+	add_theme_support( 'custom-logo', array(
+		'height'      => 76,
+		'width'       => 76,
+		'flex-height' => true,
+		'flex-width'  => true,
+	) );
+
 	load_theme_textdomain( 'fs-lms-theme', get_template_directory() . '/languages' );
 } );
 

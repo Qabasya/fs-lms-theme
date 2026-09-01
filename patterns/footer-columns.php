@@ -12,7 +12,13 @@
 	<div class="wp-block-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:site-title {"level":3,"fontSize":"sm"} /-->
+			<!-- wp:group {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|sm"}}} -->
+			<div class="wp-block-group">
+				<!-- wp:site-logo {"width":32,"shouldSyncIcon":false,"style":{"border":{"radius":"var:preset|spacing|xs"}}} /-->
+				<!-- wp:site-title {"level":3,"fontSize":"sm"} /-->
+			</div>
+			<!-- /wp:group -->
+
 			<!-- wp:paragraph {"textColor":"muted","fontSize":"sm"} -->
 			<p class="has-muted-color has-text-color has-sm-font-size">Подготовка ЕГЭ по информатике в Калининграде</p>
 			<!-- /wp:paragraph -->
@@ -54,12 +60,12 @@
 	</div>
 	<!-- /wp:columns -->
 
-	<!-- wp:separator {"style":{"color":{"background":"#eef0f4"}}} -->
-	<hr class="wp-block-separator has-text-color has-alpha-channel-opacity" style="background-color:#eef0f4;color:#eef0f4"/>
+	<!-- wp:separator {"backgroundColor":"border-light","className":"is-style-wide"} -->
+	<hr class="wp-block-separator has-text-color has-border-light-color has-alpha-channel-opacity has-border-light-background-color has-background is-style-wide"/>
 	<!-- /wp:separator -->
 
 	<!-- wp:paragraph {"textColor":"muted-2","fontSize":"xs"} -->
-	<p class="has-muted-2-color has-text-color has-xs-font-size">© 2026 Шаг в будущее</p>
+	<p class="has-muted-2-color has-text-color has-xs-font-size">© <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?></p>
 	<!-- /wp:paragraph -->
 </div>
 <!-- /wp:group -->
