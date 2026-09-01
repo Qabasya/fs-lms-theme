@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "fs-lms/testimonial-card",
+	"title": "Карточка отзыва",
+	"category": "fs-lms-cards",
+	"icon": "format-quote",
+	"description": "Аватар/инициалы, имя, роль, текст отзыва и рейтинг — карточка одного отзыва.",
+	"keywords": [ "отзыв", "рейтинг", "testimonial", "карточка" ],
+	"textdomain": "fs-lms-theme",
+	"attributes": {
+		"imageId": { "type": "number", "default": 0 },
+		"imageUrl": { "type": "string", "default": "" },
+		"imageAlt": { "type": "string", "default": "" },
+		"authorName": { "type": "string", "source": "html", "selector": ".fs-testimonial-card__name", "default": "Имя Фамилия" },
+		"authorRole": { "type": "string", "source": "html", "selector": ".fs-testimonial-card__role", "default": "Родитель, 11 класс" },
+		"quote": { "type": "string", "source": "html", "selector": ".fs-testimonial-card__quote", "default": "Текст отзыва." },
+		"rating": { "type": "number", "default": 5 }
+	},
+	"supports": { "html": false },
+	"editorScript": "fs-lms-testimonial-card-editor-script",
+	"style": "fs-lms-testimonial-card-style"
+}

@@ -8,7 +8,7 @@
  *   - Setup.php    — поддержка темы (theme supports), стили блоков дизайн-системы
  *   - Patterns.php — категории паттернов
  *   - Assets.php   — шрифты и собранные CSS/JS (assets/, см. gulpfile.js)
- *   - Blocks.php   — регистрация кастомных блоков (появится в Фазе 4)
+ *   - Blocks.php   — регистрация кастомных блоков (src/blocks/*, Фаза 4)
  */
 
 declare(strict_types=1);
@@ -17,6 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-foreach ( array( 'Setup', 'Patterns', 'Assets' ) as $module ) {
+foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks' ) as $module ) {
 	require_once get_template_directory() . "/inc/{$module}.php";
 }

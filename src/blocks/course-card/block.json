@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "fs-lms/course-card",
+	"title": "Карточка курса",
+	"category": "fs-lms-cards",
+	"icon": "welcome-learn-more",
+	"description": "Картинка, бейдж уровня, название, формат и кнопка записи — карточка одного курса/направления.",
+	"keywords": [ "курс", "направление", "карточка", "course" ],
+	"textdomain": "fs-lms-theme",
+	"attributes": {
+		"imageId": { "type": "number", "default": 0 },
+		"imageUrl": { "type": "string", "default": "" },
+		"imageAlt": { "type": "string", "default": "" },
+		"badgeText": { "type": "string", "source": "html", "selector": ".fs-course-card__badge", "default": "9 класс" },
+		"badgeColor": { "type": "string", "default": "accent" },
+		"title": { "type": "string", "source": "html", "selector": "h3", "default": "Название курса" },
+		"caption": { "type": "string", "source": "html", "selector": ".fs-course-card__caption", "default": "Абонемент на месяц, два занятия в неделю" },
+		"buttonText": { "type": "string", "default": "Записаться" },
+		"buttonUrl": { "type": "string", "default": "#" }
+	},
+	"supports": { "html": false },
+	"editorScript": "fs-lms-course-card-editor-script",
+	"style": "fs-lms-course-card-style"
+}

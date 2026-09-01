@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "fs-lms/feature-card",
+	"title": "Карточка преимущества",
+	"category": "fs-lms-cards",
+	"icon": "star-filled",
+	"description": "Иконка, заголовок и текст — одна карточка преимущества (секция «Сделаем вместе»).",
+	"keywords": [ "преимущество", "фича", "feature", "карточка" ],
+	"textdomain": "fs-lms-theme",
+	"attributes": {
+		"icon": { "type": "string", "default": "users" },
+		"iconColor": { "type": "string", "default": "accent" },
+		"iconBackground": { "type": "string", "default": "accent-soft" },
+		"title": { "type": "string", "source": "html", "selector": "h3", "default": "Заголовок преимущества" },
+		"text": { "type": "string", "source": "html", "selector": "p", "default": "Короткое описание преимущества." }
+	},
+	"supports": { "html": false },
+	"editorScript": "fs-lms-feature-card-editor-script",
+	"style": "fs-lms-feature-card-style"
+}

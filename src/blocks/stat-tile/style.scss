@@ -1,0 +1,28 @@
+.fs-stat-tile {
+	padding: var( --wp--preset--spacing--xl );
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+	box-shadow: var( --wp--custom--shadow--surface );
+
+	&__value {
+		font-size: var( --wp--preset--font-size--3xl );
+		font-weight: 700;
+		letter-spacing: -.02em;
+		line-height: 1.1;
+	}
+
+	&__label {
+		margin: var( --wp--preset--spacing--xs ) 0 var( --wp--preset--spacing--sm );
+		font-size: var( --wp--preset--font-size--base );
+		font-weight: 600;
+	}
+
+	&__description {
+		margin: 0;
+		color: var( --wp--preset--color--muted );
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 300;
+		line-height: 1.55;
+	}
+}

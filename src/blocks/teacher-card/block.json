@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "fs-lms/teacher-card",
+	"title": "Карточка преподавателя",
+	"category": "fs-lms-cards",
+	"icon": "admin-users",
+	"description": "Фото, имя, роль/предмет, короткое био и ссылка на профиль — карточка преподавателя.",
+	"keywords": [ "преподаватель", "репетитор", "teacher", "карточка" ],
+	"textdomain": "fs-lms-theme",
+	"attributes": {
+		"imageId": { "type": "number", "default": 0 },
+		"imageUrl": { "type": "string", "default": "" },
+		"imageAlt": { "type": "string", "default": "" },
+		"name": { "type": "string", "source": "html", "selector": "h3", "default": "Имя Фамилия" },
+		"role": { "type": "string", "source": "html", "selector": ".fs-teacher-card__role", "default": "Преподаватель информатики" },
+		"bio": { "type": "string", "source": "html", "selector": ".fs-teacher-card__bio", "default": "Короткое описание опыта и подхода к занятиям." },
+		"profileUrl": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false },
+	"editorScript": "fs-lms-teacher-card-editor-script",
+	"style": "fs-lms-teacher-card-style"
+}

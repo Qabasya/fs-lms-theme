@@ -102,7 +102,10 @@ const babelRuleBlocks = {
 		options: {
 			presets: [
 				[ '@babel/preset-env', { modules: false } ],
-				[ '@babel/preset-react', { runtime: 'automatic' } ],
+				// classic pragma → wp.element.createElement (не react/jsx-runtime,
+				// которого нет среди externals): каждый JSX-файл блока должен
+				// импортировать { createElement, Fragment } из '@wordpress/element'.
+				[ '@babel/preset-react', { pragma: 'createElement', pragmaFrag: 'Fragment' } ],
 			],
 			sourceType: 'module',
 		},

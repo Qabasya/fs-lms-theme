@@ -1,0 +1,50 @@
+.fs-faq-item {
+	padding: var( --wp--preset--spacing--lg ) 0;
+	border-bottom: 1px solid var( --wp--preset--color--border-light );
+
+	&__question {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var( --wp--preset--spacing--md );
+		cursor: pointer;
+		list-style: none;
+		font-size: var( --wp--preset--font-size--base );
+		font-weight: 700;
+		color: var( --wp--preset--color--text );
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+
+		&::after {
+			content: '';
+			flex: 0 0 auto;
+			width: .625rem;
+			height: .625rem;
+			border-right: 2px solid var( --wp--preset--color--muted-2 );
+			border-bottom: 2px solid var( --wp--preset--color--muted-2 );
+			transform: rotate( 45deg );
+			transition: transform .2s ease;
+		}
+	}
+
+	&[open] &__question::after {
+		transform: rotate( -135deg );
+	}
+
+	&__answer {
+		margin: var( --wp--preset--spacing--sm ) 0 0;
+		color: var( --wp--preset--color--text-secondary );
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 300;
+		line-height: 1.62;
+	}
+}
+
+/**
+ * Редактор: `<details>` там нет (см. edit.js — сворачивание неудобно
+ * редактировать), поэтому стрелка/курсор из &__question неприменимы;
+ * .fs-faq-item в контексте .editor-styles-wrapper просто наследует
+ * отступ/рамку/текстовые стили выше по каскаду — отдельный override не нужен.
+ */

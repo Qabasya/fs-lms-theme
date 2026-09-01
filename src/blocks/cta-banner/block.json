@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "fs-lms/cta-banner",
+	"title": "CTA-баннер",
+	"category": "fs-lms-cards",
+	"icon": "megaphone",
+	"description": "Заголовок, текст и одна-две кнопки — призыв к действию (solid/soft вариант фона).",
+	"keywords": [ "cta", "призыв", "баннер" ],
+	"textdomain": "fs-lms-theme",
+	"attributes": {
+		"heading": { "type": "string", "source": "html", "selector": ".fs-cta-banner__heading", "default": "Заголовок призыва к действию" },
+		"text": { "type": "string", "source": "html", "selector": ".fs-cta-banner__text", "default": "Короткое пояснение." },
+		"primaryText": { "type": "string", "default": "Записаться" },
+		"primaryUrl": { "type": "string", "default": "#" },
+		"secondaryText": { "type": "string", "default": "" },
+		"secondaryUrl": { "type": "string", "default": "" },
+		"variant": { "type": "string", "default": "solid" }
+	},
+	"supports": { "html": false },
+	"editorScript": "fs-lms-cta-banner-editor-script",
+	"style": "fs-lms-cta-banner-style"
+}

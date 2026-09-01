@@ -1,0 +1,34 @@
+.fs-feature-card {
+	display: flex;
+	flex-direction: column;
+	gap: var( --wp--preset--spacing--sm );
+	padding: var( --wp--preset--spacing--xl );
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+	box-shadow: var( --wp--custom--shadow--surface );
+
+	&__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.375rem;
+		height: 2.375rem;
+		flex: 0 0 2.375rem;
+		border-radius: var( --wp--custom--radius--control );
+	}
+
+	&__title {
+		margin: 0;
+		font-size: var( --wp--preset--font-size--md );
+		font-weight: 700;
+	}
+
+	&__text {
+		margin: 0;
+		color: var( --wp--preset--color--text-secondary );
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 300;
+		line-height: 1.62;
+	}
+}

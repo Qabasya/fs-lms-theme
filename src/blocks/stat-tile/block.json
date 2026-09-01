@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "fs-lms/stat-tile",
+	"title": "Плитка статистики",
+	"category": "fs-lms-cards",
+	"icon": "chart-bar",
+	"description": "Крупное число, подпись и описание — одна плитка в секции «цифры».",
+	"keywords": [ "статистика", "цифры", "stat", "карточка" ],
+	"textdomain": "fs-lms-theme",
+	"attributes": {
+		"value": { "type": "string", "source": "html", "selector": ".fs-stat-tile__value", "default": "100" },
+		"label": { "type": "string", "source": "html", "selector": ".fs-stat-tile__label", "default": "подпись" },
+		"description": { "type": "string", "source": "html", "selector": "p", "default": "Короткое пояснение к цифре." },
+		"accentColor": { "type": "string", "default": "accent" }
+	},
+	"supports": { "html": false },
+	"editorScript": "fs-lms-stat-tile-editor-script",
+	"style": "fs-lms-stat-tile-style"
+}

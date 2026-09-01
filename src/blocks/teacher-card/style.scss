@@ -1,0 +1,55 @@
+.fs-teacher-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: var( --wp--preset--spacing--sm );
+	padding: var( --wp--preset--spacing--xl );
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+	box-shadow: var( --wp--custom--shadow--surface );
+
+	&__media {
+		width: 5.5rem;
+		height: 5.5rem;
+		flex: 0 0 auto;
+		border-radius: 50%;
+		overflow: hidden;
+
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__name {
+		margin: 0;
+		font-size: var( --wp--preset--font-size--md );
+		font-weight: 700;
+	}
+
+	&__role {
+		margin: 0;
+		color: var( --wp--preset--color--accent-700 );
+		font-size: var( --wp--preset--font-size--xs );
+		font-weight: 600;
+	}
+
+	&__bio {
+		margin: 0;
+		color: var( --wp--preset--color--text-secondary );
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 300;
+		line-height: 1.6;
+	}
+
+	&__link {
+		font-size: var( --wp--preset--font-size--xs );
+		font-weight: 600;
+		color: var( --wp--preset--color--accent );
+		text-decoration: none;
+	}
+}

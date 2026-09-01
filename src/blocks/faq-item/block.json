@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "fs-lms/faq-item",
+	"title": "Вопрос FAQ",
+	"category": "fs-lms-cards",
+	"icon": "editor-help",
+	"description": "Вопрос/ответ на нативном <details>/<summary> — аккордеон без JS.",
+	"keywords": [ "faq", "вопрос", "ответ", "аккордеон" ],
+	"textdomain": "fs-lms-theme",
+	"attributes": {
+		"question": { "type": "string", "source": "html", "selector": ".fs-faq-item__question-text", "default": "Вопрос" },
+		"answer": { "type": "string", "source": "html", "selector": ".fs-faq-item__answer", "default": "Ответ на вопрос." },
+		"defaultOpen": { "type": "boolean", "default": false }
+	},
+	"supports": { "html": false },
+	"editorScript": "fs-lms-faq-item-editor-script",
+	"style": "fs-lms-faq-item-style"
+}
