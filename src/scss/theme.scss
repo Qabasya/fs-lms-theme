@@ -79,6 +79,31 @@ img {
 }
 
 /**
+ * Иконка корзины в шапке (`patterns/header-nav.php`, Фаза 10) — появляется
+ * только если активен WooCommerce (`wc_get_cart_url()`).
+ */
+.fs-header-cart {
+	display: flex;
+	align-items: center;
+	color: var( --wp--preset--color--text-secondary );
+
+	&:hover {
+		color: var( --wp--preset--color--accent );
+	}
+}
+
+/**
+ * Кнопки со стилем «Контур» (`is-style-outline`, использует `blog-grid`,
+ * `features-grid`, `hero-split`, `intensive-split`) — без явного цвета рамки
+ * ядро берёт `currentColor` (цвет текста кнопки), на светлом тексте это
+ * выглядит как жирная тёмная рамка вместо лёгкой контурной кнопки. Красим
+ * в тот же светлый токен рамки, что и у карточек/шапки.
+ */
+.wp-block-button.is-style-outline > .wp-block-button__link {
+	border-color: var( --wp--preset--color--border );
+}
+
+/**
  * Заглушка под изображение (курс/блог/выпускник без реальной картинки).
  * Диагональная сетка на второй поверхности — тот же приём, что в мокапе
  * (`Главная — мокап.dc.html`), только вынесенный в переиспользуемый класс
@@ -92,3 +117,80 @@ img {
 		linear-gradient( to bottom right, transparent calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% + 1px ), transparent calc( 50% + 1px ) ),
 		var( --wp--preset--color--surface-2 );
 }
+
+/**
+ * Брейкпоинт сеток карточек (Фаза 8) — тот же `$bp-tablet: 960px`, что
+ * использует плагин (fs-lms/src/scss/shared/_tokens.scss), а не дефолтный
+ * WP-брейкпоинт core/columns (782px). Ниже 960px все секции-сетки главной
+ * (features/courses/stats/blog/testimonials/contact/intensive) складываются
+ * в одну колонку — `!important` нужен, чтобы перебить инлайновый
+ * `flex-basis`, который Gutenberg пишет прямо в разметке колонок.
+ */
+@media ( max-width: 960px ) {
+	.wp-block-columns:not( .is-not-stacked-on-mobile ) > .wp-block-column {
+		flex-basis: 100% !important;
+	}
+}
+
+/**
+ * Аккордеон юридической страницы `/about/` (patterns/about-accordion.php,
+ * Фаза 10.2). Тот же визуальный язык, что у `fs-lms/faq-item`
+ * (`src/blocks/faq-item/style.scss`), но не сам блок: разделам этой
+ * страницы нужно несколько абзацев и ссылки на PDF на один ответ, а
+ * `fs-lms/faq-item` хранит ответ как один `<p>` — не подходит, поэтому
+ * здесь статичная разметка `<details>/<summary>`, стилизованная отдельным
+ * классом.
+ */
+.fs-legal-accordion {
+	&__item {
+		padding: var( --wp--preset--spacing--lg ) 0;
+		border-bottom: 1px solid var( --wp--preset--color--border-light );
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	&__question {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var( --wp--preset--spacing--md );
+		cursor: pointer;
+		list-style: none;
+		font-weight: 700;
+		color: var( --wp--preset--color--text );
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+
+		&::after {
+			content: '';
+			flex: 0 0 auto;
+			width: .625rem;
+			height: .625rem;
+			border-right: 2px solid var( --wp--preset--color--muted-2 );
+			border-bottom: 2px solid var( --wp--preset--color--muted-2 );
+			transform: rotate( 45deg );
+			transition: transform .2s ease;
+		}
+	}
+
+	&__item[open] &__question::after {
+		transform: rotate( -135deg );
+	}
+
+	&__answer {
+		margin-top: var( --wp--preset--spacing--sm );
+		color: var( --wp--preset--color--text-secondary );
+		font-size: var( --wp--preset--font-size--sm );
+		line-height: 1.62;
+
+		p + p {
+			margin-top: var( --wp--preset--spacing--sm );
+		}
+	}
+}
+
+@import 'woocommerce';

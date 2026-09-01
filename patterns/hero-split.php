@@ -3,10 +3,11 @@
  * Title: Hero — заголовок, текст, кнопки, картинка
  * Slug: fs-lms-theme/hero-split
  * Categories: fs-lms-sections
+ * Keywords: hero, обложка, заголовок
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|4xl","bottom":"var:preset|spacing|4xl","left":"var:preset|spacing|2xl","right":"var:preset|spacing|2xl"}}}} -->
-<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--4xl);padding-right:var(--wp--preset--spacing--2xl);padding-bottom:var(--wp--preset--spacing--4xl);padding-left:var(--wp--preset--spacing--2xl)">
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|xxxxl","bottom":"var:preset|spacing|xxxxl","left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
+<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--xxxxl);padding-right:var(--wp--preset--spacing--xxl);padding-bottom:var(--wp--preset--spacing--xxxxl);padding-left:var(--wp--preset--spacing--xxl)">
 	<!-- wp:columns -->
 	<div class="wp-block-columns">
 		<!-- wp:column -->
@@ -15,8 +16,8 @@
 			<p class="has-accent-700-color has-accent-soft-background-color has-text-color has-background has-xs-font-size" style="padding-top:var(--wp--preset--spacing--xs);padding-right:var(--wp--preset--spacing--md);padding-bottom:var(--wp--preset--spacing--xs);padding-left:var(--wp--preset--spacing--md)">КАЛИНИНГРАД · ГРУППЫ ДО 8 ЧЕЛОВЕК</p>
 			<!-- /wp:paragraph -->
 
-			<!-- wp:heading {"level":1,"fontSize":"3xl"} -->
-			<h1 class="wp-block-heading has-3xl-font-size">Подготовка ЕГЭ по информатике</h1>
+			<!-- wp:heading {"level":1,"fontSize":"xxxl"} -->
+			<h1 class="wp-block-heading has-xxxl-font-size">Подготовка ЕГЭ по информатике</h1>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"lead"} -->
@@ -26,7 +27,7 @@
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">
 				<!-- wp:button {"backgroundColor":"accent"} -->
-				<div class="wp-block-button"><a class="wp-block-button__link has-accent-background-color has-background wp-element-button">Записаться</a></div>
+				<div class="wp-block-button"><a class="wp-block-button__link has-accent-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться</a></div>
 				<!-- /wp:button -->
 
 				<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->

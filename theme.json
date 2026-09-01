@@ -59,7 +59,7 @@
 				}
 			],
 			"fontSizes": [
-				{ "name": "2XS", "slug": "2xs", "size": "0.625rem" },
+				{ "name": "2XS", "slug": "xxs", "size": "0.625rem" },
 				{ "name": "XS", "slug": "xs", "size": "0.75rem" },
 				{ "name": "SM", "slug": "sm", "size": "0.8125rem" },
 				{ "name": "Base", "slug": "base", "size": "0.875rem" },
@@ -67,8 +67,8 @@
 				{ "name": "Lead", "slug": "lead", "size": "1.25rem" },
 				{ "name": "LG", "slug": "lg", "size": "1.375rem" },
 				{ "name": "XL", "slug": "xl", "size": "1.5rem" },
-				{ "name": "2XL", "slug": "2xl", "size": "1.75rem" },
-				{ "name": "3XL (заголовок)", "slug": "3xl", "size": "2.25rem" }
+				{ "name": "2XL", "slug": "xxl", "size": "1.75rem" },
+				{ "name": "3XL (заголовок)", "slug": "xxxl", "size": "2.25rem" }
 			],
 			"fontWeight": true,
 			"lineHeight": true
@@ -82,9 +82,9 @@
 				{ "name": "MD", "slug": "md", "size": "0.75rem" },
 				{ "name": "LG", "slug": "lg", "size": "1rem" },
 				{ "name": "XL", "slug": "xl", "size": "1.25rem" },
-				{ "name": "2XL", "slug": "2xl", "size": "1.5rem" },
-				{ "name": "3XL", "slug": "3xl", "size": "1.75rem" },
-				{ "name": "4XL", "slug": "4xl", "size": "2rem" }
+				{ "name": "2XL", "slug": "xxl", "size": "1.5rem" },
+				{ "name": "3XL", "slug": "xxxl", "size": "1.75rem" },
+				{ "name": "4XL", "slug": "xxxxl", "size": "2rem" }
 			]
 		},
 		"border": {
@@ -99,7 +99,7 @@
 				"md": "0.375rem",
 				"lg": "0.5rem",
 				"xl": "0.75rem",
-				"2xl": "1rem",
+				"xxl": "1rem",
 				"pill": "999px",
 				"card": "0.875rem",
 				"control": "0.5625rem"

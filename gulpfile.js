@@ -28,6 +28,13 @@ const webpackCompiler = require('webpack');
 const named = require('vinyl-named');
 
 /**
+ * Прод-режим — `npm run build:prod` (`gulp build --production`, см.
+ * package.json). Финальная сборка без sourcemaps (Фаза 8 QA); обычный
+ * `npm run build`/`npm run watch` для разработки sourcemaps пишет как раньше.
+ */
+const isProduction = process.argv.includes('--production');
+
+/**
  * ПУТИ
  */
 const paths = {
@@ -121,7 +128,7 @@ const webpackConfig = {
 	module: { rules: [ babelRuleJs ] },
 	resolve: { extensions: [ '.js', '.json' ] },
 	output: { filename: '[name].min.js' },
-	devtool: 'source-map',
+	devtool: isProduction ? false : 'source-map',
 };
 
 /**
@@ -132,7 +139,7 @@ const webpackBlocksConfig = {
 	module: { rules: [ babelRuleBlocks ] },
 	resolve: { extensions: [ '.js', '.json' ] },
 	externals: wpExternals,
-	devtool: 'source-map',
+	devtool: isProduction ? false : 'source-map',
 };
 
 const errorHandler = function ( err ) {
@@ -155,16 +162,28 @@ function guard() {
 }
 
 /**
+ * Прод-режим не пишет sourcemaps вообще (не просто пустой шаг — иначе
+ * cssnano всё равно вставит `/*# sourceMappingURL` комментарий в файл).
+ */
+function maybeSourcemapsInit() {
+	return isProduction ? new PassThrough( { objectMode: true } ) : sourcemaps.init();
+}
+
+function maybeSourcemapsWrite() {
+	return isProduction ? new PassThrough( { objectMode: true } ) : sourcemaps.write( paths.output.maps );
+}
+
+/**
  * ОБРАБОТКА CSS — фронт темы
  */
 function stylesTheme() {
 	return gulp.src( paths.scss.theme )
 		.pipe( guard() )
-		.pipe( sourcemaps.init() )
+		.pipe( maybeSourcemapsInit() )
 		.pipe( sass() )
 		.pipe( postcss( [ autoprefixer(), cssnano() ] ) )
 		.pipe( rename( 'theme.min.css' ) )
-		.pipe( sourcemaps.write( paths.output.maps ) )
+		.pipe( maybeSourcemapsWrite() )
 		.pipe( gulp.dest( paths.output.css ) );
 }
 
@@ -174,11 +193,11 @@ function stylesTheme() {
 function stylesEditor() {
 	return gulp.src( paths.scss.editor )
 		.pipe( guard() )
-		.pipe( sourcemaps.init() )
+		.pipe( maybeSourcemapsInit() )
 		.pipe( sass() )
 		.pipe( postcss( [ autoprefixer(), cssnano() ] ) )
 		.pipe( rename( 'editor.min.css' ) )
-		.pipe( sourcemaps.write( paths.output.maps ) )
+		.pipe( maybeSourcemapsWrite() )
 		.pipe( gulp.dest( paths.output.css ) );
 }
 
@@ -190,7 +209,7 @@ function stylesEditor() {
 function stylesBlocksFront() {
 	return gulp.src( paths.blocks.style, { base: paths.blocks.root, allowEmpty: true } )
 		.pipe( guard() )
-		.pipe( sourcemaps.init() )
+		.pipe( maybeSourcemapsInit() )
 		.pipe( sass() )
 		.pipe( postcss( [ autoprefixer(), cssnano() ] ) )
 		.pipe( rename( ( file ) => {
@@ -198,14 +217,14 @@ function stylesBlocksFront() {
 			file.dirname = '.';
 			file.basename = blockName + '.min';
 		} ) )
-		.pipe( sourcemaps.write( paths.output.maps ) )
+		.pipe( maybeSourcemapsWrite() )
 		.pipe( gulp.dest( paths.output.css + 'blocks/' ) );
 }
 
 function stylesBlocksEditor() {
 	return gulp.src( paths.blocks.editorStyle, { base: paths.blocks.root, allowEmpty: true } )
 		.pipe( guard() )
-		.pipe( sourcemaps.init() )
+		.pipe( maybeSourcemapsInit() )
 		.pipe( sass() )
 		.pipe( postcss( [ autoprefixer(), cssnano() ] ) )
 		.pipe( rename( ( file ) => {
@@ -213,7 +232,7 @@ function stylesBlocksEditor() {
 			file.dirname = '.';
 			file.basename = blockName + '-editor.min';
 		} ) )
-		.pipe( sourcemaps.write( paths.output.maps ) )
+		.pipe( maybeSourcemapsWrite() )
 		.pipe( gulp.dest( paths.output.css + 'blocks/' ) );
 }
 
@@ -225,7 +244,7 @@ function scriptsTheme() {
 		.pipe( guard() )
 		.pipe( named() )
 		.pipe( webpack( webpackConfig ) )
-		.pipe( sourcemaps.write( paths.output.maps ) )
+		.pipe( maybeSourcemapsWrite() )
 		.pipe( gulp.dest( paths.output.js ) )
 		.pipe( notify( { message: 'Theme JS processed!', onLast: true } ) );
 }

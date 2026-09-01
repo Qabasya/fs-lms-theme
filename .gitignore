@@ -1,3 +1,7 @@
+# design-mockup/ коммитится как dev-референс (Claude Design хэндофф, не
+# часть рантайма темы) — НЕ гитигнорится и НЕ исключается из архива темы.
+# README.md уже объясняет назначение, см. tasks.md Фаза 0.
+
 # Node
 node_modules/
 npm-debug.log
