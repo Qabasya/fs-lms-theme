@@ -1,6 +1,55 @@
 // FS LMS Theme — фронт.
 //
 // theme.json уже отдаёт токены как CSS-переменные и закрывает базовую
-// типографику/цвета/spacing через Global Styles — сюда идёт только то, что
-// Gutenberg не даёт из коробки (декоративные паттерны, лента логотипов,
-// hover-анимации карточек и т.п.). Наполняется в Фазе 2.
+// типографику/цвета/spacing/layout через Global Styles — здесь только то,
+// что Gutenberg не даёт из коробки: общая переменная стиля карточки (её
+// переиспользуют паттерны и кастомные блоки Фазы 4/5) и декоративные
+// заглушки под изображения, пока в паттернах нет реальных картинок.
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+img {
+	height: auto;
+	max-width: 100%;
+}
+
+/**
+ * Стиль блока «Карточка» (core/group, is-style-card).
+ *
+ * Общая база для всех карточных секций мокапа (курсы, преподаватели,
+ * отзывы, статьи блога, статистика) — белая поверхность, рамка, тень,
+ * лёгкий подъём по hover. Регистрируется в inc/Setup.php
+ * (`register_block_style('core/group', ...)`).
+ */
+.wp-block-group.is-style-card {
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+	box-shadow: var( --wp--custom--shadow--surface );
+	overflow: hidden;
+	transition: box-shadow .2s ease, transform .2s ease;
+
+	&:hover {
+		box-shadow: var( --wp--custom--shadow--hover );
+		transform: translateY( -2px );
+	}
+}
+
+/**
+ * Заглушка под изображение (курс/блог/выпускник без реальной картинки).
+ * Диагональная сетка на второй поверхности — тот же приём, что в мокапе
+ * (`Главная — мокап.dc.html`), только вынесенный в переиспользуемый класс
+ * вместо инлайновых linear-gradient на каждом блоке.
+ */
+.fs-placeholder-tile {
+	--fs-placeholder-line: var( --wp--preset--color--border );
+
+	background:
+		linear-gradient( to top right, transparent calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% + 1px ), transparent calc( 50% + 1px ) ),
+		linear-gradient( to bottom right, transparent calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% + 1px ), transparent calc( 50% + 1px ) ),
+		var( --wp--preset--color--surface-2 );
+}

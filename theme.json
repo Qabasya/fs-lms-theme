@@ -23,9 +23,17 @@
 				{ "name": "Рамка", "slug": "border", "color": "#e7e9ef" },
 				{ "name": "Рамка (лёгкая)", "slug": "border-light", "color": "#eef0f4" },
 				{ "name": "Успех", "slug": "ok", "color": "#2f9e44" },
+				{ "name": "Успех (мягкий)", "slug": "ok-soft", "color": "#e9f7ee" },
 				{ "name": "Ошибка", "slug": "err", "color": "#e03131" },
+				{ "name": "Ошибка (мягкий)", "slug": "err-soft", "color": "#fdecec" },
 				{ "name": "Ожидание", "slug": "wait", "color": "#b36b00" },
-				{ "name": "Информация", "slug": "info", "color": "#1c7ed6" }
+				{ "name": "Ожидание (мягкий)", "slug": "wait-soft", "color": "#fdf3e3" },
+				{ "name": "Информация", "slug": "info", "color": "#1c7ed6" },
+				{ "name": "Информация (мягкий)", "slug": "info-soft", "color": "#e7f2fd" },
+				{ "name": "Видео", "slug": "violet", "color": "#7048e8" },
+				{ "name": "Видео (мягкий)", "slug": "violet-soft", "color": "#f1ecfd" },
+				{ "name": "Практика", "slug": "practice", "color": "#e8590c" },
+				{ "name": "Практика (мягкий)", "slug": "practice-soft", "color": "#fdeee3" }
 			]
 		},
 		"typography": {

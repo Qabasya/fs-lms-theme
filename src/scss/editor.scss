@@ -1,5 +1,24 @@
 // FS LMS Theme — стили внутри редактора (.editor-styles-wrapper).
 //
-// Зеркалит theme.scss там, где редактор визуально расходится с фронтом
-// (контентная область уже, поверх неё Gutenberg добавляет свою обвязку).
-// Наполняется в Фазе 2 вместе с theme.scss.
+// Зеркалит те правила theme.scss, которые редактор не подхватывает сам
+// (классы блоков применяются в обеих разметках, но editor-styles грузится
+// отдельным стилем и должен объявлять их самостоятельно).
+
+.editor-styles-wrapper {
+	.wp-block-group.is-style-card {
+		background: var( --wp--preset--color--white );
+		border: 1px solid var( --wp--preset--color--border );
+		border-radius: var( --wp--custom--radius--card );
+		box-shadow: var( --wp--custom--shadow--surface );
+		overflow: hidden;
+	}
+
+	.fs-placeholder-tile {
+		--fs-placeholder-line: var( --wp--preset--color--border );
+
+		background:
+			linear-gradient( to top right, transparent calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% + 1px ), transparent calc( 50% + 1px ) ),
+			linear-gradient( to bottom right, transparent calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% - 1px ), var( --fs-placeholder-line ) calc( 50% + 1px ), transparent calc( 50% + 1px ) ),
+			var( --wp--preset--color--surface-2 );
+	}
+}

@@ -69,13 +69,14 @@ Gutenberg-блоки и библиотека паттернов, из котор
 - [x] `npm run build` / `npm run watch` таски в `package.json`. `npm run build` и `npm run watch` проверены живьём — оба стартуют и собирают без ошибок.
 - [x] Структура папок: `src/scss/`, `src/js/`, `src/blocks/` (+ `README.md` с конвенцией), `assets/` (пустая, гитигнорится — добавлен `.gitignore` темы: `node_modules/`, `/assets/`, `/maps/`, IDE/OS-мусор).
 
-## Фаза 2 — Дизайн-система
+## Фаза 2 — Дизайн-система ✅
 
-- [ ] Проверить/дополнить `theme.json`: убедиться, что все семантические цвета из мокапа учтены (акценты чипов по типам — если понадобятся в блоке FAQ/Card badges, можно переиспользовать существующую `accent-soft`/`ok-soft`/`wait-soft`/`info-soft` палитру вместо новой).
-- [ ] `src/scss/theme.scss` — точка входа фронта: normalize/base поверх того, что уже даёт `theme.json` (WP сам генерит CSS-переменные и часть базовых стилей — SCSS нужен только там, где Gutenberg не дотягивает: декоративные паттерны фона, marquee/лента логотипов вузов, кастомные скроллбары, анимации hover-карточек).
-- [ ] `src/scss/editor.scss` — те же правила, что фронт, но заскоуплены под `.editor-styles-wrapper`, чтобы редактор визуально не расходился с фронтом (WYSIWYG).
-- [ ] `functions.php`/`inc/Assets.php`: `add_theme_support('editor-styles')` уже есть — подключить `add_editor_style('assets/css/editor.min.css')`, `wp_enqueue_style('fs-lms-theme', .../theme.min.css')`.
-- [ ] Вынести регистрацию паттерн-категорий и enqueue-логику из `functions.php` в `inc/` (например `inc/Setup.php`, `inc/Assets.php`, `inc/Patterns.php`), `functions.php` — просто `require` этих файлов. Тонкий bootstrap, как сейчас, но без разрастания в один файл по мере роста количества блоков.
+- [x] Дополнен `theme.json`: добавлены `ok-soft`/`err-soft`/`wait-soft`/`info-soft` (точные hex из `frontend/_variables.scss` плагина — `$color-*-soft`) плюс `violet`/`violet-soft` и `practice`/`practice-soft` (из `shared/_tokens.scss` `$step-type-palette` — цвета иконок «видео»/«практика» на мокапе главной, у плагина не форвардятся во frontend-переменные, но остаются тем же единственным источником токенов). Проверено — все фоновые плашки иконок/бейджей мокапа теперь покрыты палитрой.
+- [x] `src/scss/theme.scss` — box-sizing reset, `img{max-width:100%}`, общий стиль блока `.is-style-card` (card look: белая поверхность/рамка/тень/hover-подъём, используют `--wp--custom--radius--card` и `--wp--custom--shadow--*`, уже заданные в `theme.json`) и утилита `.fs-placeholder-tile` (диагональная сетка-заглушка под картинку — тот же приём, что в мокапе, но переиспользуемым классом вместо инлайн-градиентов на каждом блоке).
+- [x] `src/scss/editor.scss` — те же правила, заскоуплены под `.editor-styles-wrapper`.
+- [x] `inc/Assets.php`: `add_editor_style('assets/css/editor.min.css')` (условно — только если файл собран) + `wp_enqueue_style`/`wp_enqueue_script` для `theme.min.css`/`theme.min.js` с версией через `filemtime()`, тем же способом, что `BundleLoader` плагина.
+- [x] Регистрация паттерн-категорий и enqueue-логика вынесены из `functions.php` в `inc/Setup.php` (theme supports + `register_block_style('core/group','card')`), `inc/Patterns.php` (категории), `inc/Assets.php` (шрифты + сборка). `functions.php` — тонкий bootstrap, просто `require` модулей `inc/` по списку.
+- [x] Проверено: `php -l` на все новые файлы, `theme.json` валиден как JSON, `npm run build` пересобрал `theme.min.css`/`editor.min.css` с новыми правилами — оба файла содержат `.is-style-card` и `.fs-placeholder-tile`.
 
 ## Фаза 3 — Шапка и футер (template parts)
 
