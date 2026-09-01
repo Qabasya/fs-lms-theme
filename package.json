@@ -1,0 +1,55 @@
+{
+  "name": "fs-lms-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FS LMS Theme — блочная (FSE) тема: дизайн-система, кастомные блоки и паттерны Gutenberg. Сборка — gulp+webpack, по образцу плагина fs-lms.",
+  "license": "GPL-2.0+",
+  "type": "commonjs",
+  "sideEffects": [
+    "*.scss"
+  ],
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "Firefox ESR",
+    "not dead"
+  ],
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp watch",
+    "start": "gulp",
+    "lint:js": "eslint src/js src/blocks",
+    "fix:js": "eslint src/js src/blocks --fix",
+    "lint:css": "stylelint \"src/scss/**/*.scss\" \"src/blocks/**/*.scss\"",
+    "fix:css": "stylelint \"src/scss/**/*.scss\" \"src/blocks/**/*.scss\" --fix"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-react": "^7.28.0",
+    "@wordpress/block-editor": "^15.5.0",
+    "@wordpress/blocks": "^15.5.0",
+    "@wordpress/components": "^30.5.0",
+    "@wordpress/element": "^6.31.0",
+    "@wordpress/eslint-plugin": "^25.0.0",
+    "@wordpress/i18n": "^6.5.0",
+    "autoprefixer": "^10.4.21",
+    "babel-loader": "^10.1.1",
+    "cssnano": "^7.1.1",
+    "eslint": "^9.39.4",
+    "glob": "^11.0.3",
+    "gulp": "^5.0.1",
+    "gulp-notify": "^5.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^10.0.0",
+    "gulp-rename": "^2.1.0",
+    "gulp-sass": "^6.0.1",
+    "gulp-sourcemaps": "^2.6.5",
+    "sass": "^1.93.2",
+    "stylelint": "^17.14.0",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "vinyl-named": "^1.1.0",
+    "webpack": "^5.105.4",
+    "webpack-stream": "^7.0.0"
+  }
+}

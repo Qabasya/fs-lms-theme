@@ -1,0 +1,22 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Билд-выход gulp (см. tasks.md, Фаза 1) — генерируется из src/
+/assets/
+/maps/
+
+# IDE / OS
+.idea/
+.vscode/
+*.code-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Логи / временные файлы
+*.log
+*.tmp
+*.temp
+*.bak

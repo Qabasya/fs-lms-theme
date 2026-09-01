@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  body { margin: 0; background: #eceef3; font-family: 'Ubuntu', arial, helvetica, sans-serif; color: #181b23; }
+  a { color: #3b5bdb; text-decoration: none; }
+  a:hover { color: #2f44b3; }
+  * { box-sizing: border-box; }
+</style>
+</helmet>
+
+<section style="display:flex;flex-direction:column;gap:28px;padding:40px 48px 80px">
+  <div style="display:flex;align-items:baseline;gap:14px">
+    <div style="font:700 20px 'Ubuntu',sans-serif;letter-spacing:-.01em">Главная страница — два направления</div>
+    <div style="font:400 14px 'Ubuntu',sans-serif;color:#6b7280">Текст и структура — с future-step.ru. Стили, цвета, скругления и тени — из fs-lms.</div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:48px">
+
+    <!-- ══════════════ 1a ══════════════ -->
+    <div id="1a" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:inline-flex;align-items:center;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">1a</div>
+        <div style="font:600 15px 'Ubuntu',sans-serif">Кабинет — карточная сетка на сером холсте</div>
+      </div>
+
+      <div style="width:1280px;background:#f3f4f7;border:1px solid #e7e9ef;border-radius:14px;overflow:hidden;box-shadow:0 12px 32px rgba(16,24,40,.16),0 4px 8px rgba(16,24,40,.06)">
+
+        <!-- topbar -->
+        <div style="display:flex;justify-content:space-between;align-items:center;height:36px;padding:0 60px;background:#fafbfc;border-bottom:1px solid #eef0f4;font:400 12px 'Ubuntu',sans-serif;color:#6b7280">
+          <div>Подготовка ЕГЭ по информатике в Калининграде</div>
+          <div style="display:flex;gap:20px"><span>+7 995 326 44 86</span><span>info@future-step.ru</span></div>
+        </div>
+
+        <!-- nav -->
+        <div style="display:flex;justify-content:space-between;align-items:center;height:68px;padding:0 60px;background:rgba(255,255,255,.92);border-bottom:1px solid #e7e9ef">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="display:grid;place-items:center;width:38px;height:38px;border-radius:9px;background:#3b5bdb;color:#fff;font:700 13px 'Ubuntu',sans-serif">ШБ</div>
+            <div>
+              <div style="font:700 15px 'Ubuntu',sans-serif;letter-spacing:.06em;text-transform:uppercase">Шаг в будущее</div>
+              <div style="font:400 11px 'Ubuntu',sans-serif;color:#9aa1ad">Подготовка к ЕГЭ по информатике</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font:600 13px 'Ubuntu',sans-serif">
+            <a href="#1a" style="padding:8px 12px;border-radius:9px;background:#edf0fe;color:#2f44b3">Главная</a>
+            <a href="#1a" style="padding:8px 12px;border-radius:9px;color:#3c424e">О нас</a>
+            <a href="#1a" style="padding:8px 12px;border-radius:9px;color:#3c424e">Курсы</a>
+            <a href="#1a" style="padding:8px 12px;border-radius:9px;color:#3c424e">Учебник</a>
+            <a href="#1a" style="padding:8px 12px;border-radius:9px;color:#3c424e">Тренажёр</a>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <a href="#1a" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 18px;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#3b5bdb;color:#fff;box-shadow:0 1px 2px rgba(16,24,40,.05)">Записаться</a>
+            <div style="position:relative;display:grid;place-items:center;width:38px;height:38px;border-radius:9px;background:#fff;border:1px solid #e7e9ef;color:#3c424e">
+              <svg width="17" height="17" viewBox="0 0 20 20" fill="none"><path d="M3 11.5 5.5 4h9l2.5 7.5v4.5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M3 11.5h4.5l1 2h3l1-2H17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+              <div style="position:absolute;top:-5px;right:-5px;display:grid;place-items:center;width:17px;height:17px;border-radius:999px;background:#3b5bdb;color:#fff;font:700 10px 'Ubuntu',sans-serif">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- hero -->
+        <div style="padding:56px 60px 40px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;max-width:1160px;margin:0 auto">
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <div style="display:inline-flex;align-self:flex-start;align-items:center;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">Калининград · группы до 8 человек</div>
+              <h1 style="margin:0;font:700 46px/1.08 'Ubuntu',sans-serif;letter-spacing:-.02em;text-wrap:pretty">Подготовка ЕГЭ<br>по информатике</h1>
+              <p style="margin:0;max-width:460px;font:300 17px/1.62 'Ubuntu',sans-serif;color:#3c424e;text-wrap:pretty">Подготовка к ЕГЭ по информатике в Калининграде. Персональная поддержка профессионального репетитора для успешного обучения</p>
+              <div style="display:flex;gap:12px;padding-top:4px">
+                <a href="#1a" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 18px;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#3b5bdb;color:#fff;box-shadow:0 1px 2px rgba(16,24,40,.05)">Записаться</a>
+                <a href="#1a" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 18px;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#fff;border:1px solid #e7e9ef;color:#3c424e">О занятиях</a>
+              </div>
+            </div>
+            <div style="background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 4px 12px rgba(16,24,40,.08),0 2px 4px rgba(16,24,40,.04);overflow:hidden">
+              <div style="display:flex;align-items:center;gap:8px;padding:11px 14px;background:#fafbfc;border-bottom:1px solid #eef0f4">
+                <div style="width:9px;height:9px;border-radius:999px;background:#e7e9ef"></div>
+                <div style="width:9px;height:9px;border-radius:999px;background:#e7e9ef"></div>
+                <div style="width:9px;height:9px;border-radius:999px;background:#e7e9ef"></div>
+                <div style="margin-left:6px;font:500 12px 'JetBrains Mono',monospace;color:#6b7280">main.py</div>
+              </div>
+              <div style="display:grid;grid-template-columns:32px 1fr;font:400 14px/1.85 'JetBrains Mono',monospace;padding:18px 16px">
+                <div style="color:#9aa1ad;text-align:right;padding-right:14px">1<br>2<br>3<br>4<br>5<br>6</div>
+                <div style="color:#181b23;white-space:pre"><span style="color:#7c3aed">def</span> <span style="color:#1d4ed8">print_hi</span>():
+  <span style="color:#6b7280"># И это чистая правда</span>
+  <span style="color:#2563eb">print</span>(<span style="color:#15803d">"Я сдам ЕГЭ на сотку"</span>)
+
+<span style="color:#7c3aed">if</span> __name__ == <span style="color:#15803d">"__Future_Step__"</span>:
+  input = <span style="color:#15803d">"Записаться на курс"</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- сделаем вместе + фичи -->
+        <div style="padding:20px 60px 40px">
+          <div style="display:grid;grid-template-columns:340px 1fr;gap:32px;max-width:1160px;margin:0 auto;align-items:start">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <h2 style="margin:0;font:700 30px/1.15 'Ubuntu',sans-serif;letter-spacing:-.015em">Сделаем вместе<br><span style="color:#3b5bdb">Шаг в будущее</span></h2>
+              <div style="display:flex;flex-direction:column;gap:12px;font:300 15px/1.5 'Ubuntu',sans-serif;color:#3c424e">
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Тебе не хватает мотивации заниматься самостоятельно?</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Сомневаешься, что школьный учитель эффективно подготовит тебя к ЕГЭ?</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Хочешь поступить в вуз твоей мечты и переехать в крупный город?</span></div>
+              </div>
+              <p style="margin:0;font:400 15px/1.6 'Ubuntu',sans-serif;color:#181b23">Как нам это знакомо. Присоединяйся, вместе мы со всем справимся!</p>
+              <a href="#1a" style="display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;height:38px;padding:0 18px;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#fff;border:1px solid #e7e9ef;color:#3c424e">О занятиях</a>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="display:flex;flex-direction:column;gap:12px;padding:20px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05)">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:9px;background:#edf0fe;color:#3b5bdb"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><circle cx="7.5" cy="7" r="2.5" stroke="currentColor" stroke-width="1.6"></circle><path d="M3 16c0-2.5 2-4.5 4.5-4.5S12 13.5 12 16M13 5.2a2.5 2.5 0 0 1 0 4.6M17 16c0-2-1.2-3.7-3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
+                  <div style="font:700 16px/1.3 'Ubuntu',sans-serif">Занятия в группах до 8 человек</div>
+                </div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Подготовка к ЕГЭ в приятной атмосфере в центре Калининграда. Ты можешь заниматься вместе со своими друзьями или найти единомышленников на занятиях</p>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;padding:20px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05)">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:9px;background:#f1ecfd;color:#7048e8"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="6" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><path d="M12.5 9.2 17 6.5v7l-4.5-2.7" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg></div>
+                  <div style="font:700 16px/1.3 'Ubuntu',sans-serif">Запись каждого занятия</div>
+                </div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Вынужден пропустить занятие? Не переживай, ты можешь посмотреть его в записи и прорешать весь пройденный материал самостоятельно с поддержкой преподавателя</p>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;padding:20px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05)">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:9px;background:#fdeee3;color:#e8590c"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M5 2.5h6.2L15.5 6.8V17.5H5V2.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M11 3v4.3h4.3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg></div>
+                  <div style="font:700 16px/1.3 'Ubuntu',sans-serif">Дополнительные материалы</div>
+                </div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Тебе доступны и дополнительные материалы, которые помогут закрепить знания и вспомнить все необходимое перед самим ЕГЭ по информатике: множество конспектов с теорией, шпаргалок и памяток</p>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;padding:20px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05)">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:9px;background:#e9f7ee;color:#2f9e44"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M10 3 12 7l4.5.6-3.3 3.2.8 4.5L10 13.2 6 15.5l.8-4.5L3.5 7.7 8 7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg></div>
+                  <div style="font:700 16px/1.3 'Ubuntu',sans-serif">Регулярные тренировки</div>
+                </div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Тебя ждут регулярные пробники по информатике ЕГЭ с последующим разбором решений, а также система мотивации и контроля домашних работ для достижения наилучших результатов в подготовке!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- выпускники -->
+        <div style="padding:20px 60px 44px">
+          <div style="max-width:1160px;margin:0 auto;padding:24px 28px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05);display:flex;flex-direction:column;gap:18px">
+            <div style="font:400 13px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#9aa1ad">Наши выпускники поступают</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+              <div style="display:grid;place-items:center;height:72px;border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc;font:600 13px 'Ubuntu',sans-serif;color:#6b7280">МИРЭА</div>
+              <div style="display:grid;place-items:center;height:72px;border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc;font:600 13px 'Ubuntu',sans-serif;color:#6b7280">ИТМО</div>
+              <div style="display:grid;place-items:center;height:72px;border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc;font:600 13px 'Ubuntu',sans-serif;color:#6b7280">RUDN university</div>
+              <div style="display:grid;place-items:center;height:72px;border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc;font:600 13px 'Ubuntu',sans-serif;color:#6b7280">Московский университет</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- направления -->
+        <div style="padding:0 60px 44px">
+          <div style="max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <h2 style="margin:0;font:700 30px 'Ubuntu',sans-serif;letter-spacing:-.015em">Курсы и направления</h2>
+              <a href="#1a" style="font:600 13px 'Ubuntu',sans-serif;color:#3b5bdb">Все услуги <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+              <div style="display:flex;flex-direction:column;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05);overflow:hidden">
+                <div style="height:170px;border-bottom:1px solid #eef0f4;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc"></div>
+                <div style="display:flex;flex:1;flex-direction:column;gap:9px;padding:16px 18px 18px">
+                  <div style="display:inline-flex;align-self:flex-start;align-items:center;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">9 класс</div>
+                  <div style="font:700 16px/1.35 'Ubuntu',sans-serif;letter-spacing:-.01em">ОГЭ по информатике</div>
+                  <div style="font:300 12px/1.5 'Ubuntu',sans-serif;color:#6b7280">Абонемент на месяц, два занятия в неделю</div>
+                  <a href="#1a" style="display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;height:38px;padding:0 18px;margin-top:auto;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#3b5bdb;color:#fff;box-shadow:0 1px 2px rgba(16,24,40,.05)">Записаться</a>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05);overflow:hidden">
+                <div style="height:170px;border-bottom:1px solid #eef0f4;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc"></div>
+                <div style="display:flex;flex:1;flex-direction:column;gap:9px;padding:16px 18px 18px">
+                  <div style="display:inline-flex;align-self:flex-start;align-items:center;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#e9f7ee;color:#237032">10 класс</div>
+                  <div style="font:700 16px/1.35 'Ubuntu',sans-serif;letter-spacing:-.01em">Python 10 класс</div>
+                  <div style="font:300 12px/1.5 'Ubuntu',sans-serif;color:#6b7280">Абонемент на месяц, два занятия в неделю</div>
+                  <a href="#1a" style="display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;height:38px;padding:0 18px;margin-top:auto;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#3b5bdb;color:#fff;box-shadow:0 1px 2px rgba(16,24,40,.05)">Записаться</a>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05);overflow:hidden">
+                <div style="height:170px;border-bottom:1px solid #eef0f4;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc"></div>
+                <div style="display:flex;flex:1;flex-direction:column;gap:9px;padding:16px 18px 18px">
+                  <div style="display:inline-flex;align-self:flex-start;align-items:center;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#fdf3e3;color:#8a5a10">11 класс</div>
+                  <div style="font:700 16px/1.35 'Ubuntu',sans-serif;letter-spacing:-.01em">ЕГЭ по информатике</div>
+                  <div style="font:300 12px/1.5 'Ubuntu',sans-serif;color:#6b7280">Абонемент на месяц, два занятия в неделю</div>
+                  <a href="#1a" style="display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;height:38px;padding:0 18px;margin-top:auto;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#3b5bdb;color:#fff;box-shadow:0 1px 2px rgba(16,24,40,.05)">Записаться</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- интенсивная подготовка -->
+        <div style="padding:0 60px 44px">
+          <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:0;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05);overflow:hidden">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:112px;gap:10px;padding:24px;background:#fafbfc;border-right:1px solid #eef0f4">
+              <div style="border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+              <div style="grid-row:span 2;border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+              <div style="border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+              <div style="border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+              <div style="border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+              <div style="border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+              <div style="grid-column:span 2;border-radius:9px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:18px;padding:32px">
+              <h2 style="margin:0;font:700 30px/1.15 'Ubuntu',sans-serif;letter-spacing:-.015em">Интенсивная подготовка</h2>
+              <div style="display:flex;flex-direction:column;gap:10px;font:300 14px/1.5 'Ubuntu',sans-serif;color:#3c424e">
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Занятия 2 раза в неделю</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Запись и онлайн трансляция каждого занятия</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Домашнее задание после каждого занятия</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Индивидуальные консультации с репетитором</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Дополнительные материалы, теория и шпаргалки</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Дополнительные видеоматериалы по каждой теме</span></div>
+              </div>
+              <div style="display:flex;gap:12px">
+                <div style="flex:1;padding:14px 16px;border-radius:9px;background:#fafbfc;border:1px solid #eef0f4">
+                  <div style="font:700 24px 'Ubuntu',sans-serif">2 часа</div>
+                  <div style="font:400 13px 'Ubuntu',sans-serif;color:#6b7280">занятие</div>
+                </div>
+                <div style="flex:1;padding:14px 16px;border-radius:9px;background:#edf0fe;border:1px solid #dde3fb">
+                  <div style="font:700 24px 'Ubuntu',sans-serif;color:#2f44b3">800 ₽</div>
+                  <div style="font:400 13px 'Ubuntu',sans-serif;color:#2f44b3">час</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:12px">
+                <a href="#1a" style="display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 18px;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#3b5bdb;color:#fff;box-shadow:0 1px 2px rgba(16,24,40,.05)">Записаться</a>
+                <a href="#1a" style="display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 18px;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#fff;border:1px solid #e7e9ef;color:#3c424e">Все курсы</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- цифры -->
+        <div style="padding:0 60px 44px">
+          <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+            <div style="padding:22px 24px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05)">
+              <div style="font:700 36px 'Ubuntu',sans-serif;letter-spacing:-.02em;color:#3b5bdb">800 ₽</div>
+              <div style="margin:4px 0 8px;font:600 14px 'Ubuntu',sans-serif">за час</div>
+              <div style="font:300 13px/1.55 'Ubuntu',sans-serif;color:#6b7280">Дешевле, чем у индивидуального репетитора</div>
+            </div>
+            <div style="padding:22px 24px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05)">
+              <div style="font:700 36px 'Ubuntu',sans-serif;letter-spacing:-.02em;color:#3b5bdb">84</div>
+              <div style="margin:4px 0 8px;font:600 14px 'Ubuntu',sans-serif">средний балл</div>
+              <div style="font:300 13px/1.55 'Ubuntu',sans-serif;color:#6b7280">Регулярная работа позволит поступить в топовый вуз</div>
+            </div>
+            <div style="padding:22px 24px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05)">
+              <div style="font:700 36px 'Ubuntu',sans-serif;letter-spacing:-.02em;color:#3b5bdb">100</div>
+              <div style="margin:4px 0 8px;font:600 14px 'Ubuntu',sans-serif">лучший балл</div>
+              <div style="font:300 13px/1.55 'Ubuntu',sans-serif;color:#6b7280">Я знаю, ты сможешь больше, быстрее, сильнее</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- как проходят занятия -->
+        <div style="padding:0 60px 44px">
+          <div style="max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
+            <h2 style="margin:0;font:700 30px 'Ubuntu',sans-serif;letter-spacing:-.015em">Как проходят наши занятия</h2>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+              <div style="display:flex;flex-direction:column;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05);overflow:hidden">
+                <div style="position:relative;height:180px;border-bottom:1px solid #eef0f4;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc">
+                  <div style="position:absolute;top:12px;left:12px;padding:6px 10px;border-radius:9px;background:#fff;border:1px solid #e7e9ef;box-shadow:0 1px 2px rgba(16,24,40,.05);text-align:center"><div style="font:700 16px/1 'Ubuntu',sans-serif">04</div><div style="font:400 10px 'Ubuntu',sans-serif;letter-spacing:.05em;color:#6b7280">ОКТ</div></div>
+                  <div style="position:absolute;bottom:12px;left:12px;display:inline-flex;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">ЕГЭ 2025</div>
+                </div>
+                <div style="display:flex;flex:1;flex-direction:column;gap:9px;padding:16px 18px 18px">
+                  <div style="font:700 16px/1.35 'Ubuntu',sans-serif;letter-spacing:-.01em">Первый месяц ЕГЭ 2025 по информатике</div>
+                  <div style="font:400 12px 'Ubuntu',sans-serif;color:#9aa1ad">Опубликовано · Шаг В Будущее</div>
+                  <p style="margin:0;font:300 13px/1.62 'Ubuntu',sans-serif;color:#3c424e">Прошел всего месяц подготовки к ЕГЭ по информатике, а наши ребята уже уверенно справляются с 5 типами заданий! Впереди осталось еще 22 …</p>
+                  <a href="#1a" style="margin-top:auto;font:600 12px 'Ubuntu',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#3b5bdb">Продолжить чтение <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05);overflow:hidden">
+                <div style="position:relative;height:180px;border-bottom:1px solid #eef0f4;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc">
+                  <div style="position:absolute;top:12px;left:12px;padding:6px 10px;border-radius:9px;background:#fff;border:1px solid #e7e9ef;box-shadow:0 1px 2px rgba(16,24,40,.05);text-align:center"><div style="font:700 16px/1 'Ubuntu',sans-serif">07</div><div style="font:400 10px 'Ubuntu',sans-serif;letter-spacing:.05em;color:#6b7280">СЕН</div></div>
+                  <div style="position:absolute;bottom:12px;left:12px;display:inline-flex;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">ЕГЭ 2025</div>
+                </div>
+                <div style="display:flex;flex:1;flex-direction:column;gap:9px;padding:16px 18px 18px">
+                  <div style="font:700 16px/1.35 'Ubuntu',sans-serif;letter-spacing:-.01em">Программирование на Python по выходным</div>
+                  <div style="font:400 12px 'Ubuntu',sans-serif;color:#9aa1ad">Опубликовано · Шаг В Будущее</div>
+                  <p style="margin:0;font:300 13px/1.62 'Ubuntu',sans-serif;color:#3c424e">Продолжаем учиться и по выходным! В первую субботу нового учебного года в нашем центре в Калининграде прошли дополнительные занятия …</p>
+                  <a href="#1a" style="margin-top:auto;font:600 12px 'Ubuntu',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#3b5bdb">Продолжить чтение <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.05);overflow:hidden">
+                <div style="position:relative;height:180px;border-bottom:1px solid #eef0f4;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc">
+                  <div style="position:absolute;top:12px;left:12px;padding:6px 10px;border-radius:9px;background:#fff;border:1px solid #e7e9ef;box-shadow:0 1px 2px rgba(16,24,40,.05);text-align:center"><div style="font:700 16px/1 'Ubuntu',sans-serif">08</div><div style="font:400 10px 'Ubuntu',sans-serif;letter-spacing:.05em;color:#6b7280">АВГ</div></div>
+                  <div style="position:absolute;bottom:12px;left:12px;display:inline-flex;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">ЕГЭ 2025</div>
+                </div>
+                <div style="display:flex;flex:1;flex-direction:column;gap:9px;padding:16px 18px 18px">
+                  <div style="font:700 16px/1.35 'Ubuntu',sans-serif;letter-spacing:-.01em">ЕГЭ 2025 по информатике в новом месте</div>
+                  <div style="font:400 12px 'Ubuntu',sans-serif;color:#9aa1ad">Опубликовано · Шаг В Будущее</div>
+                  <p style="margin:0;font:300 13px/1.62 'Ubuntu',sans-serif;color:#3c424e">Новый учебный год начался, и мы рады объявить о новых возможностях для наших учеников! Готовимся к ЕГЭ 2025 по информатике в обновленно…</p>
+                  <a href="#1a" style="margin-top:auto;font:600 12px 'Ubuntu',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#3b5bdb">Продолжить чтение <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+                </div>
+              </div>
+            </div>
+            <a href="#1a" style="align-self:center;display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 18px;border-radius:9px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#fff;border:1px solid #e7e9ef;color:#3c424e">Больше фото</a>
+          </div>
+        </div>
+
+        <!-- форма -->
+        <div style="padding:0 60px 56px">
+          <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 480px;gap:32px;align-items:start;padding:32px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 4px 12px rgba(16,24,40,.08),0 2px 4px rgba(16,24,40,.04)">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <h2 style="margin:0;font:700 32px/1.12 'Ubuntu',sans-serif;letter-spacing:-.015em">Приготовься сделать<br>Шаг в будущее</h2>
+              <p style="margin:0;font:300 15px/1.6 'Ubuntu',sans-serif;color:#3c424e">Заполни форму обратной связи и мы ответим на все интересующие вопросы</p>
+              <div style="display:flex;flex-direction:column;gap:10px;padding-top:6px;font:400 14px 'Ubuntu',sans-serif;color:#3c424e">
+                <div style="display:flex;align-items:center;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span>+7 995 326 44 86</div>
+                <div style="display:flex;align-items:center;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span>info@future-step.ru</div>
+                <div style="display:flex;align-items:center;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span>Калининград, центр города</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;padding:24px;background:#fafbfc;border:1px solid #eef0f4;border-radius:14px">
+              <div style="font:500 22px/1.35 'Ubuntu',sans-serif;text-align:center">Записаться на пробное занятие</div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <label style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">Имя родителя</label>
+                <div style="height:40px;padding:10px 12px;background:#fff;border:1px solid #e7e9ef;border-radius:8px;font:400 14px 'Ubuntu',sans-serif;color:#9aa1ad">Как к вам обращаться</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 130px;gap:12px">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">Телефон</label>
+                  <div style="height:40px;padding:10px 12px;background:#fff;border:1px solid #3b5bdb;border-radius:8px;font:400 14px 'Ubuntu',sans-serif;color:#181b23">+7 ___ ___ __ __</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">Класс</label>
+                  <div style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:10px 12px;background:#fff;border:1px solid #e7e9ef;border-radius:8px;font:400 14px 'Ubuntu',sans-serif;color:#181b23">11<span style="display:flex;color:#9aa1ad"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4.5 8 10 13.5 15.5 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <label style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">Направление</label>
+                <div style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:10px 12px;background:#fff;border:1px solid #e7e9ef;border-radius:8px;font:400 14px 'Ubuntu',sans-serif;color:#181b23">ЕГЭ по информатике<span style="display:flex;color:#9aa1ad"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4.5 8 10 13.5 15.5 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font:300 12px/1.5 'Ubuntu',sans-serif;color:#6b7280">
+                <div style="width:16px;height:16px;flex:0 0 16px;margin-top:2px;border-radius:4px;border:1px solid #3b5bdb;background:#3b5bdb;color:#fff;display:grid;place-items:center"><svg width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M4 10.5 8 14l8-8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+                <div>Согласен с обработкой персональных данных</div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;height:42px;border-radius:8px;background:#3b5bdb;color:#fff;font:500 14px 'Ubuntu',sans-serif">Записаться на пробное занятие</div>
+              <div style="font:300 12px 'Ubuntu',sans-serif;color:#9aa1ad;text-align:center">Перезвоним в течение рабочего дня</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- футер -->
+        <div style="padding:32px 60px 40px;background:#fff;border-top:1px solid #e7e9ef">
+          <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="display:grid;place-items:center;width:38px;height:38px;border-radius:9px;background:#3b5bdb;color:#fff;font:700 13px 'Ubuntu',sans-serif">ШБ</div>
+                <div style="font:700 15px 'Ubuntu',sans-serif;letter-spacing:.06em;text-transform:uppercase">Шаг в будущее</div>
+              </div>
+              <div style="font:300 13px/1.6 'Ubuntu',sans-serif;color:#6b7280">Подготовка ЕГЭ по информатике в Калининграде</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;font:400 13px 'Ubuntu',sans-serif;color:#3c424e">
+              <div style="font:400 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#9aa1ad">Разделы</div>
+              <a href="#1a" style="color:#3c424e">Главная</a><a href="#1a" style="color:#3c424e">О нас</a><a href="#1a" style="color:#3c424e">Курсы</a><a href="#1a" style="color:#3c424e">Учебник</a><a href="#1a" style="color:#3c424e">Тренажёр</a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;font:400 13px 'Ubuntu',sans-serif;color:#3c424e">
+              <div style="font:400 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#9aa1ad">Контакты</div>
+              <div>+7 995 326 44 86</div><div>info@future-step.ru</div><div>Калининград</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font:400 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#9aa1ad">Соцсети</div>
+              <div style="display:flex;gap:8px">
+                <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fafbfc;border:1px solid #e7e9ef;font:600 11px 'Ubuntu',sans-serif;color:#6b7280">YT</div>
+                <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fafbfc;border:1px solid #e7e9ef;font:600 11px 'Ubuntu',sans-serif;color:#6b7280">VK</div>
+                <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fafbfc;border:1px solid #e7e9ef;font:600 11px 'Ubuntu',sans-serif;color:#6b7280">TG</div>
+              </div>
+            </div>
+          </div>
+          <div style="max-width:1160px;margin:24px auto 0;padding-top:16px;border-top:1px solid #eef0f4;font:300 12px 'Ubuntu',sans-serif;color:#9aa1ad">© 2026 Шаг в будущее · Личный кабинет</div>
+        </div>
+      </div>
+
+      <sc-if value="{{ showMobile }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:24px;padding-top:10px">
+          <div style="width:390px;background:#f3f4f7;border:1px solid #e7e9ef;border-radius:24px;overflow:hidden;box-shadow:0 12px 32px rgba(16,24,40,.16)">
+            <div style="display:flex;justify-content:space-between;align-items:center;height:56px;padding:0 16px;background:rgba(255,255,255,.92);border-bottom:1px solid #e7e9ef">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:#3b5bdb;color:#fff;font:700 11px 'Ubuntu',sans-serif">ШБ</div>
+                <div style="font:700 13px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase">Шаг в будущее</div>
+              </div>
+              <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fff;border:1px solid #e7e9ef;color:#3c424e"><svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 4h6v2h-6v-2zm2-2h2v-2h-2v2z"></path></svg></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;padding:24px 16px 20px">
+              <div style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">Калининград</div>
+              <h1 style="margin:0;font:700 30px/1.1 'Ubuntu',sans-serif;letter-spacing:-.02em">Подготовка ЕГЭ по информатике</h1>
+              <p style="margin:0;font:300 15px/1.6 'Ubuntu',sans-serif;color:#3c424e">Подготовка к ЕГЭ по информатике в Калининграде. Персональная поддержка профессионального репетитора для успешного обучения</p>
+              <div style="display:flex;align-items:center;justify-content:center;height:44px;border-radius:9px;background:#3b5bdb;color:#fff;font:600 14px 'Ubuntu',sans-serif">Записаться</div>
+              <div style="display:flex;align-items:center;justify-content:center;height:44px;border-radius:9px;background:#fff;border:1px solid #e7e9ef;color:#3c424e;font:600 14px 'Ubuntu',sans-serif">О занятиях</div>
+            </div>
+            <div style="padding:0 16px 20px">
+              <div style="background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05);overflow:hidden">
+                <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fafbfc;border-bottom:1px solid #eef0f4;font:500 11px 'JetBrains Mono',monospace;color:#6b7280">main.py</div>
+                <div style="padding:14px 12px;font:400 12px/1.8 'JetBrains Mono',monospace;white-space:pre"><span style="color:#7c3aed">def</span> <span style="color:#1d4ed8">print_hi</span>():
+  <span style="color:#6b7280"># И это чистая правда</span>
+  <span style="color:#2563eb">print</span>(<span style="color:#15803d">"Я сдам ЕГЭ на сотку"</span>)</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;padding:0 16px 20px">
+              <div style="display:flex;flex-direction:column;gap:10px;padding:18px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05)">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:9px;background:#edf0fe;color:#3b5bdb"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><circle cx="7.5" cy="7" r="2.5" stroke="currentColor" stroke-width="1.6"></circle><path d="M3 16c0-2.5 2-4.5 4.5-4.5S12 13.5 12 16M13 5.2a2.5 2.5 0 0 1 0 4.6M17 16c0-2-1.2-3.7-3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
+                  <div style="font:700 15px/1.3 'Ubuntu',sans-serif">Занятия в группах до 8 человек</div>
+                </div>
+                <p style="margin:0;font:300 13px/1.6 'Ubuntu',sans-serif;color:#3c424e">Подготовка к ЕГЭ в приятной атмосфере в центре Калининграда</p>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;padding:18px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05)">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:9px;background:#f1ecfd;color:#7048e8"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="6" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><path d="M12.5 9.2 17 6.5v7l-4.5-2.7" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg></div>
+                  <div style="font:700 15px/1.3 'Ubuntu',sans-serif">Запись каждого занятия</div>
+                </div>
+                <p style="margin:0;font:300 13px/1.6 'Ubuntu',sans-serif;color:#3c424e">Пропустил — посмотришь в записи и прорешаешь материал с поддержкой преподавателя</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px 20px">
+              <div style="padding:14px 10px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;text-align:center"><div style="font:700 20px 'Ubuntu',sans-serif;color:#3b5bdb">800 ₽</div><div style="font:400 11px 'Ubuntu',sans-serif;color:#6b7280">за час</div></div>
+              <div style="padding:14px 10px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;text-align:center"><div style="font:700 20px 'Ubuntu',sans-serif;color:#3b5bdb">84</div><div style="font:400 11px 'Ubuntu',sans-serif;color:#6b7280">средний балл</div></div>
+              <div style="padding:14px 10px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;text-align:center"><div style="font:700 20px 'Ubuntu',sans-serif;color:#3b5bdb">100</div><div style="font:400 11px 'Ubuntu',sans-serif;color:#6b7280">лучший балл</div></div>
+            </div>
+            <div style="padding:0 16px 24px">
+              <div style="display:flex;flex-direction:column;gap:12px;padding:20px 16px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;box-shadow:0 4px 12px rgba(16,24,40,.08)">
+                <div style="font:500 19px/1.3 'Ubuntu',sans-serif;text-align:center">Приготовься сделать Шаг в будущее</div>
+                <div style="height:40px;padding:10px 12px;background:#fafbfc;border:1px solid #e7e9ef;border-radius:8px;font:400 14px 'Ubuntu',sans-serif;color:#9aa1ad">Имя родителя</div>
+                <div style="height:40px;padding:10px 12px;background:#fafbfc;border:1px solid #e7e9ef;border-radius:8px;font:400 14px 'Ubuntu',sans-serif;color:#9aa1ad">+7 ___ ___ __ __</div>
+                <div style="display:flex;align-items:center;justify-content:center;height:44px;border-radius:8px;background:#3b5bdb;color:#fff;font:500 14px 'Ubuntu',sans-serif">Записаться на пробное занятие</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- ══════════════ 1b ══════════════ -->
+    <div id="1b" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:inline-flex;align-items:center;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">1b</div>
+        <div style="font:600 15px 'Ubuntu',sans-serif">Полосы — белый лист, акцентный герой, тёмный блок цифр</div>
+      </div>
+
+      <div style="width:1280px;background:#fff;border:1px solid #e7e9ef;border-radius:14px;overflow:hidden;box-shadow:0 12px 32px rgba(16,24,40,.16),0 4px 8px rgba(16,24,40,.06)">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;height:34px;padding:0 60px;background:#181b23;font:400 12px 'Ubuntu',sans-serif;color:#9aa1ad">
+          <div>Подготовка ЕГЭ по информатике в Калининграде</div>
+          <div style="display:flex;gap:20px"><span style="color:#e7e9ef">+7 995 326 44 86</span><span style="color:#e7e9ef">info@future-step.ru</span></div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;height:72px;padding:0 60px;background:#fff;border-bottom:1px solid #eef0f4">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="display:grid;place-items:center;width:36px;height:36px;border-radius:9px;background:#3b5bdb;color:#fff;font:700 13px 'Ubuntu',sans-serif">ШБ</div>
+            <div style="font:700 16px 'Ubuntu',sans-serif;letter-spacing:.06em;text-transform:uppercase">Шаг в будущее</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:28px;font:400 14px 'Ubuntu',sans-serif;color:#3c424e">
+            <a href="#1b" style="padding-bottom:3px;border-bottom:2px solid #3b5bdb;color:#181b23;font-weight:500">Главная</a>
+            <a href="#1b" style="color:#3c424e">О нас</a>
+            <a href="#1b" style="color:#3c424e">Курсы</a>
+            <a href="#1b" style="color:#3c424e">Учебник</a>
+            <a href="#1b" style="color:#3c424e">Тренажёр</a>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <a href="#1b" style="font:600 14px 'Ubuntu',sans-serif;color:#3b5bdb">Личный кабинет</a>
+            <a href="#1b" style="display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 18px;border-radius:999px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#3b5bdb;color:#fff">Записаться</a>
+          </div>
+        </div>
+
+        <!-- герой на акценте -->
+        <div style="padding:64px 60px;background:#3b5bdb">
+          <div style="display:grid;grid-template-columns:1fr 520px;gap:48px;align-items:center;max-width:1160px;margin:0 auto">
+            <div style="display:flex;flex-direction:column;gap:22px">
+              <div style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,255,255,.16);color:#fff">Группы до 8 человек · Калининград</div>
+              <h1 style="margin:0;font:700 54px/1.05 'Ubuntu',sans-serif;letter-spacing:-.025em;color:#fff;text-wrap:pretty">Подготовка ЕГЭ<br>по информатике</h1>
+              <p style="margin:0;max-width:480px;font:300 18px/1.6 'Ubuntu',sans-serif;color:#dde3fb;text-wrap:pretty">Подготовка к ЕГЭ по информатике в Калининграде. Персональная поддержка профессионального репетитора для успешного обучения</p>
+              <div style="display:flex;gap:12px;padding-top:6px">
+                <a href="#1b" style="display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 24px;border-radius:999px;white-space:nowrap;font:600 15px 'Ubuntu',sans-serif;background:#fff;color:#2f44b3">Записаться на пробное</a>
+                <a href="#1b" style="display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 24px;border-radius:999px;white-space:nowrap;font:600 15px 'Ubuntu',sans-serif;border:1px solid rgba(255,255,255,.4);color:#fff">О занятиях</a>
+              </div>
+              <div style="display:flex;gap:32px;padding-top:10px;font:400 13px 'Ubuntu',sans-serif;color:#dde3fb">
+                <div><span style="font:700 22px 'Ubuntu',sans-serif;color:#fff">800 ₽</span> за час</div>
+                <div><span style="font:700 22px 'Ubuntu',sans-serif;color:#fff">84</span> средний балл</div>
+                <div><span style="font:700 22px 'Ubuntu',sans-serif;color:#fff">100</span> лучший балл</div>
+              </div>
+            </div>
+            <div style="background:#fff;border-radius:14px;box-shadow:0 16px 48px rgba(16,24,40,.2);overflow:hidden">
+              <div style="display:flex;align-items:center;gap:8px;padding:11px 14px;background:#fafbfc;border-bottom:1px solid #eef0f4">
+                <div style="width:9px;height:9px;border-radius:999px;background:#e7e9ef"></div>
+                <div style="width:9px;height:9px;border-radius:999px;background:#e7e9ef"></div>
+                <div style="width:9px;height:9px;border-radius:999px;background:#e7e9ef"></div>
+                <div style="margin-left:6px;font:500 12px 'JetBrains Mono',monospace;color:#6b7280">main.py</div>
+              </div>
+              <div style="padding:20px 18px;font:400 14px/1.9 'JetBrains Mono',monospace;white-space:pre"><span style="color:#7c3aed">def</span> <span style="color:#1d4ed8">print_hi</span>():
+  <span style="color:#6b7280"># И это чистая правда</span>
+  <span style="color:#2563eb">print</span>(<span style="color:#15803d">"Я сдам ЕГЭ на сотку"</span>)
+
+<span style="color:#7c3aed">if</span> __name__ == <span style="color:#15803d">"__Future_Step__"</span>:
+  input = <span style="color:#15803d">"Записаться на курс"</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- сделаем вместе -->
+        <div style="padding:72px 60px 56px">
+          <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:380px 1fr;gap:56px;align-items:start">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <h2 style="margin:0;font:700 36px/1.1 'Ubuntu',sans-serif;letter-spacing:-.02em">Сделаем вместе<br><span style="color:#3b5bdb">Шаг в будущее</span></h2>
+              <div style="display:flex;flex-direction:column;gap:14px;font:300 16px/1.5 'Ubuntu',sans-serif;color:#3c424e">
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Тебе не хватает мотивации заниматься самостоятельно?</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Сомневаешься, что школьный учитель эффективно подготовит тебя к ЕГЭ?</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Хочешь поступить в вуз твоей мечты и переехать в крупный город?</span></div>
+              </div>
+              <p style="margin:0;font:400 16px/1.6 'Ubuntu',sans-serif">Как нам это знакомо. Присоединяйся, вместе мы со всем справимся!</p>
+              <a href="#1b" style="display:inline-flex;align-self:flex-start;align-items:center;justify-content:center;height:40px;padding:0 22px;border-radius:999px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#edf0fe;color:#2f44b3">О занятиях</a>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px 40px">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#edf0fe;color:#3b5bdb"><svg width="21" height="21" viewBox="0 0 20 20" fill="none"><circle cx="7.5" cy="7" r="2.5" stroke="currentColor" stroke-width="1.6"></circle><path d="M3 16c0-2.5 2-4.5 4.5-4.5S12 13.5 12 16M13 5.2a2.5 2.5 0 0 1 0 4.6M17 16c0-2-1.2-3.7-3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
+                <div style="font:700 18px/1.3 'Ubuntu',sans-serif;letter-spacing:-.01em">Занятия в группах до 8 человек</div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Подготовка к ЕГЭ в приятной атмосфере в центре Калининграда. Ты можешь заниматься вместе со своими друзьями или найти единомышленников на занятиях</p>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#f1ecfd;color:#7048e8"><svg width="21" height="21" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="6" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><path d="M12.5 9.2 17 6.5v7l-4.5-2.7" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg></div>
+                <div style="font:700 18px/1.3 'Ubuntu',sans-serif;letter-spacing:-.01em">Запись каждого занятия</div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Вынужден пропустить занятие? Не переживай, ты можешь посмотреть его в записи и прорешать весь пройденный материал самостоятельно с поддержкой преподавателя</p>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#fdeee3;color:#e8590c"><svg width="21" height="21" viewBox="0 0 20 20" fill="none"><path d="M5 2.5h6.2L15.5 6.8V17.5H5V2.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M11 3v4.3h4.3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg></div>
+                <div style="font:700 18px/1.3 'Ubuntu',sans-serif;letter-spacing:-.01em">Дополнительные материалы</div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Тебе доступны и дополнительные материалы, которые помогут закрепить знания и вспомнить все необходимое перед самим ЕГЭ по информатике: множество конспектов с теорией, шпаргалок и памяток</p>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#e9f7ee;color:#2f9e44"><svg width="21" height="21" viewBox="0 0 20 20" fill="none"><path d="M10 3 12 7l4.5.6-3.3 3.2.8 4.5L10 13.2 6 15.5l.8-4.5L3.5 7.7 8 7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg></div>
+                <div style="font:700 18px/1.3 'Ubuntu',sans-serif;letter-spacing:-.01em">Регулярные тренировки</div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Тебя ждут регулярные пробники по информатике ЕГЭ с последующим разбором решений, а также система мотивации и контроля домашних работ для достижения наилучших результатов в подготовке!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- выпускники -->
+        <div style="padding:0 60px 64px">
+          <div style="max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:20px;align-items:center">
+            <div style="font:400 13px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#9aa1ad">Наши выпускники поступают</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:40px;width:100%">
+              <div style="display:grid;place-items:center;height:64px;font:600 15px 'Ubuntu',sans-serif;color:#9aa1ad">МИРЭА</div>
+              <div style="display:grid;place-items:center;height:64px;font:600 15px 'Ubuntu',sans-serif;color:#9aa1ad">ИТМО</div>
+              <div style="display:grid;place-items:center;height:64px;font:600 15px 'Ubuntu',sans-serif;color:#9aa1ad">RUDN university</div>
+              <div style="display:grid;place-items:center;height:64px;font:600 15px 'Ubuntu',sans-serif;color:#9aa1ad">Московский университет</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- интенсивная подготовка на светлом акценте -->
+        <div style="padding:56px 60px;background:#edf0fe">
+          <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 460px;gap:48px;align-items:center">
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <h2 style="margin:0;font:700 36px/1.1 'Ubuntu',sans-serif;letter-spacing:-.02em">Интенсивная подготовка</h2>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 28px;font:300 15px/1.5 'Ubuntu',sans-serif;color:#3c424e">
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Занятия 2 раза в неделю</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Запись и онлайн трансляция каждого занятия</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Домашнее задание после каждого занятия</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Индивидуальные консультации с репетитором</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Дополнительные материалы, теория и шпаргалки</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Дополнительные видеоматериалы по каждой теме</span></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:36px;padding-top:4px">
+                <div><div style="font:700 30px 'Ubuntu',sans-serif;letter-spacing:-.02em">2 часа</div><div style="font:400 13px 'Ubuntu',sans-serif;color:#6b7280">занятие</div></div>
+                <div><div style="font:700 30px 'Ubuntu',sans-serif;letter-spacing:-.02em;color:#2f44b3">800 ₽</div><div style="font:400 13px 'Ubuntu',sans-serif;color:#6b7280">час</div></div>
+                <div style="display:flex;gap:12px;margin-left:auto">
+                  <a href="#1b" style="display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 22px;border-radius:999px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#3b5bdb;color:#fff">Записаться</a>
+                  <a href="#1b" style="display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 22px;border-radius:999px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#fff;color:#2f44b3">Все курсы</a>
+                </div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:130px;gap:12px">
+              <div style="border-radius:14px;background:linear-gradient(to top right,transparent calc(50% - 1px),#dde3fb calc(50% - 1px),#dde3fb calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#dde3fb calc(50% - 1px),#dde3fb calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+              <div style="grid-row:span 2;border-radius:14px;background:linear-gradient(to top right,transparent calc(50% - 1px),#dde3fb calc(50% - 1px),#dde3fb calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#dde3fb calc(50% - 1px),#dde3fb calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+              <div style="border-radius:14px;background:linear-gradient(to top right,transparent calc(50% - 1px),#dde3fb calc(50% - 1px),#dde3fb calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#dde3fb calc(50% - 1px),#dde3fb calc(50% + 1px),transparent calc(50% + 1px)),#fff"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- курсы -->
+        <div style="padding:64px 60px 56px">
+          <div style="max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:24px">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <h2 style="margin:0;font:700 36px 'Ubuntu',sans-serif;letter-spacing:-.02em">Курсы и направления</h2>
+              <a href="#1b" style="font:600 14px 'Ubuntu',sans-serif;color:#3b5bdb">Все услуги <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+              <div style="display:flex;flex-direction:column;gap:12px;padding:24px;border:1px solid #e7e9ef;border-radius:14px">
+                <div style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">9 класс</div>
+                <div style="font:700 22px/1.25 'Ubuntu',sans-serif;letter-spacing:-.015em">ОГЭ по информатике</div>
+                <div style="font:300 14px/1.6 'Ubuntu',sans-serif;color:#6b7280">Абонемент на месяц, два занятия в неделю</div>
+                <a href="#1b" style="margin-top:8px;font:600 13px 'Ubuntu',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#3b5bdb">Записаться <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;padding:24px;border:1px solid #e7e9ef;border-radius:14px">
+                <div style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#e9f7ee;color:#237032">10 класс</div>
+                <div style="font:700 22px/1.25 'Ubuntu',sans-serif;letter-spacing:-.015em">Python 10 класс</div>
+                <div style="font:300 14px/1.6 'Ubuntu',sans-serif;color:#6b7280">Абонемент на месяц, два занятия в неделю</div>
+                <a href="#1b" style="margin-top:8px;font:600 13px 'Ubuntu',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#3b5bdb">Записаться <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;padding:24px;border:1px solid #e7e9ef;border-radius:14px">
+                <div style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#fdf3e3;color:#8a5a10">11 класс</div>
+                <div style="font:700 22px/1.25 'Ubuntu',sans-serif;letter-spacing:-.015em">ЕГЭ по информатике</div>
+                <div style="font:300 14px/1.6 'Ubuntu',sans-serif;color:#6b7280">Абонемент на месяц, два занятия в неделю</div>
+                <a href="#1b" style="margin-top:8px;font:600 13px 'Ubuntu',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#3b5bdb">Записаться <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- цифры на тёмном -->
+        <div style="padding:56px 60px;background:#181b23">
+          <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:48px">
+            <div>
+              <div style="font:700 48px 'Ubuntu',sans-serif;letter-spacing:-.03em;color:#fff">800 ₽</div>
+              <div style="margin:6px 0 10px;font:500 15px 'Ubuntu',sans-serif;color:#dde3fb">за час</div>
+              <div style="font:300 14px/1.6 'Ubuntu',sans-serif;color:#9aa1ad">Дешевле, чем у индивидуального репетитора</div>
+            </div>
+            <div>
+              <div style="font:700 48px 'Ubuntu',sans-serif;letter-spacing:-.03em;color:#fff">84</div>
+              <div style="margin:6px 0 10px;font:500 15px 'Ubuntu',sans-serif;color:#dde3fb">средний балл</div>
+              <div style="font:300 14px/1.6 'Ubuntu',sans-serif;color:#9aa1ad">Регулярная работа позволит поступить в топовый вуз</div>
+            </div>
+            <div>
+              <div style="font:700 48px 'Ubuntu',sans-serif;letter-spacing:-.03em;color:#fff">100</div>
+              <div style="margin:6px 0 10px;font:500 15px 'Ubuntu',sans-serif;color:#dde3fb">лучший балл</div>
+              <div style="font:300 14px/1.6 'Ubuntu',sans-serif;color:#9aa1ad">Я знаю, ты сможешь больше, быстрее, сильнее</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- как проходят занятия -->
+        <div style="padding:64px 60px 56px">
+          <div style="max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:24px">
+            <h2 style="margin:0;font:700 36px 'Ubuntu',sans-serif;letter-spacing:-.02em">Как проходят наши занятия</h2>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="position:relative;height:200px;border-radius:14px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc">
+                  <div style="position:absolute;top:12px;left:12px;padding:6px 10px;border-radius:9px;background:#fff;box-shadow:0 1px 3px rgba(16,24,40,.1);text-align:center"><div style="font:700 16px/1 'Ubuntu',sans-serif">04</div><div style="font:400 10px 'Ubuntu',sans-serif;letter-spacing:.05em;color:#6b7280">ОКТ</div></div>
+                </div>
+                <div style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">ЕГЭ 2025</div>
+                <div style="font:700 19px/1.3 'Ubuntu',sans-serif;letter-spacing:-.01em">Первый месяц ЕГЭ 2025 по информатике</div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Прошел всего месяц подготовки к ЕГЭ по информатике, а наши ребята уже уверенно справляются с 5 типами заданий! Впереди осталось еще 22 …</p>
+                <a href="#1b" style="font:600 12px 'Ubuntu',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#3b5bdb">Продолжить чтение <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="position:relative;height:200px;border-radius:14px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc">
+                  <div style="position:absolute;top:12px;left:12px;padding:6px 10px;border-radius:9px;background:#fff;box-shadow:0 1px 3px rgba(16,24,40,.1);text-align:center"><div style="font:700 16px/1 'Ubuntu',sans-serif">07</div><div style="font:400 10px 'Ubuntu',sans-serif;letter-spacing:.05em;color:#6b7280">СЕН</div></div>
+                </div>
+                <div style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">ЕГЭ 2025</div>
+                <div style="font:700 19px/1.3 'Ubuntu',sans-serif;letter-spacing:-.01em">Программирование на Python по выходным</div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Продолжаем учиться и по выходным! В первую субботу нового учебного года в нашем центре в Калининграде прошли дополнительные занятия …</p>
+                <a href="#1b" style="font:600 12px 'Ubuntu',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#3b5bdb">Продолжить чтение <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="position:relative;height:200px;border-radius:14px;background:linear-gradient(to top right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),#e7e9ef calc(50% - 1px),#e7e9ef calc(50% + 1px),transparent calc(50% + 1px)),#fafbfc">
+                  <div style="position:absolute;top:12px;left:12px;padding:6px 10px;border-radius:9px;background:#fff;box-shadow:0 1px 3px rgba(16,24,40,.1);text-align:center"><div style="font:700 16px/1 'Ubuntu',sans-serif">08</div><div style="font:400 10px 'Ubuntu',sans-serif;letter-spacing:.05em;color:#6b7280">АВГ</div></div>
+                </div>
+                <div style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:#edf0fe;color:#2f44b3">ЕГЭ 2025</div>
+                <div style="font:700 19px/1.3 'Ubuntu',sans-serif;letter-spacing:-.01em">ЕГЭ 2025 по информатике в новом месте</div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Новый учебный год начался, и мы рады объявить о новых возможностях для наших учеников! Готовимся к ЕГЭ 2025 по информатике в обновленно…</p>
+                <a href="#1b" style="font:600 12px 'Ubuntu',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#3b5bdb">Продолжить чтение <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style="vertical-align:-2px"><path d="M4 10h11m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+              </div>
+            </div>
+            <a href="#1b" style="align-self:center;display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 22px;border-radius:999px;white-space:nowrap;font:600 14px 'Ubuntu',sans-serif;background:#edf0fe;color:#2f44b3">Больше фото</a>
+          </div>
+        </div>
+
+        <!-- форма -->
+        <div style="padding:0 60px 64px">
+          <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #e7e9ef;border-radius:14px;overflow:hidden;box-shadow:0 4px 12px rgba(16,24,40,.08)">
+            <div style="display:flex;flex-direction:column;gap:16px;padding:40px;background:#3b5bdb">
+              <h2 style="margin:0;font:700 34px/1.1 'Ubuntu',sans-serif;letter-spacing:-.02em;color:#fff">Приготовься сделать<br>Шаг в будущее</h2>
+              <p style="margin:0;font:300 16px/1.6 'Ubuntu',sans-serif;color:#dde3fb">Заполни форму обратной связи и мы ответим на все интересующие вопросы</p>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-top:auto;font:400 15px 'Ubuntu',sans-serif;color:#fff">
+                <div>+7 995 326 44 86</div>
+                <div>info@future-step.ru</div>
+                <div style="color:#dde3fb">Калининград, центр города</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;padding:40px;background:#fff">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <label style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">Имя родителя</label>
+                <div style="height:42px;padding:11px 14px;background:#fafbfc;border:1px solid #e7e9ef;border-radius:9px;font:400 14px 'Ubuntu',sans-serif;color:#9aa1ad">Как к вам обращаться</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 120px;gap:12px">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">Телефон</label>
+                  <div style="height:42px;padding:11px 14px;background:#fff;border:1px solid #3b5bdb;border-radius:9px;font:400 14px 'Ubuntu',sans-serif">+7 ___ ___ __ __</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">Класс</label>
+                  <div style="display:flex;align-items:center;justify-content:space-between;height:42px;padding:11px 14px;background:#fafbfc;border:1px solid #e7e9ef;border-radius:9px;font:400 14px 'Ubuntu',sans-serif">11<span style="display:flex;color:#9aa1ad"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4.5 8 10 13.5 15.5 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <label style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">Направление</label>
+                <div style="display:flex;gap:8px">
+                  <div style="display:inline-flex;padding:8px 14px;border-radius:999px;white-space:nowrap;font:600 13px 'Ubuntu',sans-serif;background:#3b5bdb;color:#fff">ЕГЭ</div>
+                  <div style="display:inline-flex;padding:8px 14px;border-radius:999px;white-space:nowrap;font:600 13px 'Ubuntu',sans-serif;background:#fff;border:1px solid #e7e9ef;color:#3c424e">ОГЭ</div>
+                  <div style="display:inline-flex;padding:8px 14px;border-radius:999px;white-space:nowrap;font:600 13px 'Ubuntu',sans-serif;background:#fff;border:1px solid #e7e9ef;color:#3c424e">Python</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font:300 12px/1.5 'Ubuntu',sans-serif;color:#6b7280">
+                <div style="width:16px;height:16px;flex:0 0 16px;margin-top:2px;border-radius:4px;border:1px solid #3b5bdb;background:#3b5bdb;color:#fff;display:grid;place-items:center"><svg width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M4 10.5 8 14l8-8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+                <div>Согласен с обработкой персональных данных</div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;height:46px;border-radius:999px;background:#3b5bdb;color:#fff;font:600 15px 'Ubuntu',sans-serif">Записаться на пробное занятие</div>
+              <div style="font:300 12px 'Ubuntu',sans-serif;color:#9aa1ad;text-align:center">Перезвоним в течение рабочего дня</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- футер -->
+        <div style="padding:36px 60px 40px;background:#181b23">
+          <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="display:grid;place-items:center;width:36px;height:36px;border-radius:9px;background:#3b5bdb;color:#fff;font:700 13px 'Ubuntu',sans-serif">ШБ</div>
+                <div style="font:700 15px 'Ubuntu',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#fff">Шаг в будущее</div>
+              </div>
+              <div style="font:300 13px/1.6 'Ubuntu',sans-serif;color:#9aa1ad">Подготовка ЕГЭ по информатике в Калининграде</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;font:400 13px 'Ubuntu',sans-serif">
+              <div style="font:400 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6b7280">Разделы</div>
+              <a href="#1b" style="color:#e7e9ef">Главная</a><a href="#1b" style="color:#e7e9ef">О нас</a><a href="#1b" style="color:#e7e9ef">Курсы</a><a href="#1b" style="color:#e7e9ef">Учебник</a><a href="#1b" style="color:#e7e9ef">Тренажёр</a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;font:400 13px 'Ubuntu',sans-serif;color:#e7e9ef">
+              <div style="font:400 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6b7280">Контакты</div>
+              <div>+7 995 326 44 86</div><div>info@future-step.ru</div><div>Калининград</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font:400 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6b7280">Соцсети</div>
+              <div style="display:flex;gap:8px">
+                <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);font:600 11px 'Ubuntu',sans-serif;color:#e7e9ef">YT</div>
+                <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);font:600 11px 'Ubuntu',sans-serif;color:#e7e9ef">VK</div>
+                <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);font:600 11px 'Ubuntu',sans-serif;color:#e7e9ef">TG</div>
+              </div>
+            </div>
+          </div>
+          <div style="max-width:1160px;margin:24px auto 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);font:300 12px 'Ubuntu',sans-serif;color:#6b7280">© 2026 Шаг в будущее · Личный кабинет</div>
+        </div>
+      </div>
+
+      <sc-if value="{{ showMobile }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:24px;padding-top:10px">
+          <div style="width:390px;background:#fff;border:1px solid #e7e9ef;border-radius:24px;overflow:hidden;box-shadow:0 12px 32px rgba(16,24,40,.16)">
+            <div style="display:flex;justify-content:space-between;align-items:center;height:56px;padding:0 16px;background:#fff;border-bottom:1px solid #eef0f4">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:#3b5bdb;color:#fff;font:700 11px 'Ubuntu',sans-serif">ШБ</div>
+                <div style="font:700 13px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase">Шаг в будущее</div>
+              </div>
+              <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fafbfc;border:1px solid #e7e9ef;color:#3c424e"><svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 4h6v2h-6v-2zm2-2h2v-2h-2v2z"></path></svg></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px;padding:28px 20px 32px;background:#3b5bdb">
+              <div style="display:inline-flex;align-self:flex-start;padding:5px 11px;border-radius:999px;font:700 11px 'Ubuntu',sans-serif;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,255,255,.16);color:#fff">Калининград</div>
+              <h1 style="margin:0;font:700 34px/1.05 'Ubuntu',sans-serif;letter-spacing:-.025em;color:#fff">Подготовка ЕГЭ по информатике</h1>
+              <p style="margin:0;font:300 15px/1.6 'Ubuntu',sans-serif;color:#dde3fb">Подготовка к ЕГЭ по информатике в Калининграде. Персональная поддержка профессионального репетитора для успешного обучения</p>
+              <div style="display:flex;align-items:center;justify-content:center;height:46px;border-radius:999px;background:#fff;color:#2f44b3;font:600 15px 'Ubuntu',sans-serif">Записаться на пробное</div>
+              <div style="display:flex;justify-content:space-between;padding-top:4px;font:400 12px 'Ubuntu',sans-serif;color:#dde3fb">
+                <div><div style="font:700 20px 'Ubuntu',sans-serif;color:#fff">800 ₽</div>за час</div>
+                <div><div style="font:700 20px 'Ubuntu',sans-serif;color:#fff">84</div>средний балл</div>
+                <div><div style="font:700 20px 'Ubuntu',sans-serif;color:#fff">100</div>лучший балл</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:22px;padding:28px 20px">
+              <h2 style="margin:0;font:700 26px/1.15 'Ubuntu',sans-serif;letter-spacing:-.02em">Сделаем вместе<br><span style="color:#3b5bdb">Шаг в будущее</span></h2>
+              <div style="display:flex;flex-direction:column;gap:12px;font:300 15px/1.5 'Ubuntu',sans-serif;color:#3c424e">
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Тебе не хватает мотивации заниматься самостоятельно?</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Сомневаешься, что школьный учитель эффективно подготовит тебя к ЕГЭ?</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Хочешь поступить в вуз твоей мечты и переехать в крупный город?</span></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#edf0fe;color:#3b5bdb"><svg width="21" height="21" viewBox="0 0 20 20" fill="none"><circle cx="7.5" cy="7" r="2.5" stroke="currentColor" stroke-width="1.6"></circle><path d="M3 16c0-2.5 2-4.5 4.5-4.5S12 13.5 12 16M13 5.2a2.5 2.5 0 0 1 0 4.6M17 16c0-2-1.2-3.7-3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
+                <div style="font:700 18px/1.3 'Ubuntu',sans-serif">Занятия в группах до 8 человек</div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Подготовка к ЕГЭ в приятной атмосфере в центре Калининграда. Ты можешь заниматься вместе со своими друзьями или найти единомышленников на занятиях</p>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#f1ecfd;color:#7048e8"><svg width="21" height="21" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="6" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"></rect><path d="M12.5 9.2 17 6.5v7l-4.5-2.7" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg></div>
+                <div style="font:700 18px/1.3 'Ubuntu',sans-serif">Запись каждого занятия</div>
+                <p style="margin:0;font:300 14px/1.62 'Ubuntu',sans-serif;color:#3c424e">Вынужден пропустить занятие? Не переживай, ты можешь посмотреть его в записи и прорешать весь пройденный материал самостоятельно с поддержкой преподавателя</p>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;padding:28px 20px;background:#edf0fe">
+              <h2 style="margin:0;font:700 26px/1.15 'Ubuntu',sans-serif;letter-spacing:-.02em">Интенсивная подготовка</h2>
+              <div style="display:flex;flex-direction:column;gap:10px;font:300 14px/1.5 'Ubuntu',sans-serif;color:#3c424e">
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Занятия 2 раза в неделю</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Запись и онлайн трансляция каждого занятия</span></div>
+                <div style="display:flex;gap:10px"><span style="color:#3b5bdb;font-weight:700">»</span><span>Домашнее задание после каждого занятия</span></div>
+              </div>
+              <div style="display:flex;gap:28px;padding-top:4px">
+                <div><div style="font:700 24px 'Ubuntu',sans-serif">2 часа</div><div style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">занятие</div></div>
+                <div><div style="font:700 24px 'Ubuntu',sans-serif;color:#2f44b3">800 ₽</div><div style="font:400 12px 'Ubuntu',sans-serif;color:#6b7280">час</div></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;height:44px;border-radius:999px;background:#3b5bdb;color:#fff;font:600 14px 'Ubuntu',sans-serif">Все курсы</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;padding:28px 20px 32px">
+              <h2 style="margin:0;font:700 24px/1.15 'Ubuntu',sans-serif;letter-spacing:-.02em">Приготовься сделать Шаг в будущее</h2>
+              <p style="margin:0;font:300 14px/1.6 'Ubuntu',sans-serif;color:#6b7280">Заполни форму обратной связи и мы ответим на все интересующие вопросы</p>
+              <div style="height:42px;padding:11px 14px;background:#fafbfc;border:1px solid #e7e9ef;border-radius:9px;font:400 14px 'Ubuntu',sans-serif;color:#9aa1ad">Имя родителя</div>
+              <div style="height:42px;padding:11px 14px;background:#fafbfc;border:1px solid #e7e9ef;border-radius:9px;font:400 14px 'Ubuntu',sans-serif;color:#9aa1ad">+7 ___ ___ __ __</div>
+              <div style="display:flex;align-items:center;justify-content:center;height:46px;border-radius:999px;background:#3b5bdb;color:#fff;font:600 15px 'Ubuntu',sans-serif">Записаться на пробное занятие</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showMobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return { showMobile: this.props.showMobile ?? true };
+  }
+}
+</script>
+</body>
+</html>
