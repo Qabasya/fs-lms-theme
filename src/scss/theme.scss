@@ -328,7 +328,7 @@ a {
 		margin-top: .25rem;
 		border: none;
 		border-radius: var( --wp--custom--radius--control );
-		background: var( --wp--preset--color--accent );
+		background: var( --wp--preset--color--accent-2 );
 		color: var( --wp--preset--color--white );
 		font-size: var( --wp--preset--font-size--base );
 		font-weight: 600;
@@ -336,7 +336,7 @@ a {
 		transition: background-color .15s ease;
 
 		&:hover {
-			background: var( --wp--preset--color--accent-600 );
+			background: var( --wp--preset--color--accent-2-600 );
 		}
 	}
 

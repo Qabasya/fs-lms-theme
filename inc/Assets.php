@@ -52,9 +52,20 @@ add_action( 'wp_enqueue_scripts', function (): void {
  * src/js/theme.js → assets/js/theme.min.js.
  */
 add_action( 'wp_enqueue_scripts', function (): void {
+	/**
+	 * Splide core CSS (Фаза 12.0, gulpfile.js — таск `styles:vendor`,
+	 * копия из node_modules без сборки) — подключается раньше темы, чтобы
+	 * .fs-* классы каруселей в theme.min.css могли переопределять его при
+	 * необходимости.
+	 */
+	$splide_css_path = get_template_directory() . '/assets/css/vendor/splide-core.min.css';
+	if ( file_exists( $splide_css_path ) ) {
+		wp_enqueue_style( 'fs-lms-theme-splide', get_template_directory_uri() . '/assets/css/vendor/splide-core.min.css', array(), filemtime( $splide_css_path ) );
+	}
+
 	$css_path = get_template_directory() . '/assets/css/theme.min.css';
 	if ( file_exists( $css_path ) ) {
-		wp_enqueue_style( 'fs-lms-theme', get_template_directory_uri() . '/assets/css/theme.min.css', array(), filemtime( $css_path ) );
+		wp_enqueue_style( 'fs-lms-theme', get_template_directory_uri() . '/assets/css/theme.min.css', array_filter( array( file_exists( $splide_css_path ) ? 'fs-lms-theme-splide' : null ) ), filemtime( $css_path ) );
 	}
 
 	$js_path = get_template_directory() . '/assets/js/theme.min.js';

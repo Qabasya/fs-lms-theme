@@ -24,16 +24,16 @@
 	<div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 		<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->
 		<div class="wp-block-group">
-			<!-- wp:site-tagline {"textColor":"muted","fontSize":"xs"} /-->
-
+			<!-- wp:site-tagline {"textColor":"muted","fontSize":"xxs"} /-->
+            <p class="has-muted-2-color has-text-color has-xxs-font-size">ЕГЭ, ОГЭ, программирование и робототехника в Калининграде</p>
 			<!-- wp:group {"layout":{"type":"flex"},"style":{"spacing":{"blockGap":"var:preset|spacing|xl","margin":{"left":"auto"}}}} -->
 			<div class="wp-block-group" style="margin-left:auto">
-				<!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
-				<p class="has-muted-color has-text-color has-xs-font-size">+7 995 326 44 86</p>
+				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
+				<p class="has-muted-color has-text-color has-xxs-font-size">+7 995 326 44 86</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
-				<p class="has-muted-color has-text-color has-xs-font-size">info@future-step.ru</p>
+				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
+				<p class="has-muted-color has-text-color has-xxs-font-size">info@future-step.ru</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
@@ -45,24 +45,16 @@
 <!-- /wp:group -->
 
 <!-- wp:group {"tagName":"div","backgroundColor":"white","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md"}},"border":{"bottom":{"color":"var:preset|color|border","width":"1px"}}}} -->
-<div class="wp-block-group has-white-background-color has-background" style="margin-top:0;border-bottom-color:var(--wp--preset--color--border);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--md);padding-bottom:var(--wp--preset--spacing--md)">
+<div class="wp-block-group has-white-background-color has-background" style="margin-top:0;border-bottom-color:var(--wp--preset--color--border);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--lg);padding-bottom:var(--wp--preset--spacing--lg)">
 	<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
 	<div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 		<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->
 		<div class="wp-block-group">
 			<!-- wp:group {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|md"}}} -->
 			<div class="wp-block-group">
-				<!-- wp:site-logo {"width":38,"shouldSyncIcon":false,"style":{"border":{"radius":"var:preset|spacing|sm"}}} /-->
-
-				<!-- wp:group {"layout":{"type":"constrained"}} -->
-				<div class="wp-block-group">
-					<!-- wp:site-title {"level":0,"fontSize":"sm","style":{"typography":{"fontWeight":"700","letterSpacing":"0.06em","textTransform":"uppercase"}}} /-->
-
-					<!-- wp:paragraph {"textColor":"muted-2","fontSize":"xxs"} -->
-					<p class="has-muted-2-color has-text-color has-xxs-font-size">Подготовка к ЕГЭ по информатике</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
+				<!-- wp:html -->
+				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="fs-header-logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'images/logo.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="229" height="64" style="display:block;width:229px;height:64px;object-fit:contain;" /></a>
+				<!-- /wp:html -->
 			</div>
 			<!-- /wp:group -->
 
@@ -80,26 +72,11 @@
 
 			<!-- wp:group {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|lg"}}} -->
 			<div class="wp-block-group">
-				<!-- wp:group {"layout":{"type":"flex"},"style":{"spacing":{"blockGap":"var:preset|spacing|sm"}}} -->
-				<div class="wp-block-group">
-					<!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
-					<p class="has-muted-color has-text-color has-xs-font-size"><a href="https://www.youtube.com/@future-step">YouTube</a></p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
-					<p class="has-muted-color has-text-color has-xs-font-size"><a href="https://vk.com/future_step39">VK</a></p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
-					<p class="has-muted-color has-text-color has-xs-font-size"><a href="https://t.me/+wMAEBd_RtqJhMDAy">Telegram</a></p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
 
 				<!-- wp:buttons -->
 				<div class="wp-block-buttons">
-					<!-- wp:button {"backgroundColor":"accent"} -->
-					<div class="wp-block-button"><a class="wp-block-button__link has-accent-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться</a></div>
+					<!-- wp:button {"backgroundColor":"accent-2"} -->
+					<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться</a></div>
 					<!-- /wp:button -->
 				</div>
 				<!-- /wp:buttons -->

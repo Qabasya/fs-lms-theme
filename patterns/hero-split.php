@@ -29,8 +29,8 @@
 
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">
-				<!-- wp:button {"backgroundColor":"accent"} -->
-				<div class="wp-block-button"><a class="wp-block-button__link has-accent-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться на пробное</a></div>
+				<!-- wp:button {"backgroundColor":"accent-2"} -->
+				<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться на пробное</a></div>
 				<!-- /wp:button -->
 
 				<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
@@ -59,12 +59,11 @@
 				</div>
 				<div class="fs-code-card__body">
 					<div class="fs-code-card__lines">1<br>2<br>3<br>4<br>5<br>6</div>
-					<div class="fs-code-card__code"><span class="fs-code-kw">def</span> <span class="fs-code-fn">print_hi</span>():
-  <span class="fs-code-comment"># И это чистая правда</span>
-  <span class="fs-code-fn2">print</span>(<span class="fs-code-str">"Я сдам ЕГЭ на сотку"</span>)
+					<div class="fs-code-card__code"><span class="fs-code-kw">def</span> <span class="fs-code-fn">problem</span>():
+  <span class="fs-code-fn2">print</span>(<span class="fs-code-str">"Хочу сдать ЕГЭ на сотку"</span>)
 
-<span class="fs-code-kw">if</span> __name__ == <span class="fs-code-str">"__Future_Step__"</span>:
-  input = <span class="fs-code-str">"Записаться на курс"</span></div>
+                    <div class="fs-code-card__code"><span class="fs-code-kw">def</span> <span class="fs-code-fn">solution</span>():
+    action = <span class="fs-code-str">"Записаться на курс"</span></div>
 				</div>
 			</div>
 			<!-- /wp:html -->

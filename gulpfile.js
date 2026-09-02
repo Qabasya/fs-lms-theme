@@ -55,6 +55,15 @@ const paths = {
 		watchJs: './src/blocks/**/*.js',
 		watchScss: './src/blocks/**/*.scss',
 	},
+	vendor: {
+		/**
+		 * Splide (Фаза 12.0) — карусель «Наши выпускники»/«Наши выпускники
+		 * поступают». Берём core-сборку (только структура, без готовых
+		 * стрелок/пагинации Splide) — визуал стрелок/масок целиком свой, по
+		 * мокапу v4, см. src/scss/theme.scss.
+		 */
+		splideCss: './node_modules/@splidejs/splide/dist/css/splide-core.min.css',
+	},
 	output: {
 		css: './assets/css/',
 		js: './assets/js/',
@@ -188,6 +197,17 @@ function stylesTheme() {
 }
 
 /**
+ * ВЕНДОРНЫЙ CSS — Splide core (Фаза 12.0). Просто копия из node_modules в
+ * assets/, без sass/postcss — уже минифицирован издателем пакета.
+ */
+function stylesVendor() {
+	return gulp.src( paths.vendor.splideCss )
+		.pipe( guard() )
+		.pipe( rename( 'splide-core.min.css' ) )
+		.pipe( gulp.dest( paths.output.css + 'vendor/' ) );
+}
+
+/**
  * ОБРАБОТКА CSS — стили внутри редактора (editor-styles-wrapper)
  */
 function stylesEditor() {
@@ -312,11 +332,12 @@ function watchFiles() {
 	console.log( 'Gulp is watching and building fs-lms-theme assets...' );
 }
 
-const build = gulp.parallel( stylesTheme, stylesEditor, stylesBlocksFront, stylesBlocksEditor, scriptsTheme, scriptsBlocks );
+const build = gulp.parallel( stylesTheme, stylesEditor, stylesBlocksFront, stylesBlocksEditor, stylesVendor, scriptsTheme, scriptsBlocks );
 
 exports[ 'styles:theme' ] = stylesTheme;
 exports[ 'styles:editor' ] = stylesEditor;
 exports[ 'styles:blocks' ] = gulp.parallel( stylesBlocksFront, stylesBlocksEditor );
+exports[ 'styles:vendor' ] = stylesVendor;
 exports[ 'scripts:theme' ] = scriptsTheme;
 exports[ 'scripts:blocks' ] = scriptsBlocks;
 exports.build = build;

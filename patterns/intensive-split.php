@@ -60,8 +60,8 @@
 
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">
-				<!-- wp:button {"backgroundColor":"accent"} -->
-				<div class="wp-block-button"><a class="wp-block-button__link has-accent-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться</a></div>
+				<!-- wp:button {"backgroundColor":"accent-2"} -->
+				<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться</a></div>
 				<!-- /wp:button -->
 
 				<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->

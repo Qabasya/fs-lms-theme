@@ -41,40 +41,41 @@
 		<!-- wp:column {"width":"480px"} -->
 		<div class="wp-block-column" style="flex-basis:480px">
 			<!-- wp:html -->
-			<form class="fs-apply-form" action="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">
+			<form class="fs-apply-form" id="apply-form" action="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">
 				<div class="fs-apply-form__title">Записаться на пробное занятие</div>
 
 				<div class="fs-form-field">
-					<label for="fs-apply-name">Имя родителя</label>
-					<input type="text" id="fs-apply-name" name="parent_name" placeholder="Анна" autocomplete="name">
+					<label for="fs-apply-name">ФИО родителя</label>
+					<input type="text" id="fs-apply-name" name="parent_name" placeholder="Иванова Анна Геннадьевна" autocomplete="name">
 				</div>
+
+                <div class="fs-form-field">
+                    <label for="fs-apply-name">ФИО ребёнка</label>
+                    <input type="text" id="fs-apply-name" name="student_name" placeholder="Иванов Сергей Дмитриевич" autocomplete="name">
+                </div>
 
 				<div class="fs-form-field">
 					<label for="fs-apply-phone">Телефон</label>
 					<input type="tel" id="fs-apply-phone" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel">
 				</div>
 
-				<div class="fs-form-row">
-					<div class="fs-form-field">
-						<label for="fs-apply-grade">Класс</label>
-						<select id="fs-apply-grade" name="grade">
-							<option>9</option>
-							<option>10</option>
-							<option selected>11</option>
-						</select>
-					</div>
-					<div class="fs-form-field">
-						<label for="fs-apply-track">Направление</label>
-						<select id="fs-apply-track" name="track">
-							<option selected>ЕГЭ</option>
-							<option>ОГЭ</option>
-							<option>Python</option>
-						</select>
-					</div>
-				</div>
+
+                <div class="fs-form-field">
+                    <label for="fs-apply-grade">Класс</label>
+                    <select id="fs-apply-grade" name="grade">
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option selected>11</option>
+                    </select>
+                </div>
+
 
 				<button type="submit" class="fs-apply-form__submit">Отправить заявку</button>
-				<div class="fs-apply-form__note">Перезвоним в течение рабочего дня. Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
+				<div class="fs-apply-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
 			</form>
 			<!-- /wp:html -->
 		</div>

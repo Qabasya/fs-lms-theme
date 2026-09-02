@@ -10,9 +10,11 @@
 			"defaultPalette": false,
 			"palette": [
 				{ "name": "Акцент", "slug": "accent", "color": "#3b5bdb" },
-				{ "name": "Акцент (hover)", "slug": "accent-600", "color": "#364fc7" },
+				{ "name": "Акцент (hover)", "slug": "accent-600", "color": "#2f44b3" },
 				{ "name": "Акцент (текст)", "slug": "accent-700", "color": "#2f44b3" },
-				{ "name": "Акцент (мягкий)", "slug": "accent-soft", "color": "#edf0fe" },
+				{ "name": "Акцент (мягкий)", "slug": "accent-soft", "color": "#edf2ff" },
+				{ "name": "Акцент 2", "slug": "accent-2", "color": "#de5904" },
+				{ "name": "Акцент 2 (hover)", "slug": "accent-2-600", "color": "#bd4c03" },
 				{ "name": "Фон страницы", "slug": "bg", "color": "#f3f4f7" },
 				{ "name": "Поверхность", "slug": "white", "color": "#ffffff" },
 				{ "name": "Поверхность 2", "slug": "surface-2", "color": "#fafbfc" },
@@ -122,7 +124,7 @@
 		"typography": {
 			"fontFamily": "var(--wp--preset--font-family--ui)",
 			"fontSize": "var(--wp--preset--font-size--base)",
-			"lineHeight": "1.5"
+			"lineHeight": "1.2"
 		},
 		"elements": {
 			"link": {
@@ -146,14 +148,14 @@
 			"button": {
 				"color": {
 					"text": "var(--wp--preset--color--white)",
-					"background": "var(--wp--preset--color--accent)"
+					"background": "var(--wp--preset--color--accent-2)"
 				},
 				"border": {
 					"radius": "var(--wp--custom--radius--control)"
 				},
 				":hover": {
 					"color": {
-						"background": "var(--wp--preset--color--accent-600)"
+						"background": "var(--wp--preset--color--accent-2-600)"
 					}
 				}
 			}
