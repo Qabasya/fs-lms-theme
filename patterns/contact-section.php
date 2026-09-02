@@ -5,17 +5,20 @@
  * Categories: fs-lms-sections
  * Keywords: контакты, заявка, форма, contact
  *
- * Источник: блок «форма» в «Главная — мокап.dc.html» (1a). Форма — НЕ с
- * реальной отправкой (это зона плагина, см. tasks.md Фаза 0): настоящие
- * HTML-поля для визуального соответствия макету (Фаза 11 — раньше здесь
- * была просто кнопка без единого поля), но без обработчика — кнопка
- * по-прежнему ссылка на страницу заявки плагина, `fs_lms_theme_url('apply')`
- * (Фаза 7, `inc/PluginRoutes.php`). Реальный бэкенд формы — вне рамок
- * Фазы 11, см. tasks.md.
+ * Источник: блок «форма» в «Главная v4 - сборка.dc.html» (Фаза 12.8,
+ * `id="signup"` — якорь из hero/курсов/блока занятий, решение 5 Фазы 12).
+ * Форма — по-прежнему без реальной отправки (Фаза 14, отдельная задача):
+ * поля для визуального соответствия макету, `<form>` без `action`/`method`
+ * — раньше вела на страницу заявки плагина (`fs_lms_theme_url('apply')`),
+ * теперь эта ссылка не используется с главной вовсе (решение 5).
+ *
+ * Фаза 12.8: набор полей синхронизирован с v4 — «Имя родителя» + Телефон +
+ * Класс (100px) + Направление (`<select>`, в паре с Классом) — поле «ФИО
+ * ребёнка» (было в Фазе 11) убрано, в v4 его нет.
  */
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
+<div id="signup" class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
 	<div class="wp-block-columns">
 		<!-- wp:column -->
@@ -41,41 +44,46 @@
 		<!-- wp:column {"width":"480px"} -->
 		<div class="wp-block-column" style="flex-basis:480px">
 			<!-- wp:html -->
-			<form class="fs-apply-form" id="apply-form" action="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">
+			<form class="fs-apply-form" id="apply-form">
 				<div class="fs-apply-form__title">Записаться на пробное занятие</div>
 
 				<div class="fs-form-field">
-					<label for="fs-apply-name">ФИО родителя</label>
-					<input type="text" id="fs-apply-name" name="parent_name" placeholder="Иванова Анна Геннадьевна" autocomplete="name">
+					<label for="fs-apply-name">Имя родителя</label>
+					<input type="text" id="fs-apply-name" name="parent_name" placeholder="Анна" autocomplete="name">
 				</div>
-
-                <div class="fs-form-field">
-                    <label for="fs-apply-name">ФИО ребёнка</label>
-                    <input type="text" id="fs-apply-name" name="student_name" placeholder="Иванов Сергей Дмитриевич" autocomplete="name">
-                </div>
 
 				<div class="fs-form-field">
 					<label for="fs-apply-phone">Телефон</label>
 					<input type="tel" id="fs-apply-phone" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel">
 				</div>
 
+				<div class="fs-form-row" style="grid-template-columns:100px 1fr">
+					<div class="fs-form-field">
+						<label for="fs-apply-grade">Класс</label>
+						<select id="fs-apply-grade" name="grade">
+							<option>5</option>
+							<option>6</option>
+							<option>7</option>
+							<option>8</option>
+							<option>9</option>
+							<option>10</option>
+							<option selected>11</option>
+						</select>
+					</div>
 
-                <div class="fs-form-field">
-                    <label for="fs-apply-grade">Класс</label>
-                    <select id="fs-apply-grade" name="grade">
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
-                        <option selected>11</option>
-                    </select>
-                </div>
-
+					<div class="fs-form-field">
+						<label for="fs-apply-subject">Направление</label>
+						<select id="fs-apply-subject" name="subject">
+							<option>ЕГЭ по информатике</option>
+							<option>ОГЭ по информатике</option>
+							<option>Разработка на Python</option>
+							<option>Робототехника</option>
+						</select>
+					</div>
+				</div>
 
 				<button type="submit" class="fs-apply-form__submit">Отправить заявку</button>
-				<div class="fs-apply-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
+				<div class="fs-apply-form__note">Перезвоним в течение рабочего дня. Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
 			</form>
 			<!-- /wp:html -->
 		</div>

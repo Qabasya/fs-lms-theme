@@ -107,6 +107,34 @@ a {
 }
 
 /**
+ * Сетка из 4 карточек направлений (Фаза 12.6, `patterns/courses-grid.php`)
+ * — тот же приём `grid` + `stretch`, что и у `.fs-features-grid`, но 4
+ * колонки вместо 2 (десктоп); складывается по тем же брейкпоинтам сеток
+ * карточек ниже (960px → 1 колонка через общее правило `wp-block-columns`,
+ * здесь отдельно — `wp:group{type:grid}` не колонки, свой брейкпоинт).
+ */
+.fs-courses-grid {
+	grid-template-columns: repeat( 4, 1fr );
+	align-items: stretch;
+
+	> * {
+		height: 100%;
+	}
+}
+
+@media ( max-width: 991px ) {
+	.fs-courses-grid {
+		grid-template-columns: repeat( 2, 1fr );
+	}
+}
+
+@media ( max-width: 767px ) {
+	.fs-courses-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/**
  * 3 плитки статистики (`patterns/stats-row.php`) — фиксированная высота
  * 160px на колонку, а не просто `stretch`: описания разной длины иначе
  * тянут за собой всю плитку до высоты самого длинного текста; `fs-stat-tile`
@@ -139,6 +167,152 @@ a {
 	&__label {
 		font-size: var( --wp--preset--font-size--xs );
 		color: var( --wp--preset--color--muted );
+	}
+}
+
+/**
+ * Первый экран v4 (Фаза 12, `patterns/hero.php`) — левая панель со списком
+ * направлений, правая — мини-форма записи + плашка из 3 фактов.
+ */
+.fs-hero-dirs {
+	height: 100%;
+	padding: 2.75rem 2.5rem;
+	background: var( --wp--preset--color--accent-2-soft );
+	border-left: 3px solid var( --wp--preset--color--accent-2 );
+	border-radius: var( --wp--custom--radius--card );
+	display: flex;
+	flex-direction: column;
+
+	&__title {
+		margin: 0 0 1.125rem;
+		font-size: var( --wp--preset--font-size--xxl );
+		line-height: 1.15;
+		font-weight: 700;
+	}
+
+	&__item {
+		display: flex;
+		align-items: baseline;
+		gap: .75rem;
+		padding: .75rem 0;
+		border-bottom: 1px solid #ece3d6;
+		color: var( --wp--preset--color--text );
+
+		&--last {
+			border-bottom: none;
+		}
+
+		&:hover {
+			color: var( --wp--preset--color--accent-2 );
+		}
+	}
+
+	&__arrow {
+		color: var( --wp--preset--color--accent-2 );
+		font-size: 1.125rem;
+	}
+
+	&__name {
+		font-size: 1.3125rem;
+	}
+
+	&__grade {
+		font-size: var( --wp--preset--font-size--xs );
+		color: var( --wp--preset--color--accent-2 );
+	}
+}
+
+.fs-hero-form {
+	padding: 2rem;
+	background: var( --wp--preset--color--surface-2 );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+	margin-bottom: 1.25rem;
+
+	&__title {
+		margin-bottom: 1.5rem;
+		font-size: var( --wp--preset--font-size--xl );
+		font-weight: 700;
+		text-align: center;
+	}
+
+	&__row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: .75rem;
+		margin-bottom: 1rem;
+
+		input {
+			height: 2.375rem;
+			padding: 0 var( --wp--preset--spacing--md );
+			background: var( --wp--preset--color--white );
+			border: 1px solid var( --wp--preset--color--border );
+			border-radius: var( --wp--custom--radius--control );
+			font-family: inherit;
+			font-size: var( --wp--preset--font-size--base );
+			color: var( --wp--preset--color--text );
+
+			&::placeholder {
+				color: var( --wp--preset--color--muted-2 );
+			}
+
+			&:focus {
+				outline: none;
+				border-color: var( --wp--preset--color--accent );
+			}
+		}
+	}
+
+	&__submit {
+		display: inline-flex;
+		align-items: center;
+		height: 2.375rem;
+		padding: 0 1.375rem;
+		background: var( --wp--preset--color--accent );
+		color: var( --wp--preset--color--white );
+		border-radius: var( --wp--custom--radius--control );
+		font-size: var( --wp--preset--font-size--base );
+		font-weight: 500;
+
+		&:hover {
+			background: var( --wp--preset--color--accent-600 );
+			color: var( --wp--preset--color--white );
+		}
+	}
+
+	&__note {
+		margin-top: .875rem;
+		font-size: var( --wp--preset--font-size--xxs );
+		font-weight: 300;
+		color: var( --wp--preset--color--muted-2 );
+	}
+}
+
+.fs-hero-stats {
+	display: grid;
+	grid-template-columns: repeat( 3, 1fr );
+	padding: 1.375rem 0;
+	background: var( --wp--preset--color--surface-2 );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+
+	&__item {
+		text-align: center;
+		border-right: 1px solid var( --wp--preset--color--border );
+
+		&:last-child {
+			border-right: none;
+		}
+	}
+
+	&__value {
+		font-size: var( --wp--preset--font-size--xl );
+		font-weight: 700;
+	}
+
+	&__label {
+		font-size: var( --wp--preset--font-size--base );
+		color: var( --wp--preset--color--text-secondary );
 	}
 }
 
@@ -324,7 +498,7 @@ a {
 	}
 
 	&__submit {
-		height: 2.875rem;
+		height: 2.625rem;
 		margin-top: .25rem;
 		border: none;
 		border-radius: var( --wp--custom--radius--control );
@@ -438,6 +612,58 @@ a {
 }
 
 /**
+ * Карусели Splide (Фаза 12.0/12.3/12.4) — `mask-image` вместо белой
+ * градиентной накладки по краям (`patterns/alumni-carousel.php`,
+ * `patterns/alumni-strip.php`), стрелки — перекрашенные стандартные стрелки
+ * Splide (`.splide__arrow`, core CSS подключён в `stylesVendor()`
+ * `gulpfile.js`), собственных SVG-иконок стрелок не заводим.
+ */
+.fs-carousel-mask .splide__track {
+	/* autoprefixer (gulpfile.js) добавляет -webkit-mask-image из browserslist, вручную не дублируем */
+	mask-image: linear-gradient( 90deg, transparent, #000 14%, #000 86%, transparent );
+}
+
+.fs-carousel-mask .splide__arrow {
+	display: grid;
+	place-items: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--pill );
+	box-shadow: var( --wp--custom--shadow--surface );
+	opacity: 1;
+
+	svg {
+		width: 1rem;
+		height: 1rem;
+		fill: var( --wp--preset--color--text-secondary );
+	}
+
+	&:hover {
+		background: var( --wp--preset--color--surface-2 );
+	}
+
+	&:disabled {
+		opacity: .35;
+	}
+}
+
+.fs-alumni-logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 3.25rem;
+	padding: 0 var( --wp--preset--spacing--md );
+	background: var( --wp--preset--color--border-light );
+	border-radius: var( --wp--custom--radius--md );
+	font-size: var( --wp--preset--font-size--sm );
+	font-weight: 500;
+	color: var( --wp--preset--color--muted-2 );
+	text-align: center;
+}
+
+/**
  * Заглушка под изображение (курс/блог/выпускник без реальной картинки).
  * Диагональная сетка на второй поверхности — тот же приём, что в мокапе
  * (`Главная — мокап.dc.html`), только вынесенный в переиспользуемый класс
@@ -479,10 +705,10 @@ a {
 	}
 }
 
-@media ( max-width: 599px ) {
+@media ( max-width: 767px ) {
 	:root {
-		--wp--style--root--padding-left: 1.25rem;
-		--wp--style--root--padding-right: 1.25rem;
+		--wp--style--root--padding-left: 1rem;
+		--wp--style--root--padding-right: 1rem;
 
 		/**
 		 * Крупные заголовки (`has-xxxl-font-size` — h1 hero, 52px;
@@ -493,6 +719,80 @@ a {
 		 */
 		--wp--preset--font-size--xxxl: 2rem;
 		--wp--preset--font-size--xxl: 1.5rem;
+	}
+}
+
+/**
+ * Тёмный футер v4 (Фаза 12.9, `patterns/footer-columns.php`) — цвета
+ * захардкожены (не токены дизайн-системы: одноразовая тёмная палитра
+ * только для этой секции, тот же приём, что у `.fs-code-card`).
+ */
+.fs-footer-grid {
+	display: grid;
+	grid-template-columns: 300px 1fr 300px;
+	gap: 2.75rem;
+	padding-bottom: 2rem;
+
+	&__col {
+		display: flex;
+		flex-direction: column;
+		gap: .875rem;
+	}
+
+	&__title {
+		font-size: var( --wp--preset--font-size--lead );
+		font-weight: 700;
+		color: #fff;
+	}
+
+	&__lead {
+		margin: 0;
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 300;
+		line-height: 1.7;
+		color: #adb5bd;
+	}
+
+	&__contacts {
+		display: flex;
+		flex-direction: column;
+		gap: .375rem;
+		font-size: var( --wp--preset--font-size--sm );
+
+		a,
+		div {
+			color: #dee2e6;
+		}
+	}
+
+	&__map {
+		align-self: center;
+		justify-self: center;
+		width: 100%;
+		max-width: 412px;
+	}
+}
+
+.fs-footer-logo img {
+	filter: brightness( 0 ) invert( 1 );
+}
+
+.fs-footer-bottom {
+	padding: 1.125rem 0 1.5rem;
+	border-top: 1px solid #3a3f47;
+	font-size: var( --wp--preset--font-size--xs );
+	font-weight: 300;
+	color: #868e96;
+	text-align: center;
+}
+
+@media ( max-width: 991px ) {
+	.fs-footer-grid {
+		grid-template-columns: 1fr;
+
+		&__map {
+			max-width: none;
+		}
 	}
 }
 

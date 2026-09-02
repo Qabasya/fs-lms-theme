@@ -15,6 +15,7 @@
 				{ "name": "Акцент (мягкий)", "slug": "accent-soft", "color": "#edf2ff" },
 				{ "name": "Акцент 2", "slug": "accent-2", "color": "#de5904" },
 				{ "name": "Акцент 2 (hover)", "slug": "accent-2-600", "color": "#bd4c03" },
+				{ "name": "Акцент 2 (мягкий)", "slug": "accent-2-soft", "color": "#faf5ee" },
 				{ "name": "Фон страницы", "slug": "bg", "color": "#f3f4f7" },
 				{ "name": "Поверхность", "slug": "white", "color": "#ffffff" },
 				{ "name": "Поверхность 2", "slug": "surface-2", "color": "#fafbfc" },
@@ -112,8 +113,8 @@
 			}
 		},
 		"layout": {
-			"contentSize": "72.5rem",
-			"wideSize": "72.5rem"
+			"contentSize": "75rem",
+			"wideSize": "75rem"
 		}
 	},
 	"styles": {
@@ -164,9 +165,9 @@
 			"blockGap": "1.25rem",
 			"padding": {
 				"top": "0",
-				"right": "3.75rem",
+				"right": "2.5rem",
 				"bottom": "0",
-				"left": "3.75rem"
+				"left": "2.5rem"
 			}
 		}
 	},

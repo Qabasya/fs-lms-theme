@@ -12,6 +12,7 @@
 
 export const BADGE_COLORS = [
 	{ name: 'Акцент', slug: 'accent' },
+	{ name: 'Акцент 2', slug: 'accent-2' },
 	{ name: 'Успех', slug: 'ok' },
 	{ name: 'Ожидание', slug: 'wait' },
 	{ name: 'Информация', slug: 'info' },

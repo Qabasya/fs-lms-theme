@@ -6,16 +6,19 @@
  * Block Types: core/template-part/header
  * Keywords: шапка, хедер, header, меню, навигация
  *
- * По мокапу («Главная — мокап.dc.html»): тонкая инфо-полоса + основная
- * навигация (лого, меню, CTA). Ссылка «Записаться» ведёт на страницу заявки
- * плагина через `fs_lms_theme_url('apply')` (см. inc/PluginRoutes.php,
- * Фаза 7); «Курсы» — на страницу магазина WooCommerce через
- * `fs_lms_theme_shop_url()` (Фаза 10.3, inc/WooCommerce.php). «Учебник»/
- * «Тренажёр» остаются заглушкой `#` — под них ещё нет страниц темы.
+ * По мокапу v4 («Главная v4 - сборка.dc.html», Фаза 12): тонкая инфо-полоса +
+ * основная навигация (лого, меню, CTA). Ссылка «Записаться» — якорь
+ * `#hero-form` на форму первого экрана (Фаза 12, решение 5) — раньше вела на
+ * страницу заявки плагина через `fs_lms_theme_url('apply')`, эта функция
+ * остаётся для других страниц сайта. «Курсы» — на страницу магазина
+ * WooCommerce через `fs_lms_theme_shop_url()` (Фаза 10.3,
+ * inc/WooCommerce.php). «Учебник»/«Тренажёр» остаются заглушкой `#` — под
+ * них ещё нет страниц темы.
  *
- * Соцсети (YouTube/VK/Telegram) и иконка корзины — перенесены из шапки
- * текущего сайта (`refs/ЕГЭ по информатике в Калининграде.html`, WoodMart),
- * их не было в исходном мокапе Фазы 3.
+ * Соцсети (YouTube/VK/Telegram) в макете v4 нет (Фаза 12, решение 7) — в
+ * шапке их и не было с самого начала (Фаза 3), убирать нечего. Иконка
+ * корзины — из текущего сайта (WoodMart), в макете v4 её тоже нет, но она
+ * не относится к соцсетям и оставлена как есть (см. tasks.md 12.1).
  */
 ?>
 <!-- wp:group {"tagName":"div","backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|xs","bottom":"var:preset|spacing|xs"}},"border":{"bottom":{"color":"var:preset|color|border-light","width":"1px"}}}} -->
@@ -76,7 +79,7 @@
 				<!-- wp:buttons -->
 				<div class="wp-block-buttons">
 					<!-- wp:button {"backgroundColor":"accent-2"} -->
-					<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться</a></div>
+					<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="#hero-form">Записаться</a></div>
 					<!-- /wp:button -->
 				</div>
 				<!-- /wp:buttons -->

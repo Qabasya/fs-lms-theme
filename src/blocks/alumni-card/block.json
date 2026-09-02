@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "fs-lms/alumni-card",
+	"title": "Карточка выпускника",
+	"category": "fs-lms-cards",
+	"icon": "awards",
+	"description": "Фото, баллы, имя и короткий отзыв — карточка одного выпускника (карусель «Наши выпускники»).",
+	"keywords": [ "выпускник", "отзыв", "alumni", "карточка" ],
+	"textdomain": "fs-lms-theme",
+	"attributes": {
+		"imageId": { "type": "number", "default": 0 },
+		"imageUrl": { "type": "string", "default": "" },
+		"imageAlt": { "type": "string", "default": "" },
+		"scoreText": { "type": "string", "source": "html", "selector": ".fs-alumni-card__score", "default": "98 баллов" },
+		"authorName": { "type": "string", "source": "html", "selector": ".fs-alumni-card__name", "default": "Имя Фамилия" },
+		"quote": { "type": "string", "source": "html", "selector": ".fs-alumni-card__quote", "default": "Короткий отзыв выпускника." }
+	},
+	"supports": { "html": false },
+	"editorScript": "fs-lms-alumni-card-editor-script",
+	"style": "fs-lms-alumni-card-style"
+}
