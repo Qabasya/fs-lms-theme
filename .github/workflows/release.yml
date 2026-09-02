@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build release ZIP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+
+      # Гейт качества: любой красный шаг рушит релиз.
+      - run: npm run lint:js
+      - run: npm run lint:css
+
+      # Гейт версии: тег без 'v' обязан совпасть с Version: в шапке style.css
+      # (WordPress берёт версию темы именно оттуда, не из package.json).
+      - name: Verify version matches tag
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          STYLE_VERSION=$(grep "^Version:" style.css | sed 's/^Version:[[:space:]]*//' | head -1)
+
+          echo "Tag: $TAG_VERSION | style.css: $STYLE_VERSION"
+
+          if [ "$TAG_VERSION" != "$STYLE_VERSION" ]; then
+            echo "::error::Version mismatch — tag=$TAG_VERSION style.css=$STYLE_VERSION"
+            exit 1
+          fi
+
+      - name: Build assets (production, no sourcemaps)
+        run: npm run build:prod
+
+      - name: Assemble theme directory
+        run: |
+          mkdir -p build/fs-lms-theme
+          rsync -a --exclude-from=.distignore ./ build/fs-lms-theme/
+
+      - name: Zip release package
+        run: |
+          cd build
+          zip -r "../fs-lms-theme-${GITHUB_REF_NAME#v}.zip" fs-lms-theme
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: fs-lms-theme-*.zip

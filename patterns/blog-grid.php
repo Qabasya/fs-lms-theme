@@ -9,38 +9,49 @@
  * В отличие от остальных секций — это реальные посты блога (`core/query` +
  * `core/post-template`), не статичные карточки: у мокапа тут даты/бейджи
  * категорий/эксцерпт конкретных постов, а не переиспользуемая карточка.
+ *
+ * Фаза 11: секция не рендерится, если опубликованных постов меньше 3 —
+ * пустой/недобитый ряд карточек выглядит хуже, чем отсутствие секции.
+ * Паттерн исполняется как обычный PHP (`ob_start()+include`, см. Фазу 3),
+ * поэтому условие — просто `if` вокруг разметки. Обложка — `aspectRatio`
+ * вместо фиксированной `height` (16/9 по макету); `core/post-featured-image`
+ * — динамический блок (свой `render_callback`), поэтому нестандартный
+ * атрибут не вызывает несовпадение при валидации блока в редакторе (в
+ * отличие от статичных блоков типа `core/group`, см. tasks.md Фаза 11).
  */
+
+if ( wp_count_posts()->publish < 3 ) {
+	return;
+}
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"var:preset|spacing|xxxl","left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-right:var(--wp--preset--spacing--xxl);padding-bottom:var(--wp--preset--spacing--xxxl);padding-left:var(--wp--preset--spacing--xxl)">
-	<!-- wp:heading {"fontSize":"xxl"} -->
-	<h2 class="wp-block-heading has-xxl-font-size">Как проходят наши занятия</h2>
-	<!-- /wp:heading -->
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
+<div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
+	<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"bottom"}} -->
+	<div class="wp-block-group">
+		<!-- wp:heading {"fontSize":"xxl"} -->
+		<h2 class="wp-block-heading has-xxl-font-size">Как проходят наши занятия</h2>
+		<!-- /wp:heading -->
+
+		<!-- wp:paragraph {"fontSize":"sm","style":{"typography":{"fontWeight":"600"}}} -->
+		<p class="has-sm-font-size" style="font-weight:600"><a href="#">Все записи →</a></p>
+		<!-- /wp:paragraph -->
+	</div>
+	<!-- /wp:group -->
 
 	<!-- wp:query {"queryId":0,"query":{"perPage":3,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false}} -->
 	<div class="wp-block-query">
 		<!-- wp:post-template {"className":"is-style-card"} -->
-			<!-- wp:post-featured-image {"isLink":true,"height":"180px","style":{"border":{"radius":"0"}}} /-->
+			<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"16/9","style":{"border":{"radius":"0"}}} /-->
 
 			<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|lg","bottom":"var:preset|spacing|lg","left":"var:preset|spacing|lg","right":"var:preset|spacing|lg"}}}} -->
 			<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--lg);padding-right:var(--wp--preset--spacing--lg);padding-bottom:var(--wp--preset--spacing--lg);padding-left:var(--wp--preset--spacing--lg)">
-				<!-- wp:post-title {"level":3,"isLink":true,"fontSize":"md"} /-->
+				<!-- wp:post-date {"textColor":"muted-2","fontSize":"xxs"} /-->
 
-				<!-- wp:group {"layout":{"type":"flex"},"style":{"spacing":{"blockGap":"var:preset|spacing|xs"}}} -->
-				<div class="wp-block-group">
-					<!-- wp:post-date {"textColor":"muted-2","fontSize":"xxs"} /-->
+				<!-- wp:post-title {"level":3,"isLink":true,"fontSize":"lg"} /-->
 
-					<!-- wp:paragraph {"textColor":"muted-2","fontSize":"xxs"} -->
-					<p class="has-muted-2-color has-text-color has-xxs-font-size">·</p>
-					<!-- /wp:paragraph -->
+				<!-- wp:post-excerpt {"excerptLength":22,"textColor":"muted","fontSize":"sm"} /-->
 
-					<!-- wp:post-author-name {"textColor":"muted-2","fontSize":"xxs"} /-->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:post-excerpt {"excerptLength":22,"textColor":"text-secondary","fontSize":"sm"} /-->
-
-				<!-- wp:read-more {"content":"Продолжить чтение →","textColor":"accent","fontSize":"xs"} /-->
+				<!-- wp:read-more {"content":"Читать →","textColor":"text","fontSize":"sm"} /-->
 			</div>
 			<!-- /wp:group -->
 		<!-- /wp:post-template -->

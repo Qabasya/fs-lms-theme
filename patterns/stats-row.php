@@ -8,8 +8,8 @@
  * Источник: блок «цифры» в «Главная — мокап.dc.html» (1a).
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"var:preset|spacing|xxxl","left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-right:var(--wp--preset--spacing--xxl);padding-bottom:var(--wp--preset--spacing--xxxl);padding-left:var(--wp--preset--spacing--xxl)">
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
+<div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
 	<!-- wp:columns -->
 	<div class="wp-block-columns">
 		<!-- wp:column -->

@@ -6,16 +6,16 @@
 	box-shadow: var( --wp--custom--shadow--surface );
 
 	&__value {
-		font-size: var( --wp--preset--font-size--xxxl );
+		font-size: 2.5rem; // 40px — вне шкалы токенов (см. Фаза 11), xxxl теперь 52px под H1
 		font-weight: 700;
 		letter-spacing: -.02em;
-		line-height: 1.1;
+		line-height: 1;
 	}
 
 	&__label {
 		margin: var( --wp--preset--spacing--xs ) 0 var( --wp--preset--spacing--sm );
-		font-size: var( --wp--preset--font-size--base );
-		font-weight: 600;
+		font-size: var( --wp--preset--font-size--md );
+		font-weight: 700;
 	}
 
 	&__description {

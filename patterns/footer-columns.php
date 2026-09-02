@@ -45,7 +45,7 @@
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:html -->
-			<iframe src="https://yandex.ru/map-widget/v1/?indoorLevel=1&amp;ll=20.503606%2C54.718401&amp;oid=187566652967&amp;ol=biz&amp;z=16.53" width="100%" height="240" loading="lazy" style="border:0;border-radius:var(--wp--custom--radius--md)" title="<?php echo esc_attr__( 'Карта — где мы находимся', 'fs-lms-theme' ); ?>"></iframe>
+			<iframe class="fs-aspect-16-9" src="https://yandex.ru/map-widget/v1/?indoorLevel=1&amp;ll=20.503606%2C54.718401&amp;oid=187566652967&amp;ol=biz&amp;z=16.53" width="100%" loading="lazy" style="border:0;border-radius:var(--wp--custom--radius--md)" title="<?php echo esc_attr__( 'Карта — где мы находимся', 'fs-lms-theme' ); ?>"></iframe>
 			<!-- /wp:html -->
 		</div>
 		<!-- /wp:column -->

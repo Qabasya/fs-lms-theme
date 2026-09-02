@@ -8,7 +8,7 @@
 	box-shadow: var( --wp--custom--shadow--surface );
 
 	&__media {
-		height: 10.625rem;
+		aspect-ratio: 16 / 10;
 		border-bottom: 1px solid var( --wp--preset--color--border-light );
 
 		img {
@@ -51,9 +51,29 @@
 		font-weight: 300;
 	}
 
-	&__button {
-		align-self: flex-start;
+	&__footer {
+		display: flex;
+		align-items: center;
+		gap: var( --wp--preset--spacing--md );
 		margin-top: auto;
+		padding-top: var( --wp--preset--spacing--md );
+	}
+
+	&__price {
+		font-size: 1.25rem;
+		font-weight: 700;
+	}
+
+	&__price-unit {
+		margin-left: .125rem;
+		font-size: var( --wp--preset--font-size--xs );
+		font-weight: 400;
+		color: var( --wp--preset--color--muted );
+	}
+
+	&__button {
+		flex: 0 0 auto;
+		margin-left: auto;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;

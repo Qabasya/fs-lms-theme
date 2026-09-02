@@ -6,6 +6,8 @@
 // переиспользуют паттерны и кастомные блоки Фазы 4/5) и декоративные
 // заглушки под изображения, пока в паттернах нет реальных картинок.
 
+@import 'woocommerce';
+
 *,
 *::before,
 *::after {
@@ -79,6 +81,298 @@ img {
 }
 
 /**
+ * Сетка карточек-фичей (Фаза 11, `patterns/features-grid.php`) — раньше
+ * два ряда `wp:columns` растягивали пары внутри строки, но не между
+ * строками (карточки были разной высоты); настоящий `grid` + `stretch`
+ * выравнивает все четыре сразу.
+ */
+.fs-features-grid {
+	align-items: stretch;
+
+	> * {
+		height: 100%;
+	}
+}
+
+/**
+ * Полоса из 3 фактов под кнопками hero (Фаза 11, `patterns/hero-split.php`).
+ */
+.fs-hero-facts {
+	display: flex;
+	gap: 1.75rem;
+	padding-top: .875rem;
+	margin-top: .5rem;
+	border-top: 1px solid var( --wp--preset--color--border );
+
+	&__number {
+		font-size: 1.375rem;
+		font-weight: 700;
+	}
+
+	&__label {
+		font-size: var( --wp--preset--font-size--xs );
+		color: var( --wp--preset--color--muted );
+	}
+}
+
+/**
+ * Код-карточка hero (Фаза 11) — статичная иллюстрация `main.py`, цвета
+ * подсветки синтаксиса захардкожены как в мокапе (не токены темы — это
+ * фиксированная code-editor-палитра, не часть дизайн-системы сайта).
+ */
+.fs-code-card {
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+	box-shadow: var( --wp--custom--shadow--hover );
+	overflow: hidden;
+
+	&__bar {
+		display: flex;
+		align-items: center;
+		gap: .5rem;
+		padding: .6875rem .875rem;
+		background: var( --wp--preset--color--surface-2 );
+		border-bottom: 1px solid var( --wp--preset--color--border-light );
+
+		span {
+			width: .5625rem;
+			height: .5625rem;
+			border-radius: var( --wp--custom--radius--pill );
+			background: var( --wp--preset--color--border );
+		}
+	}
+
+	&__filename {
+		margin-left: .375rem;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: .75rem;
+		font-weight: 500;
+		color: var( --wp--preset--color--muted );
+	}
+
+	&__body {
+		display: grid;
+		grid-template-columns: 2rem 1fr;
+		padding: 1.25rem 1rem;
+		font-family: 'JetBrains Mono', monospace;
+		font-size: .875rem;
+		line-height: 1.9;
+	}
+
+	&__lines {
+		color: var( --wp--preset--color--muted-2 );
+		text-align: right;
+		padding-right: .875rem;
+	}
+
+	&__code {
+		color: var( --wp--preset--color--text );
+		white-space: pre;
+	}
+}
+
+.fs-code-kw { color: #7c3aed; }
+.fs-code-fn { color: #1d4ed8; }
+.fs-code-fn2 { color: #2563eb; }
+.fs-code-comment { color: var( --wp--preset--color--muted ); }
+.fs-code-str { color: #15803d; }
+
+.fs-aspect-4-3 {
+	aspect-ratio: 4 / 3;
+}
+
+.fs-aspect-16-9 {
+	display: block;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+}
+
+/**
+ * Чек-лист с галочкой в кружке (Фаза 11, `patterns/intensive-split.php`)
+ * — замена маркера `»` на иконку.
+ */
+.fs-checklist {
+	display: flex;
+	flex-direction: column;
+	gap: var( --wp--preset--spacing--sm );
+	margin: var( --wp--preset--spacing--lg ) 0;
+
+	&__item {
+		display: flex;
+		align-items: flex-start;
+		gap: var( --wp--preset--spacing--sm );
+		font-size: var( --wp--preset--font-size--base );
+		color: var( --wp--preset--color--text-secondary );
+	}
+
+	&__icon {
+		flex: 0 0 auto;
+		margin-top: .0625rem;
+	}
+}
+
+/**
+ * Плашка «2 часа / 800 ₽» одной карточкой с разделителем (Фаза 11) —
+ * заменяет две отдельные цветные плашки.
+ */
+.fs-price-plaque {
+	display: flex;
+	align-items: center;
+	gap: var( --wp--preset--spacing--md );
+	padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+	margin-bottom: var( --wp--preset--spacing--lg );
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+
+	&__value {
+		font-size: var( --wp--preset--font-size--xl );
+		font-weight: 700;
+
+		&--accent {
+			color: var( --wp--preset--color--accent );
+		}
+	}
+
+	&__label {
+		font-size: var( --wp--preset--font-size--xs );
+		color: var( --wp--preset--color--muted );
+	}
+
+	&__divider {
+		width: 1px;
+		height: 2.25rem;
+		background: var( --wp--preset--color--border );
+	}
+}
+
+/**
+ * Список контактов с иконками (Фаза 11, `patterns/contact-section.php`)
+ * — замена текста с маркером `»`.
+ */
+.fs-contact-list {
+	display: flex;
+	flex-direction: column;
+	gap: var( --wp--preset--spacing--md );
+	margin-top: var( --wp--preset--spacing--md );
+
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: var( --wp--preset--spacing--sm );
+		font-size: var( --wp--preset--font-size--base );
+		color: var( --wp--preset--color--text );
+
+		svg {
+			flex: 0 0 auto;
+		}
+
+		a {
+			color: inherit;
+		}
+	}
+}
+
+/**
+ * Форма заявки (Фаза 11) — реальные поля для визуального соответствия
+ * макету, без обработчика (`action` ведёт на страницу заявки плагина,
+ * см. docblock паттерна) — GET-навигация, как и раньше у кнопки-ссылки,
+ * просто с полями вместо голой кнопки.
+ */
+.fs-apply-form {
+	display: flex;
+	flex-direction: column;
+	gap: var( --wp--preset--spacing--md );
+	padding: var( --wp--preset--spacing--xxl );
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+	box-shadow: var( --wp--custom--shadow--hover );
+
+	&__title {
+		font-size: var( --wp--preset--font-size--xl );
+		font-weight: 700;
+	}
+
+	&__submit {
+		height: 2.875rem;
+		margin-top: .25rem;
+		border: none;
+		border-radius: var( --wp--custom--radius--control );
+		background: var( --wp--preset--color--accent );
+		color: var( --wp--preset--color--white );
+		font-size: var( --wp--preset--font-size--base );
+		font-weight: 600;
+		cursor: pointer;
+		transition: background-color .15s ease;
+
+		&:hover {
+			background: var( --wp--preset--color--accent-600 );
+		}
+	}
+
+	&__note {
+		font-size: var( --wp--preset--font-size--xxs );
+		font-weight: 300;
+		color: var( --wp--preset--color--muted-2 );
+		text-align: center;
+	}
+}
+
+.fs-form-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var( --wp--preset--spacing--md );
+}
+
+.fs-form-field {
+	display: flex;
+	flex-direction: column;
+	gap: var( --wp--preset--spacing--xs );
+
+	label {
+		font-size: var( --wp--preset--font-size--xs );
+		font-weight: 500;
+		color: var( --wp--preset--color--text-secondary );
+	}
+
+	input,
+	select {
+		height: 2.625rem;
+		padding: 0 var( --wp--preset--spacing--md );
+		border: 1px solid var( --wp--preset--color--border );
+		border-radius: var( --wp--custom--radius--control );
+		background: var( --wp--preset--color--surface-2 );
+		font-family: inherit;
+		font-size: var( --wp--preset--font-size--base );
+		color: var( --wp--preset--color--text );
+
+		&:focus {
+			outline: none;
+			border-color: var( --wp--preset--color--accent );
+			box-shadow: 0 0 0 3px rgba( 59, 91, 219, .12 );
+		}
+
+		&::placeholder {
+			color: var( --wp--preset--color--muted-2 );
+		}
+	}
+}
+
+/**
+ * `:focus-visible` на кнопках/полях формы (Фаза 11) — доступность,
+ * отсутствовало в теме до этого прохода.
+ */
+.wp-block-button__link:focus-visible,
+.fs-apply-form__submit:focus-visible,
+.fs-form-field input:focus-visible,
+.fs-form-field select:focus-visible {
+	outline: 2px solid var( --wp--preset--color--accent );
+	outline-offset: 2px;
+}
+
+/**
  * Иконка корзины в шапке (`patterns/header-nav.php`, Фаза 10) — появляется
  * только если активен WooCommerce (`wc_get_cart_url()`).
  */
@@ -90,6 +384,18 @@ img {
 	&:hover {
 		color: var( --wp--preset--color--accent );
 	}
+}
+
+/**
+ * Базовая высота кнопок `wp:button` (Фаза 11) — 44px, как у главных CTA в
+ * макете (хедер/карточки используют свою явную высоту 38px через
+ * собственные компонентные классы — `.fs-course-card__button` и т.п.).
+ */
+.wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	height: 2.75rem;
+	white-space: nowrap;
 }
 
 /**
@@ -129,6 +435,26 @@ img {
 @media ( max-width: 960px ) {
 	.wp-block-columns:not( .is-not-stacked-on-mobile ) > .wp-block-column {
 		flex-basis: 100% !important;
+	}
+}
+
+/**
+ * Адаптив бокового отступа контейнера (Фаза 11) — `theme.json`
+ * (`styles.spacing.padding`) задаёт базовое значение 60px (desktop,
+ * ≥1200px), здесь — 32px (900–1199px) и 20px (<600px) поверх той же
+ * CSS-переменной, которую использует `useRootPaddingAwareAlignments`.
+ */
+@media ( max-width: 1199px ) {
+	:root {
+		--wp--style--root--padding-left: 2rem;
+		--wp--style--root--padding-right: 2rem;
+	}
+}
+
+@media ( max-width: 599px ) {
+	:root {
+		--wp--style--root--padding-left: 1.25rem;
+		--wp--style--root--padding-right: 1.25rem;
 	}
 }
 
@@ -193,4 +519,3 @@ img {
 	}
 }
 
-@import 'woocommerce';

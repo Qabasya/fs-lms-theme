@@ -5,7 +5,7 @@
 	"title": "Карточка курса",
 	"category": "fs-lms-cards",
 	"icon": "welcome-learn-more",
-	"description": "Картинка, бейдж уровня, название, формат и кнопка записи — карточка одного курса/направления.",
+	"description": "Картинка, бейдж уровня, название, формат, цена и кнопка записи — карточка одного курса/направления.",
 	"keywords": [ "курс", "направление", "карточка", "course" ],
 	"textdomain": "fs-lms-theme",
 	"attributes": {
@@ -16,6 +16,8 @@
 		"badgeColor": { "type": "string", "default": "accent" },
 		"title": { "type": "string", "source": "html", "selector": "h3", "default": "Название курса" },
 		"caption": { "type": "string", "source": "html", "selector": ".fs-course-card__caption", "default": "Абонемент на месяц, два занятия в неделю" },
+		"price": { "type": "string", "source": "html", "selector": ".fs-course-card__price-amount", "default": "" },
+		"priceUnit": { "type": "string", "source": "html", "selector": ".fs-course-card__price-unit", "default": "/ мес" },
 		"buttonText": { "type": "string", "default": "Записаться" },
 		"buttonUrl": { "type": "string", "default": "#" }
 	},

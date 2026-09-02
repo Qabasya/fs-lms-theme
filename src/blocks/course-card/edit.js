@@ -6,7 +6,7 @@ import { ImageControl } from '../shared/ImageControl';
 import { BADGE_COLORS, softSlug, textSlug } from '../shared/colors';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { imageId, imageUrl, imageAlt, badgeText, badgeColor, title, caption, buttonText, buttonUrl } = attributes;
+	const { imageId, imageUrl, imageAlt, badgeText, badgeColor, title, caption, price, priceUnit, buttonText, buttonUrl } = attributes;
 	const blockProps = useBlockProps( { className: 'fs-course-card' } );
 	const mediaClassName = 'fs-course-card__media' + ( imageUrl ? '' : ' fs-placeholder-tile' );
 
@@ -19,6 +19,19 @@ export default function Edit( { attributes, setAttributes } ) {
 						value={ badgeColor }
 						options={ BADGE_COLORS.map( ( c ) => ( { label: c.name, value: c.slug } ) ) }
 						onChange={ ( value ) => setAttributes( { badgeColor: value } ) }
+					/>
+				</PanelBody>
+				<PanelBody title={ __( 'Цена', 'fs-lms-theme' ) }>
+					<TextControl
+						label={ __( 'Цена', 'fs-lms-theme' ) }
+						value={ price }
+						onChange={ ( value ) => setAttributes( { price: value } ) }
+						help={ __( 'Пусто — строка цены не выводится.', 'fs-lms-theme' ) }
+					/>
+					<TextControl
+						label={ __( 'Единица', 'fs-lms-theme' ) }
+						value={ priceUnit }
+						onChange={ ( value ) => setAttributes( { priceUnit: value } ) }
 					/>
 				</PanelBody>
 				<PanelBody title={ __( 'Кнопка', 'fs-lms-theme' ) }>
@@ -68,7 +81,27 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) => setAttributes( { caption: value } ) }
 						placeholder={ __( 'Формат/расписание', 'fs-lms-theme' ) }
 					/>
-					<span className="fs-course-card__button wp-element-button">{ buttonText }</span>
+					<div className="fs-course-card__footer">
+						{ price && (
+							<div className="fs-course-card__price">
+								<RichText
+									tagName="span"
+									className="fs-course-card__price-amount"
+									value={ price }
+									onChange={ ( value ) => setAttributes( { price: value } ) }
+									allowedFormats={ [] }
+								/>
+								<RichText
+									tagName="span"
+									className="fs-course-card__price-unit"
+									value={ priceUnit }
+									onChange={ ( value ) => setAttributes( { priceUnit: value } ) }
+									allowedFormats={ [] }
+								/>
+							</div>
+						) }
+						<span className="fs-course-card__button wp-element-button">{ buttonText }</span>
+					</div>
 				</div>
 			</div>
 		</Fragment>

@@ -1,149 +1,77 @@
 <?php
 /**
- * Title: Интенсивная подготовка — сетка миниатюр + список + цена
+ * Title: Интенсивная подготовка — фото + чек-лист + цена
  * Slug: fs-lms-theme/intensive-split
  * Categories: fs-lms-sections
  * Keywords: интенсив, подготовка, цена
  *
  * Источник: блок «интенсивная подготовка» в «Главная — мокап.dc.html» (1a).
- * Левая сетка миниатюр — декоративные плейсхолдеры (`fs-placeholder-tile`),
- * без реальных фото на первом проходе. Кнопка «Записаться» ведёт на
- * страницу заявки плагина через `fs_lms_theme_url('apply')` (Фаза 7);
- * «Все курсы» — заглушка `#` (см. courses-grid.php).
+ * Кнопка «Записаться» ведёт на страницу заявки плагина через
+ * `fs_lms_theme_url('apply')` (Фаза 7); «Все курсы» — заглушка `#` (см.
+ * courses-grid.php).
+ *
+ * Фаза 11 (`refs/Главная v2 - мокап.dc.html`): мозаика из 5 плейсхолдеров
+ * заменена на одно фото `aspect-ratio:4/3` (мозаика не по макету — Фаза 5
+ * добавила от себя); маркеры `»` в чек-листе — на иконку галочки в кружке
+ * `accent-soft`; две отдельные цветные плашки цены/длительности — на одну
+ * карточку с вертикальным разделителем.
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"var:preset|spacing|xxxl","left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-right:var(--wp--preset--spacing--xxl);padding-bottom:var(--wp--preset--spacing--xxxl);padding-left:var(--wp--preset--spacing--xxl)">
-	<!-- wp:group {"className":"is-style-card","style":{"border":{"radius":"var:preset|spacing|md"}},"layout":{"type":"default"}} -->
-	<div class="wp-block-group is-style-card" style="border-radius:var(--wp--preset--spacing--md)">
-		<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"0"}}}} -->
-		<div class="wp-block-columns">
-			<!-- wp:column {"backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xl","left":"var:preset|spacing|xl","right":"var:preset|spacing|xl"}},"border":{"right":{"color":"var:preset|color|border-light","width":"1px"}}}} -->
-			<div class="wp-block-column has-surface-2-background-color has-background" style="border-right-color:var(--wp--preset--color--border-light);border-right-width:1px;padding-top:var(--wp--preset--spacing--xl);padding-right:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xl);padding-left:var(--wp--preset--spacing--xl)">
-				<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|sm","top":"var:preset|spacing|sm"}}}} -->
-				<div class="wp-block-columns">
-					<!-- wp:column -->
-					<div class="wp-block-column">
-						<!-- wp:group {"className":"fs-placeholder-tile","style":{"dimensions":{"minHeight":"112px"},"border":{"radius":"var:preset|spacing|sm"}}} -->
-						<div class="wp-block-group fs-placeholder-tile" style="border-radius:var(--wp--preset--spacing--sm);min-height:112px"></div>
-						<!-- /wp:group -->
-					</div>
-					<!-- /wp:column -->
-
-					<!-- wp:column -->
-					<div class="wp-block-column">
-						<!-- wp:group {"className":"fs-placeholder-tile","style":{"dimensions":{"minHeight":"234px"},"border":{"radius":"var:preset|spacing|sm"}}} -->
-						<div class="wp-block-group fs-placeholder-tile" style="border-radius:var(--wp--preset--spacing--sm);min-height:234px"></div>
-						<!-- /wp:group -->
-					</div>
-					<!-- /wp:column -->
-
-					<!-- wp:column -->
-					<div class="wp-block-column">
-						<!-- wp:group {"className":"fs-placeholder-tile","style":{"dimensions":{"minHeight":"112px"},"border":{"radius":"var:preset|spacing|sm"}}} -->
-						<div class="wp-block-group fs-placeholder-tile" style="border-radius:var(--wp--preset--spacing--sm);min-height:112px"></div>
-						<!-- /wp:group -->
-					</div>
-					<!-- /wp:column -->
-				</div>
-				<!-- /wp:columns -->
-
-				<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|sm","top":"var:preset|spacing|sm"}}}} -->
-				<div class="wp-block-columns">
-					<!-- wp:column -->
-					<div class="wp-block-column">
-						<!-- wp:group {"className":"fs-placeholder-tile","style":{"dimensions":{"minHeight":"112px"},"border":{"radius":"var:preset|spacing|sm"}}} -->
-						<div class="wp-block-group fs-placeholder-tile" style="border-radius:var(--wp--preset--spacing--sm);min-height:112px"></div>
-						<!-- /wp:group -->
-					</div>
-					<!-- /wp:column -->
-
-					<!-- wp:column {"width":"66.66%"} -->
-					<div class="wp-block-column" style="flex-basis:66.66%">
-						<!-- wp:group {"className":"fs-placeholder-tile","style":{"dimensions":{"minHeight":"112px"},"border":{"radius":"var:preset|spacing|sm"}}} -->
-						<div class="wp-block-group fs-placeholder-tile" style="border-radius:var(--wp--preset--spacing--sm);min-height:112px"></div>
-						<!-- /wp:group -->
-					</div>
-					<!-- /wp:column -->
-				</div>
-				<!-- /wp:columns -->
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
+<div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
+	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
+	<div class="wp-block-columns">
+		<!-- wp:column -->
+		<div class="wp-block-column">
+			<!-- wp:group {"className":"fs-placeholder-tile fs-aspect-4-3","style":{"border":{"radius":"var:preset|spacing|md","color":"var:preset|color|border","width":"1px"}},"layout":{"type":"flex","justifyContent":"center","verticalAlignment":"center"}} -->
+			<div class="wp-block-group fs-placeholder-tile fs-aspect-4-3" style="border-color:var(--wp--preset--color--border);border-width:1px;border-radius:var(--wp--preset--spacing--md)">
+				<!-- wp:paragraph {"textColor":"muted-2","fontSize":"xs"} -->
+				<p class="has-muted-2-color has-text-color has-xs-font-size">фото занятия</p>
+				<!-- /wp:paragraph -->
 			</div>
-			<!-- /wp:column -->
-
-			<!-- wp:column {"style":{"spacing":{"padding":{"top":"var:preset|spacing|xxl","bottom":"var:preset|spacing|xxl","left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
-			<div class="wp-block-column" style="padding-top:var(--wp--preset--spacing--xxl);padding-right:var(--wp--preset--spacing--xxl);padding-bottom:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
-				<!-- wp:heading {"fontSize":"xxl"} -->
-				<h2 class="wp-block-heading has-xxl-font-size">Интенсивная подготовка</h2>
-				<!-- /wp:heading -->
-
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"sm"} -->
-				<p class="has-text-secondary-color has-text-color has-sm-font-size">» Занятия 2 раза в неделю</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"sm"} -->
-				<p class="has-text-secondary-color has-text-color has-sm-font-size">» Запись и онлайн трансляция каждого занятия</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"sm"} -->
-				<p class="has-text-secondary-color has-text-color has-sm-font-size">» Домашнее задание после каждого занятия</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"sm"} -->
-				<p class="has-text-secondary-color has-text-color has-sm-font-size">» Индивидуальные консультации с репетитором</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"sm"} -->
-				<p class="has-text-secondary-color has-text-color has-sm-font-size">» Дополнительные материалы, теория и шпаргалки</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"sm"} -->
-				<p class="has-text-secondary-color has-text-color has-sm-font-size">» Дополнительные видеоматериалы по каждой теме</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|md"}}}} -->
-				<div class="wp-block-columns">
-					<!-- wp:column {"backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md","left":"var:preset|spacing|lg","right":"var:preset|spacing|lg"}},"border":{"radius":"var:preset|spacing|sm","color":"var:preset|color|border-light","width":"1px"}}} -->
-					<div class="wp-block-column has-surface-2-background-color has-background" style="border-color:var(--wp--preset--color--border-light);border-width:1px;border-radius:var(--wp--preset--spacing--sm);padding-top:var(--wp--preset--spacing--md);padding-right:var(--wp--preset--spacing--lg);padding-bottom:var(--wp--preset--spacing--md);padding-left:var(--wp--preset--spacing--lg)">
-						<!-- wp:paragraph {"fontSize":"xl","style":{"typography":{"fontWeight":"700"}}} -->
-						<p class="has-xl-font-size" style="font-weight:700">2 часа</p>
-						<!-- /wp:paragraph -->
-
-						<!-- wp:paragraph {"textColor":"muted","fontSize":"sm"} -->
-						<p class="has-muted-color has-text-color has-sm-font-size">занятие</p>
-						<!-- /wp:paragraph -->
-					</div>
-					<!-- /wp:column -->
-
-					<!-- wp:column {"backgroundColor":"accent-soft","style":{"spacing":{"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md","left":"var:preset|spacing|lg","right":"var:preset|spacing|lg"}},"border":{"radius":"var:preset|spacing|sm"}}} -->
-					<div class="wp-block-column has-accent-soft-background-color has-background" style="border-radius:var(--wp--preset--spacing--sm);padding-top:var(--wp--preset--spacing--md);padding-right:var(--wp--preset--spacing--lg);padding-bottom:var(--wp--preset--spacing--md);padding-left:var(--wp--preset--spacing--lg)">
-						<!-- wp:paragraph {"textColor":"accent-700","fontSize":"xl","style":{"typography":{"fontWeight":"700"}}} -->
-						<p class="has-accent-700-color has-text-color has-xl-font-size" style="font-weight:700">800 ₽</p>
-						<!-- /wp:paragraph -->
-
-						<!-- wp:paragraph {"textColor":"accent-700","fontSize":"sm"} -->
-						<p class="has-accent-700-color has-text-color has-sm-font-size">час</p>
-						<!-- /wp:paragraph -->
-					</div>
-					<!-- /wp:column -->
-				</div>
-				<!-- /wp:columns -->
-
-				<!-- wp:buttons -->
-				<div class="wp-block-buttons">
-					<!-- wp:button {"backgroundColor":"accent"} -->
-					<div class="wp-block-button"><a class="wp-block-button__link has-accent-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться</a></div>
-					<!-- /wp:button -->
-
-					<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
-					<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="#">Все курсы</a></div>
-					<!-- /wp:button -->
-				</div>
-				<!-- /wp:buttons -->
-			</div>
-			<!-- /wp:column -->
+			<!-- /wp:group -->
 		</div>
-		<!-- /wp:columns -->
+		<!-- /wp:column -->
+
+		<!-- wp:column {"width":"480px"} -->
+		<div class="wp-block-column" style="flex-basis:480px">
+			<!-- wp:heading {"fontSize":"xxl"} -->
+			<h2 class="wp-block-heading has-xxl-font-size">Интенсивная подготовка</h2>
+			<!-- /wp:heading -->
+
+			<!-- wp:html -->
+			<div class="fs-checklist">
+				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Занятия 2 раза в неделю</span></div>
+				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Запись и онлайн-трансляция каждого занятия</span></div>
+				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Домашнее задание после каждого занятия</span></div>
+				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Индивидуальные консультации с репетитором</span></div>
+				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Дополнительные материалы, теория и шпаргалки</span></div>
+				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Дополнительные видеоматериалы по каждой теме</span></div>
+			</div>
+			<!-- /wp:html -->
+
+			<!-- wp:html -->
+			<div class="fs-price-plaque">
+				<div><div class="fs-price-plaque__value">2 часа</div><div class="fs-price-plaque__label">одно занятие</div></div>
+				<div class="fs-price-plaque__divider"></div>
+				<div><div class="fs-price-plaque__value fs-price-plaque__value--accent">800 ₽</div><div class="fs-price-plaque__label">за час</div></div>
+			</div>
+			<!-- /wp:html -->
+
+			<!-- wp:buttons -->
+			<div class="wp-block-buttons">
+				<!-- wp:button {"backgroundColor":"accent"} -->
+				<div class="wp-block-button"><a class="wp-block-button__link has-accent-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться</a></div>
+				<!-- /wp:button -->
+
+				<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
+				<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="#courses">Все курсы</a></div>
+				<!-- /wp:button -->
+			</div>
+			<!-- /wp:buttons -->
+		</div>
+		<!-- /wp:column -->
 	</div>
-	<!-- /wp:group -->
+	<!-- /wp:columns -->
 </div>
 <!-- /wp:group -->
