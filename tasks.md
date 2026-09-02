@@ -58,7 +58,7 @@ Gutenberg-блоки и библиотека паттернов, из котор
 ## Фаза 1 — Инструменты сборки (gulp + webpack, по образцу плагина) ✅
 
 - [x] `package.json` темы: `gulp`, `gulp-sass`+`sass`, `gulp-postcss`+`autoprefixer`+`cssnano`, `gulp-sourcemaps`, `gulp-rename`, `gulp-plumber`+`gulp-notify`, `webpack`+`webpack-stream`+`babel-loader`+`vinyl-named` — как у плагина.
-- [x] Добавить то, чего у плагина нет, но нужно для кастомных блоков: `@babel/preset-react`, `@wordpress/blocks`, `@wordpress/block-editor`, `@wordpress/components`, `@wordpress/element`, `@wordpress/i18n` как devDependencies (типы/автокомплит; в рантайме это глобалы `wp.*`, не бандлятся) + `glob` для динамического поиска блоков.
+- [x] Добавить то, чего у плагина нет, но нужно для кастомных блоков: `@babel/preset-react` как devDependency + `glob` для динамического поиска блоков. Пробовали держать `@wordpress/blocks`/`block-editor`/`components`/`element`/`i18n` в devDependencies ради автокомплита в IDE (в рантайме это глобалы `wp.*`, не бандлятся) — убраны позже: их собственное дерево зависимостей конфликтовало по версии `stylelint` и ломало `npm ci` в CI под Node 20 (см. коммит «Убрать неиспользуемые @wordpress/* devDependencies»). Для сборки они не нужны — webpack `externals` не резолвит пакет из `node_modules`, только подставляет глобал.
 - [x] `gulpfile.js`: адаптированы пути под тему —
   - `src/scss/theme.scss` → `assets/css/theme.min.css` (фронт)
   - `src/scss/editor.scss` → `assets/css/editor.min.css` (стили внутри редактора)
