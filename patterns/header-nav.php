@@ -26,8 +26,8 @@
 		<div class="wp-block-group">
 			<!-- wp:site-tagline {"textColor":"muted","fontSize":"xs"} /-->
 
-			<!-- wp:group {"layout":{"type":"flex"},"style":{"spacing":{"blockGap":"var:preset|spacing|xl"}}} -->
-			<div class="wp-block-group">
+			<!-- wp:group {"layout":{"type":"flex"},"style":{"spacing":{"blockGap":"var:preset|spacing|xl","margin":{"left":"auto"}}}} -->
+			<div class="wp-block-group" style="margin-left:auto">
 				<!-- wp:paragraph {"textColor":"muted","fontSize":"xs"} -->
 				<p class="has-muted-color has-text-color has-xs-font-size">+7 995 326 44 86</p>
 				<!-- /wp:paragraph -->
@@ -44,8 +44,8 @@
 </div>
 <!-- /wp:group -->
 
-<!-- wp:group {"tagName":"div","backgroundColor":"white","style":{"spacing":{"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md"}},"border":{"bottom":{"color":"var:preset|color|border","width":"1px"}}}} -->
-<div class="wp-block-group has-white-background-color has-background" style="border-bottom-color:var(--wp--preset--color--border);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--md);padding-bottom:var(--wp--preset--spacing--md)">
+<!-- wp:group {"tagName":"div","backgroundColor":"white","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|md","bottom":"var:preset|spacing|md"}},"border":{"bottom":{"color":"var:preset|color|border","width":"1px"}}}} -->
+<div class="wp-block-group has-white-background-color has-background" style="margin-top:0;border-bottom-color:var(--wp--preset--color--border);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--md);padding-bottom:var(--wp--preset--spacing--md)">
 	<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
 	<div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 		<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->

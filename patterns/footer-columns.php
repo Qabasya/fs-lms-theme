@@ -17,8 +17,8 @@
  * когда появятся, ссылки просто заработают.
  */
 ?>
-<!-- wp:group {"backgroundColor":"white","style":{"spacing":{"padding":{"top":"var:preset|spacing|xxxl","bottom":"var:preset|spacing|xl"}},"border":{"top":{"color":"var:preset|color|border","width":"1px"}}}} -->
-<div class="wp-block-group has-white-background-color has-background" style="border-top-color:var(--wp--preset--color--border);border-top-width:1px;padding-top:var(--wp--preset--spacing--xxxl);padding-bottom:var(--wp--preset--spacing--xl)">
+<!-- wp:group {"backgroundColor":"white","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xxxl","bottom":"var:preset|spacing|xl"}},"border":{"top":{"color":"var:preset|color|border","width":"1px"}}}} -->
+<div class="wp-block-group has-white-background-color has-background" style="margin-top:0;border-top-color:var(--wp--preset--color--border);border-top-width:1px;padding-top:var(--wp--preset--spacing--xxxl);padding-bottom:var(--wp--preset--spacing--xl)">
 	<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
 	<div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 	<!-- wp:columns -->

@@ -10,8 +10,8 @@
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
 <div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
-	<!-- wp:columns -->
-	<div class="wp-block-columns">
+	<!-- wp:columns {"className":"fs-stats-row"} -->
+	<div class="wp-block-columns fs-stats-row">
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:fs-lms/stat-tile {"value":"800 ₽","label":"за час","description":"Дешевле, чем у индивидуального репетитора","accentColor":"accent"} -->

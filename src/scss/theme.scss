@@ -20,6 +20,17 @@ img {
 }
 
 /**
+ * Ссылки — без подчёркивания, цвет акцента (перебивает дефолтный
+ * `theme.json` `elements.link`, у которого нет `textDecoration`). Телефон и
+ * почта в `.fs-contact-list` — исключение: там ссылка выглядит как обычный
+ * текст в строке с иконкой, а не как гиперссылка (см. `&__item a` ниже).
+ */
+a {
+	color: var( --wp--preset--color--accent );
+	text-decoration: none;
+}
+
+/**
  * Текст только для скринридеров — WordPress core сам объявляет этот класс
  * только в определённых контекстах (виджеты/комменты), в блочной теме с
  * нуля его нет по умолчанию. Используется, например, в `fs-lms/testimonial-card`
@@ -88,10 +99,26 @@ img {
  */
 .fs-features-grid {
 	align-items: stretch;
+	grid-auto-rows: 1fr;
 
 	> * {
 		height: 100%;
 	}
+}
+
+/**
+ * 3 плитки статистики (`patterns/stats-row.php`) — фиксированная высота
+ * 160px на колонку, а не просто `stretch`: описания разной длины иначе
+ * тянут за собой всю плитку до высоты самого длинного текста; `fs-stat-tile`
+ * заполняет колонку целиком, чтобы карточка (а не только невидимая колонка)
+ * имела эту высоту.
+ */
+.fs-stats-row > .wp-block-column {
+	height: 160px;
+}
+
+.fs-stats-row .fs-stat-tile {
+	height: 100%;
 }
 
 /**
@@ -270,6 +297,7 @@ img {
 
 		a {
 			color: inherit;
+			text-decoration: underline;
 		}
 	}
 }
@@ -455,6 +483,16 @@ img {
 	:root {
 		--wp--style--root--padding-left: 1.25rem;
 		--wp--style--root--padding-right: 1.25rem;
+
+		/**
+		 * Крупные заголовки (`has-xxxl-font-size` — h1 hero, 52px;
+		 * `has-xxl-font-size` — h2 секций, 34px) не влезают по ширине на
+		 * узких экранах — та же переменная, что использует утилитный класс
+		 * WP (`var(--wp--preset--font-size--xxxl)`), просто переопределена
+		 * ниже брейкпоинта, без отдельного класса на каждый заголовок.
+		 */
+		--wp--preset--font-size--xxxl: 2rem;
+		--wp--preset--font-size--xxl: 1.5rem;
 	}
 }
 

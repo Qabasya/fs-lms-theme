@@ -19,10 +19,6 @@
 	<div class="wp-block-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:paragraph {"backgroundColor":"accent-soft","textColor":"accent-700","fontSize":"xs","style":{"spacing":{"padding":{"top":"var:preset|spacing|xs","bottom":"var:preset|spacing|xs","left":"var:preset|spacing|md","right":"var:preset|spacing|md"}}}} -->
-			<p class="has-accent-700-color has-accent-soft-background-color has-text-color has-background has-xs-font-size" style="padding-top:var(--wp--preset--spacing--xs);padding-right:var(--wp--preset--spacing--md);padding-bottom:var(--wp--preset--spacing--xs);padding-left:var(--wp--preset--spacing--md)">КАЛИНИНГРАД · ГРУППЫ ДО 8 ЧЕЛОВЕК</p>
-			<!-- /wp:paragraph -->
-
 			<!-- wp:heading {"level":1,"fontSize":"xxxl"} -->
 			<h1 class="wp-block-heading has-xxxl-font-size">Подготовка ЕГЭ по информатике</h1>
 			<!-- /wp:heading -->
