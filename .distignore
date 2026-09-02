@@ -1,4 +1,14 @@
-/src/
+# ВНИМАНИЕ: не исключать /src/blocks/*/block.json целиком — inc/Blocks.php
+# читает эти файлы в рантайме (register_block_type() резолвит name/attributes
+# оттуда, не из assets/). Билд компилирует только *.js/*.scss в assets/,
+# сам block.json никуда не копируется — без него на живом сайте блоки вообще
+# не регистрируются (ни один register_block_type() не вызовется).
+/src/scss/
+/src/js/
+/src/blocks/shared/
+/src/blocks/*/*.js
+/src/blocks/*/*.scss
+/src/blocks/README.md
 /refs/
 /design-mockup/
 /.github/
