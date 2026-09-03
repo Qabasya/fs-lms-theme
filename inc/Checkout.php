@@ -107,16 +107,37 @@ remove_action( 'woocommerce_cart_collaterals', 'woocommerce_cross_sell_display' 
 /**
  * Оформление заказа (Фаза 16.4, по `Оформление заказа - мокап.dc.html`) —
  * степпер (шаг 2), тот же `fs_lms_theme_checkout_steps()`, что на
- * «Корзине» (шаг 1). Сетка «форма + сводка заказа» — без обёртки, чистой
- * CSS-сеткой прямо на `form.checkout` (`_woocommerce.scss`,
- * `.woocommerce-checkout form.checkout` — явный `grid-column`/`grid-row`
- * на `#customer_details`/`#order_review_heading`/`#order_review`), в
- * отличие от корзины обёртку в PHP заводить не пришлось — у `form.checkout`
- * и так один родитель на все нужные элементы.
+ * «Корзине» (шаг 1).
  */
 add_action( 'woocommerce_before_checkout_form', function (): void {
 	fs_lms_theme_checkout_steps( 2 );
 }, 5 );
+
+/**
+ * BugFix (2026-09-03, живой прогон): сетка «форма + сводка заказа» —
+ * `#customer_details` (данные покупателя, может быть очень высоким —
+ * страна/адрес/индекс/город и т.д.) и `#order_review_heading` +
+ * `#order_review` — три РАЗНЫХ прямых потомка `form.checkout`. Попытка
+ * развести их по CSS Grid без обёртки (`#customer_details{grid-row:1/-1}`,
+ * heading/review по отдельным явным строкам) сломалась вживую: браузер
+ * распределяет «излишек» высоты растянутого на все строки
+ * `#customer_details` между обеими строками грида, отчего первая строка
+ * (где живёт только короткий heading) раздувалась почти на всю высоту
+ * формы — «Ваш заказ» отрывался от самой сводки на ~1100px. Оборачиваем
+ * heading+review в один div (`.fs-checkout-order-review`) — теперь это
+ * ОДИН grid-элемент второй колонки, его собственная высота — просто
+ * высота содержимого, `align-items:start` на гриде держит его у верха,
+ * независимо от того, насколько выше `#customer_details` в первой
+ * колонке (та же техника, что `.fs-cart-layout` в Фазе 16.3, только там
+ * обёртка была не нужна — сводка корзины была ровно одним элементом).
+ */
+add_action( 'woocommerce_checkout_before_order_review_heading', function (): void {
+	echo '<div class="fs-checkout-order-review">';
+} );
+
+add_action( 'woocommerce_checkout_after_order_review', function (): void {
+	echo '</div>';
+} );
 
 /**
  * Страница «Заказ получен» (thank-you, `order-received.php`) — третий шаг

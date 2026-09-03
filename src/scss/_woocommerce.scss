@@ -4,6 +4,22 @@
 // тулбара сортировки/счётчика (были в Фазе 10.4, убраны по решению
 // пользователя вместе с хуками в `inc/WooCommerce.php`).
 
+/**
+ * BugFix (2026-09-03, живой прогон): `woocommerce-blocktheme.css` (сам
+ * плагин, не тема) содержит компат-правило под FSE-темы без собственной
+ * стилизации: `.woocommerce-cart main .woocommerce,.woocommerce-checkout
+ * main .woocommerce{max-width:1000px}` — из-за этого `.fs-cart-layout`/
+ * `.woocommerce-checkout form.checkout` (наши сетки на всю ширину
+ * `<main>`, 1200px) реально получали только 1000px, отчего колонка с
+ * именем товара в таблице корзины сжималась почти до нуля и текст
+ * переносился на 4-5 строк. Специфичность правила WC (3 класса + элемент)
+ * выше плоского `.woocommerce{}`, поэтому нейтрализуем тем же селектором.
+ */
+.woocommerce-cart main .woocommerce,
+.woocommerce-checkout main .woocommerce {
+	max-width: none;
+}
+
 .fs-shop-intro {
 	max-width: 35rem;
 	margin: var( --wp--preset--spacing--sm ) 0 0;
@@ -27,7 +43,37 @@
 	margin: var( --wp--preset--spacing--xl ) 0 0;
 	padding: 0;
 
+	/**
+	 * BugFix (2026-09-03, живой прогон): WooCommerce вешает на `ul.products`
+	 * clearfix `::before`/`::after{content:" ";display:table}`
+	 * (`woocommerce.css`) — не проблема для его собственной float-раскладки,
+	 * но в CSS Grid любой генерируемый псевдоэлемент с непустым `content`
+	 * становится настоящим grid-элементом (display блокируется до `block`
+	 * независимо от заданного `table`), съедая первую ячейку сетки: первая
+	 * карточка визуально уезжала во вторую колонку, а 4-я — переносилась
+	 * на новую строку. Убираем генерацию обоих псевдоэлементов — при
+	 * `display:grid` clearfix не нужен вообще.
+	 */
+	&::before,
+	&::after {
+		content: none;
+	}
+
 	li.product {
+		/**
+		 * BugFix (2026-09-03, живой прогон): WooCommerce сам задаёт
+		 * `ul.products li.product{float:left;width:22.05%;margin:0 3.8%
+		 * 2.992em 0}` (`woocommerce-layout.css`) — специфичность нашего
+		 * селектора выше (`.woocommerce ul.products li.product`), но мы не
+		 * трогали именно эти свойства, поэтому старые float/width/margin
+		 * оставались в силе поверх `display:grid` контейнера: карточка
+		 * занимала часть grid-ячейки по ширине, а не всю её. `float`
+		 * grid-элементами и так игнорируется браузером, но `width`/`margin`
+		 * — нет, обнуляем явно.
+		 */
+		float: none;
+		width: auto;
+		margin: 0;
 		display: flex;
 		flex-direction: column;
 		background: var( --wp--preset--color--white );

@@ -158,19 +158,29 @@ add_action( 'woocommerce_after_shop_loop_item_title', function (): void {
 }, 10 );
 
 /**
- * BugFix.14 (2026-09-03): фолбэк-картинки товаров по категории направления
- * (`img/shop-*.png`) — реальные фото товаров задаются как обычно через
- * featured image в админке; этот фильтр подменяет только штатный
- * WooCommerce-плейсхолдер (`wc_placeholder_img_src`, срабатывает лишь у
- * товара без загруженного изображения) на фото направления по слагу
- * категории. Слаги категорий — из `refs/Абонементы - ЕГЭ по информатике
- * Калининград.html` (tasks.md, Фаза 10.3): `kege`/`koge`/`python-10`/`robo`.
+ * BugFix.14 (2026-09-03, живой прогон + фикс): фолбэк-картинки товаров по
+ * категории направления (`img/shop-*.png`) — реальные фото товаров
+ * задаются как обычно через featured image в админке. Слаги категорий —
+ * из `refs/Абонементы - ЕГЭ по информатике Калининград.html` (tasks.md,
+ * Фаза 10.3): `kege`/`koge`/`python-10`/`robo`.
+ *
+ * Изначально хук стоял на `woocommerce_placeholder_img_src` — не
+ * срабатывал: подтверждено живьём (Docker-стенд, WC 10.2.1) —
+ * `wc_placeholder_img()` вызывает `wc_placeholder_img_src()` только в
+ * ветке «нет настроенного `woocommerce_placeholder_image`»; на этом
+ * стенде опция уже указывает на медиа-вложение
+ * (`woocommerce-placeholder.webp`), и функция идёт через
+ * `wp_get_attachment_image()`, вообще не вызывая `wc_placeholder_img_src()`.
+ * `woocommerce_placeholder_img` (фильтрует готовый `<img>` HTML,
+ * `wc-product-functions.php:446`) вызывается в обеих ветках — переехали
+ * на него, чтобы не зависеть от того, настроена ли опция
+ * `woocommerce_placeholder_image` на конкретном сайте.
  */
-add_filter( 'woocommerce_placeholder_img_src', function ( string $src ): string {
+add_filter( 'woocommerce_placeholder_img', function ( string $html, string $size, array $dimensions ) {
 	global $product;
 
 	if ( ! $product instanceof WC_Product ) {
-		return $src;
+		return $html;
 	}
 
 	$image_by_category_slug = array(
@@ -182,17 +192,25 @@ add_filter( 'woocommerce_placeholder_img_src', function ( string $src ): string 
 
 	$terms = get_the_terms( $product->get_id(), 'product_cat' );
 	if ( empty( $terms ) || is_wp_error( $terms ) ) {
-		return $src;
+		return $html;
 	}
 
 	foreach ( $terms as $term ) {
-		if ( isset( $image_by_category_slug[ $term->slug ] ) ) {
-			return get_theme_file_uri( 'img/' . $image_by_category_slug[ $term->slug ] );
+		if ( ! isset( $image_by_category_slug[ $term->slug ] ) ) {
+			continue;
 		}
+
+		return sprintf(
+			'<img src="%1$s" width="%2$d" height="%3$d" alt="%4$s" class="woocommerce-placeholder wp-post-image" />',
+			esc_url( get_theme_file_uri( 'img/' . $image_by_category_slug[ $term->slug ] ) ),
+			(int) $dimensions['width'],
+			(int) $dimensions['height'],
+			esc_attr( $product->get_name() )
+		);
 	}
 
-	return $src;
-} );
+	return $html;
+}, 10, 3 );
 
 /**
  * URL страницы магазина (Фаза 10, использовалась в `patterns/header-nav.php`
