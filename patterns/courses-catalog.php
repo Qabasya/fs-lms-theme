@@ -30,10 +30,15 @@
  * карточки). Раз карточек всего 4 и всё на статичной разметке — не
  * заводили под это CPT/ACF.
  *
- * Кнопка «Программа» — `fs_lms_theme_subject_url( $key, 'overview' )`
- * (корневая страница предмета, новый case `'overview'` в
- * `inc/PluginRoutes.php`, Фаза 16.5); «Записаться» — якорь `#signup` на
- * форму `courses-contact.php` этой же страницы.
+ * Кнопка — `fs_lms_theme_subject_url( $key, 'overview' )` (корневая
+ * страница предмета, case `'overview'` в `inc/PluginRoutes.php`, Фаза
+ * 16.5).
+ *
+ * BugFix.8 (2026-09-03): было две кнопки («Программа» ghost + «Записаться»
+ * solid на `#signup`) — оставлена одна, «Подробнее» (`--solid`), ведёт на
+ * страницу направления. Вся карточка кликабельна тем же приёмом
+ * stretched-link, что и `fs-lms/course-card` (`theme.scss`,
+ * `.fs-course-catalog-card__button--solid::after`).
  */
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
@@ -61,7 +66,7 @@
 	<div class="fs-course-catalog">
 
 		<div class="fs-course-catalog-card" data-grade="11">
-			<div class="fs-course-catalog-card__media fs-placeholder-tile"></div>
+			<div class="fs-course-catalog-card__media"><img src="<?php echo esc_url( get_theme_file_uri( 'img/dir-ege.png' ) ); ?>" alt="ЕГЭ по информатике" /></div>
 			<div class="fs-course-catalog-card__body">
 				<div class="fs-course-catalog-card__meta">
 					<span class="fs-course-catalog-card__badge">11 класс</span>
@@ -80,15 +85,14 @@
 						<span class="fs-course-catalog-card__price-note">800 ₽ за час, занятие 2 часа</span>
 					</div>
 					<div class="fs-course-catalog-card__actions">
-						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--ghost" href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_ege', 'overview' ) ); ?>">Программа</a>
-						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--solid" href="#signup">Записаться</a>
+						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--solid" href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_ege', 'overview' ) ); ?>">Подробнее</a>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="fs-course-catalog-card" data-grade="9">
-			<div class="fs-course-catalog-card__media fs-placeholder-tile"></div>
+			<div class="fs-course-catalog-card__media"><img src="<?php echo esc_url( get_theme_file_uri( 'img/dir-oge.png' ) ); ?>" alt="ОГЭ по информатике" /></div>
 			<div class="fs-course-catalog-card__body">
 				<div class="fs-course-catalog-card__meta">
 					<span class="fs-course-catalog-card__badge">9 класс</span>
@@ -107,15 +111,14 @@
 						<span class="fs-course-catalog-card__price-note">800 ₽ за час, занятие 2 часа</span>
 					</div>
 					<div class="fs-course-catalog-card__actions">
-						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--ghost" href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_oge', 'overview' ) ); ?>">Программа</a>
-						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--solid" href="#signup">Записаться</a>
+						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--solid" href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_oge', 'overview' ) ); ?>">Подробнее</a>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="fs-course-catalog-card" data-grade="10">
-			<div class="fs-course-catalog-card__media fs-placeholder-tile"></div>
+			<div class="fs-course-catalog-card__media"><img src="<?php echo esc_url( get_theme_file_uri( 'img/dir-py.png' ) ); ?>" alt="Разработка на Python" /></div>
 			<div class="fs-course-catalog-card__body">
 				<div class="fs-course-catalog-card__meta">
 					<span class="fs-course-catalog-card__badge">10 класс</span>
@@ -134,15 +137,14 @@
 						<span class="fs-course-catalog-card__price-note">800 ₽ за час, занятие 2 часа</span>
 					</div>
 					<div class="fs-course-catalog-card__actions">
-						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--ghost" href="<?php echo esc_url( fs_lms_theme_subject_url( 'python', 'overview' ) ); ?>">Программа</a>
-						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--solid" href="#signup">Записаться</a>
+						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--solid" href="<?php echo esc_url( fs_lms_theme_subject_url( 'python', 'overview' ) ); ?>">Подробнее</a>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="fs-course-catalog-card" data-grade="5-8">
-			<div class="fs-course-catalog-card__media fs-placeholder-tile"></div>
+			<div class="fs-course-catalog-card__media"><img src="<?php echo esc_url( get_theme_file_uri( 'img/dir-robo.png' ) ); ?>" alt="Робототехника" /></div>
 			<div class="fs-course-catalog-card__body">
 				<div class="fs-course-catalog-card__meta">
 					<span class="fs-course-catalog-card__badge">5–8 класс</span>
@@ -161,8 +163,7 @@
 						<span class="fs-course-catalog-card__price-note">800 ₽ за час, занятие 2 часа</span>
 					</div>
 					<div class="fs-course-catalog-card__actions">
-						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--ghost" href="<?php echo esc_url( fs_lms_theme_subject_url( 'robo', 'overview' ) ); ?>">Программа</a>
-						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--solid" href="#signup">Записаться</a>
+						<a class="fs-course-catalog-card__button fs-course-catalog-card__button--solid" href="<?php echo esc_url( fs_lms_theme_subject_url( 'robo', 'overview' ) ); ?>">Подробнее</a>
 					</div>
 				</div>
 			</div>

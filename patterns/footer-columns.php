@@ -13,8 +13,13 @@
  * резиновой средней колонке, отцентрована). Без соцсетей (YouTube/VK/
  * Telegram в макете v4 есть, сознательно не переносятся — Фаза 12 решение
  * 7). Тот же паттерн переиспользуется на страницах направлений (Фаза 13,
- * решение 4). Логотип — тот же `images/logo.png`, что в шапке (решение 2
- * Фазы 12, не инлайновый цветной знак из макета).
+ * решение 4).
+ *
+ * BugFix.14 (2026-09-03): логотип переключён на отдельный файл
+ * `img/logo-footer.png` (было — общий с шапкой `images/logo.png`,
+ * решение 2 Фазы 12, разворот этого решения по прямому указанию
+ * пользователя); ширина/высота пересчитаны под реальное соотношение
+ * сторон файла (2800×816), не растянуты произвольно.
  */
 ?>
 <!-- wp:group {"tagName":"div","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xxxl","bottom":"0"}}},"textColor":"white"} -->
@@ -24,7 +29,7 @@
 		<!-- wp:html -->
 		<div class="fs-footer-grid">
 			<div class="fs-footer-grid__col">
-				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="fs-footer-logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'images/logo.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="180" height="50" style="display:block;width:180px;height:50px;object-fit:contain;" /></a>
+				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="fs-footer-logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'img/logo-footer.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="172" height="50" style="display:block;width:172px;height:50px;object-fit:contain;" /></a>
 				<p class="fs-footer-grid__lead">Школа программирования и робототехники в Калининграде</p>
 				<div class="fs-footer-grid__contacts">
 					<div>236006, г. Калининград, ул. Черняховского, д. 6, каб. 316</div>

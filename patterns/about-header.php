@@ -56,10 +56,17 @@
  * ИНН/ОГРНИП — тоже оттуда (футер называет второй номер «ОГРН», хотя
  * для ИП корректно «ОГРНИП» — не отдельная ошибка этой фазы, тот же
  * номер, только точная подпись).
+ *
+ * BugFix.10-11 (2026-09-03): заголовок страницы (`wp:post-title`,
+ * `.page-about` scope в `theme.scss`) — меньше и по центру.
+ * `padding-top` этой группы (была `3rem`) уменьшен до `1rem`: это
+ * первый блок `post-content` сразу под заголовком, отступ между ними
+ * складывается из этого паддинга — уменьшать `blockGap`
+ * `templates/page-wide.html` нельзя (общий для `/courses/`).
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"3rem","bottom":"2rem"}}}} -->
-<div class="wp-block-group" style="padding-top:3rem;padding-bottom:2rem">
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"1rem","bottom":"2rem"}}}} -->
+<div class="wp-block-group" style="padding-top:1rem;padding-bottom:2rem">
 	<!-- wp:html -->
 	<div class="fs-about-divider"></div>
 	<!-- /wp:html -->

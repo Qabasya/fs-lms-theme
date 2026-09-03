@@ -33,8 +33,8 @@
 				<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Записаться на пробное</a></div>
 				<!-- /wp:button -->
 
-				<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
-				<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="#courses">О занятиях</a></div>
+				<!-- wp:button {"backgroundColor":"accent-2"} -->
+				<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="#courses">О занятиях</a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->

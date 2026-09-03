@@ -158,6 +158,43 @@ add_action( 'woocommerce_after_shop_loop_item_title', function (): void {
 }, 10 );
 
 /**
+ * BugFix.14 (2026-09-03): фолбэк-картинки товаров по категории направления
+ * (`img/shop-*.png`) — реальные фото товаров задаются как обычно через
+ * featured image в админке; этот фильтр подменяет только штатный
+ * WooCommerce-плейсхолдер (`wc_placeholder_img_src`, срабатывает лишь у
+ * товара без загруженного изображения) на фото направления по слагу
+ * категории. Слаги категорий — из `refs/Абонементы - ЕГЭ по информатике
+ * Калининград.html` (tasks.md, Фаза 10.3): `kege`/`koge`/`python-10`/`robo`.
+ */
+add_filter( 'woocommerce_placeholder_img_src', function ( string $src ): string {
+	global $product;
+
+	if ( ! $product instanceof WC_Product ) {
+		return $src;
+	}
+
+	$image_by_category_slug = array(
+		'kege'      => 'shop-ege.png',
+		'koge'      => 'shop-oge.png',
+		'python-10' => 'shop-py.png',
+		'robo'      => 'shop-robo.png',
+	);
+
+	$terms = get_the_terms( $product->get_id(), 'product_cat' );
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return $src;
+	}
+
+	foreach ( $terms as $term ) {
+		if ( isset( $image_by_category_slug[ $term->slug ] ) ) {
+			return get_theme_file_uri( 'img/' . $image_by_category_slug[ $term->slug ] );
+		}
+	}
+
+	return $src;
+} );
+
+/**
  * URL страницы магазина (Фаза 10, использовалась в `patterns/header-nav.php`
  * до Фазы 16.5, где пункт «Курсы» переключили на новый каталог направлений
  * `/courses/`). Страница `/shop/` по решению пользователя (2026-09-03) не

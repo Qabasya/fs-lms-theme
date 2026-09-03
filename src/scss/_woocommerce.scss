@@ -53,7 +53,7 @@
 		img {
 			display: block;
 			width: 100%;
-			aspect-ratio: 16 / 10;
+			aspect-ratio: 4 / 3;
 			object-fit: cover;
 		}
 
@@ -300,7 +300,7 @@
 			img {
 				display: block;
 				width: 64px;
-				height: 64px;
+				aspect-ratio: 4 / 3;
 				border-radius: var( --wp--custom--radius--md );
 				object-fit: cover;
 			}
@@ -504,6 +504,368 @@
 			}
 		}
 	}
+
+	/**
+	 * Оформление заказа (Фаза 16.4, `form-checkout.php` — классический
+	 * шорткод `[woocommerce_checkout]`, см. заголовок файла и
+	 * `inc/Checkout.php`). Сетка — прямо на `form.checkout`: у него ровно
+	 * три содержательных прямых потомка (`#customer_details`,
+	 * `#order_review_heading`, `#order_review`), явный `grid-column`/
+	 * `grid-row` раскладывает их без обёрток. Товары в этом каталоге —
+	 * без доставки (виртуальные абонементы), поэтому `.col-2` (блок
+	 * `woocommerce_checkout_shipping`) обычно пуст — снят float, чтобы
+	 * пустой `.col-2` не резервировал место в раскладке.
+	 */
+	&-checkout form.checkout {
+		display: grid;
+		grid-template-columns: minmax( 0, 1fr ) 380px;
+		gap: var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--xl );
+		align-items: start;
+
+		#customer_details {
+			grid-column: 1;
+			grid-row: 1 / -1;
+			display: flex;
+			flex-direction: column;
+			gap: var( --wp--preset--spacing--xl );
+		}
+
+		.col2-set {
+			display: contents;
+		}
+
+		.col-1,
+		.col-2 {
+			width: 100%;
+			float: none;
+		}
+
+		.col-2:empty {
+			display: none;
+		}
+
+		#order_review_heading {
+			grid-column: 2;
+			grid-row: 1;
+			margin: 0;
+			font-size: var( --wp--preset--font-size--lead );
+			font-weight: 700;
+		}
+
+		#order_review {
+			grid-column: 2;
+			grid-row: 2;
+			padding: var( --wp--preset--spacing--xl );
+			background: var( --wp--preset--color--surface-2 );
+			border: 1px solid var( --wp--preset--color--border );
+			border-radius: var( --wp--custom--radius--lg );
+		}
+	}
+
+	// Поля «Данные покупателя» (`.woocommerce-billing-fields`) и
+	// «Примечание к заказу» (`.woocommerce-additional-fields`) — общий
+	// язык `.fs-form-field` (высота 42px, `surface-2`, фокус-кольцо),
+	// сетка 2 колонки, `form-row-wide`/`form-row-first`/`-last` через
+	// `grid-column` вместо штатных float-ов WooCommerce.
+	&-billing-fields,
+	&-additional-fields {
+		h3 {
+			margin: 0 0 var( --wp--preset--spacing--md );
+			font-size: var( --wp--preset--font-size--lead );
+			font-weight: 700;
+		}
+	}
+
+	&-billing-fields + &-additional-fields {
+		margin-top: var( --wp--preset--spacing--xl );
+	}
+
+	&-billing-fields__field-wrapper {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var( --wp--preset--spacing--md );
+	}
+
+	.form-row {
+		grid-column: span 1;
+		margin: 0;
+
+		&.form-row-wide,
+		&.address-field {
+			grid-column: 1 / -1;
+		}
+
+		label {
+			display: block;
+			margin-bottom: var( --wp--preset--spacing--xs );
+			font-size: var( --wp--preset--font-size--xs );
+			font-weight: 500;
+			color: var( --wp--preset--color--text-secondary );
+
+			.required {
+				color: var( --wp--preset--color--err );
+				text-decoration: none;
+			}
+		}
+
+		.woocommerce-input-wrapper {
+			display: block;
+			width: 100%;
+		}
+
+		input.input-text,
+		textarea,
+		select {
+			width: 100%;
+			min-height: 2.625rem;
+			padding: var( --wp--preset--spacing--sm ) var( --wp--preset--spacing--md );
+			border: 1px solid var( --wp--preset--color--border );
+			border-radius: var( --wp--custom--radius--control );
+			background: var( --wp--preset--color--white );
+			font-family: inherit;
+			font-size: var( --wp--preset--font-size--base );
+			color: var( --wp--preset--color--text );
+
+			&:focus {
+				outline: none;
+				border-color: var( --wp--preset--color--accent );
+				box-shadow: 0 0 0 3px rgba( 59, 91, 219, .12 );
+			}
+		}
+
+		textarea {
+			min-height: 5.0625rem;
+			resize: vertical;
+		}
+	}
+
+	#order_comments_field {
+		margin-top: var( --wp--preset--spacing--md );
+	}
+
+	// «Есть купон?» (`.woocommerce-form-coupon-toggle` — уведомление со
+	// ссылкой `.showcoupon`, штатный JS WooCommerce разворачивает/сворачивает
+	// `.checkout_coupon` под ней) — карточка вместо голой ссылки, форма
+	// внутри — тот же язык, что `.coupon` в корзине.
+	.woocommerce-form-coupon-toggle {
+		margin: 0;
+
+		.woocommerce-info {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: var( --wp--preset--spacing--md );
+			padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+			background: var( --wp--preset--color--surface-2 );
+			border: 1px solid var( --wp--preset--color--border );
+			border-radius: var( --wp--custom--radius--lg );
+			list-style: none;
+			font-size: var( --wp--preset--font-size--lead );
+			font-weight: 700;
+			color: var( --wp--preset--color--text );
+
+			a.showcoupon {
+				color: inherit;
+				text-decoration: none;
+			}
+
+			&::before {
+				display: none;
+			}
+		}
+	}
+
+	.checkout_coupon.woocommerce-form-coupon {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		gap: var( --wp--preset--spacing--sm );
+		padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+		margin: 0;
+		border: 1px solid var( --wp--preset--color--border );
+		border-top: none;
+		border-radius: 0 0 var( --wp--custom--radius--lg ) var( --wp--custom--radius--lg );
+
+		p.form-row {
+			margin: 0;
+		}
+
+		#coupon_code {
+			width: 15rem;
+		}
+
+		.button {
+			height: 2.375rem;
+			padding: 0 var( --wp--preset--spacing--lg );
+			border: 1px solid var( --wp--preset--color--border );
+			border-radius: var( --wp--custom--radius--control );
+			background: var( --wp--preset--color--white );
+			color: var( --wp--preset--color--text-secondary );
+			font-size: var( --wp--preset--font-size--sm );
+			font-weight: 500;
+			cursor: pointer;
+
+			&:hover {
+				background: var( --wp--preset--color--surface-2 );
+			}
+		}
+	}
+
+	// Таблица «Ваш заказ» + оплата + согласие + кнопка — всё внутри
+	// `#order_review` (карточка стилизована выше).
+	&-checkout-review-order-table {
+		width: 100%;
+		margin-bottom: var( --wp--preset--spacing--md );
+		border-collapse: collapse;
+
+		thead {
+			display: none; // заголовки таблицы избыточны в компактной сводке
+		}
+
+		tr {
+			display: flex;
+			justify-content: space-between;
+			gap: var( --wp--preset--spacing--md );
+		}
+
+		tbody tr {
+			padding: var( --wp--preset--spacing--sm ) 0;
+			border-bottom: 1px solid var( --wp--preset--color--border-light );
+			font-size: var( --wp--preset--font-size--sm );
+
+			.product-name {
+				color: var( --wp--preset--color--text );
+
+				.product-quantity {
+					color: var( --wp--preset--color--muted );
+					font-weight: 300;
+				}
+			}
+
+			.product-total {
+				flex: 0 0 auto;
+				font-weight: 500;
+				color: var( --wp--preset--color--text );
+			}
+		}
+
+		tfoot tr {
+			padding: var( --wp--preset--spacing--xs ) 0;
+			font-size: var( --wp--preset--font-size--sm );
+			color: var( --wp--preset--color--text-secondary );
+
+			th {
+				font-weight: 400;
+				text-align: left;
+			}
+
+			td {
+				text-align: right;
+				color: var( --wp--preset--color--text );
+			}
+
+			&.order-total {
+				padding-top: var( --wp--preset--spacing--sm );
+				margin-top: var( --wp--preset--spacing--xs );
+				border-top: 1px solid var( --wp--preset--color--border );
+				align-items: baseline;
+
+				th {
+					font-size: var( --wp--preset--font-size--base );
+					font-weight: 500;
+					color: var( --wp--preset--color--text );
+				}
+
+				td {
+					font-size: 1.625rem;
+					font-weight: 700;
+				}
+			}
+		}
+	}
+
+	// Способы оплаты (`ul.wc_payment_methods`, `#payment`).
+	.wc_payment_methods.payment_methods {
+		display: flex;
+		flex-direction: column;
+		gap: var( --wp--preset--spacing--sm );
+		padding: 0;
+		margin: 0 0 var( --wp--preset--spacing--md );
+		list-style: none;
+
+		.wc_payment_method {
+			padding: var( --wp--preset--spacing--md );
+			border: 1px solid var( --wp--preset--color--border );
+			border-radius: var( --wp--custom--radius--md );
+			background: var( --wp--preset--color--white );
+
+			label {
+				font-size: var( --wp--preset--font-size--base );
+				font-weight: 500;
+				color: var( --wp--preset--color--text );
+			}
+
+			.payment_box {
+				margin-top: var( --wp--preset--spacing--sm );
+				padding: var( --wp--preset--spacing--sm ) var( --wp--preset--spacing--md );
+				background: var( --wp--preset--color--surface-2 );
+				border-radius: var( --wp--custom--radius--sm );
+				font-size: var( --wp--preset--font-size--sm );
+				font-weight: 300;
+				color: var( --wp--preset--color--text-secondary );
+
+				p:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+
+	// Согласие с условиями (`terms.php`) + кнопка «Оформить заказ».
+	.woocommerce-terms-and-conditions-wrapper {
+		margin-bottom: var( --wp--preset--spacing--md );
+
+		label {
+			display: flex;
+			align-items: flex-start;
+			gap: var( --wp--preset--spacing--sm );
+			font-size: var( --wp--preset--font-size--xs );
+			font-weight: 300;
+			color: var( --wp--preset--color--text-secondary );
+		}
+
+		input.input-checkbox {
+			flex: 0 0 auto;
+			width: 16px;
+			height: 16px;
+			margin-top: .125rem;
+		}
+	}
+
+	.form-row.place-order {
+		margin: 0;
+
+		#place_order {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			height: 2.625rem;
+			padding: 0 var( --wp--preset--spacing--lg );
+			border: none;
+			border-radius: var( --wp--custom--radius--control );
+			background: var( --wp--preset--color--accent );
+			color: var( --wp--preset--color--white );
+			font-family: inherit;
+			font-size: var( --wp--preset--font-size--base );
+			font-weight: 600;
+			cursor: pointer;
+
+			&:hover {
+				background: var( --wp--preset--color--accent-600 );
+			}
+		}
+	}
 }
 
 @media ( max-width: 960px ) {
@@ -537,5 +899,119 @@
 
 	.woocommerce table.cart thead {
 		display: none; // мобильный стек не нуждается в отдельной шапке-гриде
+	}
+
+	.woocommerce-checkout form.checkout {
+		grid-template-columns: 1fr;
+
+		#customer_details,
+		#order_review_heading,
+		#order_review {
+			grid-column: 1;
+			grid-row: auto;
+		}
+	}
+
+	.woocommerce-billing-fields__field-wrapper {
+		grid-template-columns: 1fr;
+	}
+}
+
+/**
+ * BugFix.13 (2026-09-03): страница отдельного товара
+ * (`/product/<slug>/`) — WooCommerce уже рендерит её целиком (галерея +
+ * `.entry-summary`), тему просят только подтянуть шрифты/отступы/цвет
+ * кнопки под дизайн-систему, структуру не менять (см. решение пользователя
+ * в tasks.md — «не создавать свои страницы»).
+ */
+.single-product div.product {
+	.woocommerce-product-gallery {
+		border-radius: var( --wp--custom--radius--card );
+		overflow: hidden;
+
+		img {
+			border-radius: var( --wp--custom--radius--card );
+		}
+	}
+
+	.summary.entry-summary {
+		.product_title {
+			margin-top: 0;
+			font-size: var( --wp--preset--font-size--xxl );
+			font-weight: 700;
+			letter-spacing: -.01em;
+		}
+
+		.price {
+			display: block;
+			margin-bottom: var( --wp--preset--spacing--md );
+			font-size: var( --wp--preset--font-size--xl );
+			font-weight: 700;
+			color: var( --wp--preset--color--accent );
+
+			del {
+				margin-right: .5rem;
+				font-size: var( --wp--preset--font-size--base );
+				font-weight: 400;
+				color: var( --wp--preset--color--muted );
+			}
+		}
+
+		.woocommerce-product-details__short-description {
+			font-size: var( --wp--preset--font-size--base );
+			font-weight: 300;
+			line-height: 1.6;
+			color: var( --wp--preset--color--text-secondary );
+		}
+
+		form.cart {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: var( --wp--preset--spacing--md );
+			margin: var( --wp--preset--spacing--lg ) 0;
+
+			.quantity .qty {
+				width: 4.5rem;
+				height: 2.75rem;
+				padding: 0 var( --wp--preset--spacing--sm );
+				border: 1px solid var( --wp--preset--color--border );
+				border-radius: var( --wp--custom--radius--control );
+				text-align: center;
+				font-family: inherit;
+				font-size: var( --wp--preset--font-size--base );
+			}
+		}
+
+		.single_add_to_cart_button {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			height: 2.75rem;
+			padding: 0 var( --wp--preset--spacing--xl );
+			border: none;
+			border-radius: var( --wp--custom--radius--control );
+			background: var( --wp--preset--color--accent-2 );
+			color: var( --wp--preset--color--white );
+			font-size: var( --wp--preset--font-size--base );
+			font-weight: 600;
+			cursor: pointer;
+
+			&:hover {
+				background: var( --wp--preset--color--accent-2-600 );
+			}
+		}
+
+		.product_meta {
+			margin-top: var( --wp--preset--spacing--lg );
+			padding-top: var( --wp--preset--spacing--md );
+			border-top: 1px solid var( --wp--preset--color--border-light );
+			font-size: var( --wp--preset--font-size--xs );
+			color: var( --wp--preset--color--muted );
+
+			a {
+				color: inherit;
+			}
+		}
 	}
 }

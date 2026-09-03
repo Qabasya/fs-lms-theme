@@ -23,6 +23,10 @@
  * (12.5) и `header-nav.php`. Пункты 4/5 чек-листа переформулированы под
  * v4. Кнопка «Записаться» — якорь `#signup` (12.8), «Все курсы» — `#dirs`
  * (12.6, секция сменила id с `#courses` на `#dirs`).
+ *
+ * BugFix.14 (2026-09-03): плейсхолдер «фото занятия» заменён на реальное
+ * фото `img/photo.png`, `fs-aspect-4-3` сохранён на `<img>` (тот же
+ * класс, что раньше держал соотношение сторон на заглушке).
  */
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
@@ -31,13 +35,9 @@
 	<div class="wp-block-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:group {"className":"fs-placeholder-tile fs-aspect-4-3","style":{"border":{"radius":"var:preset|spacing|md","color":"var:preset|color|border","width":"1px"}},"layout":{"type":"flex","justifyContent":"center","verticalAlignment":"center"}} -->
-			<div class="wp-block-group fs-placeholder-tile fs-aspect-4-3" style="border-color:var(--wp--preset--color--border);border-width:1px;border-radius:var(--wp--preset--spacing--md)">
-				<!-- wp:paragraph {"textColor":"muted-2","fontSize":"xs"} -->
-				<p class="has-muted-2-color has-text-color has-xs-font-size">фото занятия</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:group -->
+			<!-- wp:image {"className":"fs-aspect-4-3","style":{"border":{"radius":"var:preset|spacing|md"}}} -->
+			<figure class="wp-block-image fs-aspect-4-3" style="border-radius:var(--wp--preset--spacing--md)"><img src="<?php echo esc_url( get_theme_file_uri( 'img/photo.png' ) ); ?>" alt="Фото занятия" /></figure>
+			<!-- /wp:image -->
 		</div>
 		<!-- /wp:column -->
 

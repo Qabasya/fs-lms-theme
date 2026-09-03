@@ -18,12 +18,22 @@ export const BADGE_COLORS = [
 	{ name: 'Информация', slug: 'info' },
 	{ name: 'Видео', slug: 'violet' },
 	{ name: 'Практика', slug: 'practice' },
+	{ name: 'Жёлтый', slug: 'subject-yellow-text' },
 ];
 
 const TEXT_OVERRIDE = { accent: 'accent-700' };
 
+/**
+ * BugFix.4/6 (2026-09-03): `subject-yellow`/`subject-yellow-text` не
+ * следуют конвенции `<slug>`/`<slug>-soft` остальной палитры (заведены
+ * для пастельных подложек иконок направлений, см. `features-grid.php`,
+ * не парой «насыщенный + `-soft`») — явный оверрайд подложки, чтобы
+ * бейдж «Жёлтый» доставал пару из тех же двух токенов.
+ */
+const BG_OVERRIDE = { 'subject-yellow-text': 'subject-yellow' };
+
 export function softSlug( slug ) {
-	return `${ slug }-soft`;
+	return BG_OVERRIDE[ slug ] || `${ slug }-soft`;
 }
 
 export function textSlug( slug ) {

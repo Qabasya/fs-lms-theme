@@ -36,7 +36,12 @@
 				{ "name": "Видео", "slug": "violet", "color": "#7048e8" },
 				{ "name": "Видео (мягкий)", "slug": "violet-soft", "color": "#f1ecfd" },
 				{ "name": "Практика", "slug": "practice", "color": "#e8590c" },
-				{ "name": "Практика (мягкий)", "slug": "practice-soft", "color": "#fdeee3" }
+				{ "name": "Практика (мягкий)", "slug": "practice-soft", "color": "#fdeee3" },
+				{ "name": "Направление — синий", "slug": "subject-blue", "color": "#c5d9ed" },
+				{ "name": "Направление — жёлтый", "slug": "subject-yellow", "color": "#f5e6ab" },
+				{ "name": "Направление — жёлтый (текст)", "slug": "subject-yellow-text", "color": "#a67c00" },
+				{ "name": "Направление — зелёный", "slug": "subject-green", "color": "#b8e6bf" },
+				{ "name": "Направление — фиолетовый", "slug": "subject-purple", "color": "#ede9fe" }
 			]
 		},
 		"typography": {

@@ -35,6 +35,12 @@
  * ниже вычисляем активный пункт вручную через `is_front_page()`/`is_page()`
  * и подставляем `className` в JSON-атрибуты блока (та же техника, что
  * `esc_url()` в `url` этих же блоков).
+ *
+ * BugFix.14 (2026-09-03): логотип переключён на отдельный файл
+ * `img/logo-header.png` (было — общий с футером `images/logo.png`,
+ * решение 2 Фазы 12, разворот по прямому указанию пользователя); ширина
+ * пересчитана под реальное соотношение сторон файла (2800×816), высота
+ * не менялась (64px).
  */
 $fs_nav_current_home    = is_front_page() ? 'current-menu-item' : '';
 $fs_nav_current_about   = is_page( 'about' ) ? 'current-menu-item' : '';
@@ -75,7 +81,7 @@ $fs_nav_current_courses = is_page( 'courses' ) ? 'current-menu-item' : '';
 			<!-- wp:group {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|md"}}} -->
 			<div class="wp-block-group">
 				<!-- wp:html -->
-				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="fs-header-logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'images/logo.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="229" height="64" style="display:block;width:229px;height:64px;object-fit:contain;" /></a>
+				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="fs-header-logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'img/logo-header.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="220" height="64" style="display:block;width:220px;height:64px;object-fit:contain;" /></a>
 				<!-- /wp:html -->
 			</div>
 			<!-- /wp:group -->

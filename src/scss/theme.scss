@@ -243,27 +243,6 @@ a {
 		grid-template-columns: 1fr 1fr;
 		gap: .75rem;
 		margin-bottom: 1rem;
-
-		input {
-			min-width: 0;
-			height: 2.375rem;
-			padding: 0 var( --wp--preset--spacing--md );
-			background: var( --wp--preset--color--white );
-			border: 1px solid var( --wp--preset--color--border );
-			border-radius: var( --wp--custom--radius--control );
-			font-family: inherit;
-			font-size: var( --wp--preset--font-size--base );
-			color: var( --wp--preset--color--text );
-
-			&::placeholder {
-				color: var( --wp--preset--color--muted-2 );
-			}
-
-			&:focus {
-				outline: none;
-				border-color: var( --wp--preset--color--accent );
-			}
-		}
 	}
 
 	&__submit {
@@ -327,6 +306,36 @@ a {
 	&__label {
 		font-size: var( --wp--preset--font-size--base );
 		color: var( --wp--preset--color--text-secondary );
+	}
+}
+
+/**
+ * BugFix.1: обе колонки hero (`patterns/hero.php`) — одной высоты
+ * (`align-items:stretch`, cross-axis flex-контейнера `wp-block-columns`),
+ * правая колонка растягивает `.fs-hero-form`/`.fs-hero-stats` на всю
+ * высоту через `flex-direction:column` + `flex:1` на форме, стата-плашка
+ * остаётся своего размера и прижимается к низу.
+ */
+.fs-hero-columns {
+	align-items: stretch;
+
+	> .wp-block-column {
+		height: 100%;
+	}
+
+	> .wp-block-column:last-child {
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+.fs-hero-form {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+
+	&__row {
+		flex: 0 0 auto;
 	}
 }
 
@@ -397,6 +406,50 @@ a {
 		margin: 0 0 .75rem;
 		line-height: 1.1;
 	}
+
+	/**
+	 * BugFix.7 (2026-09-03): цвет инфобокса по направлению — то же
+	 * сопоставление, что бейджи карточек курсов (BugFix.6): Робототехника
+	 * фиолетовый, Python зелёный, ЕГЭ синий, ОГЭ жёлтый. Модификатор
+	 * добавляется вручную на странице направления (см.
+	 * `patterns/subject-hero.php`) — без модификатора остаётся дефолтный
+	 * `accent-2` (как было, для не-предметных вставок этого паттерна).
+	 */
+	&--robo {
+		background: var( --wp--preset--color--violet-soft );
+		border-left-color: var( --wp--preset--color--violet );
+
+		.fs-subject-hero-box__badge {
+			color: var( --wp--preset--color--violet );
+		}
+	}
+
+	&--python {
+		background: var( --wp--preset--color--ok-soft );
+		border-left-color: var( --wp--preset--color--ok );
+
+		.fs-subject-hero-box__badge {
+			color: var( --wp--preset--color--ok );
+		}
+	}
+
+	&--ege {
+		background: var( --wp--preset--color--info-soft );
+		border-left-color: var( --wp--preset--color--info );
+
+		.fs-subject-hero-box__badge {
+			color: var( --wp--preset--color--info );
+		}
+	}
+
+	&--oge {
+		background: var( --wp--preset--color--subject-yellow );
+		border-left-color: var( --wp--preset--color--subject-yellow-text );
+
+		.fs-subject-hero-box__badge {
+			color: var( --wp--preset--color--subject-yellow-text );
+		}
+	}
 }
 
 /**
@@ -463,7 +516,16 @@ a {
 .fs-code-str { color: #15803d; }
 
 .fs-aspect-4-3 {
+	display: block;
+	width: 100%;
 	aspect-ratio: 4 / 3;
+	overflow: hidden;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 }
 
 .fs-aspect-16-9 {
@@ -503,12 +565,21 @@ a {
 .fs-price-plaque {
 	display: flex;
 	align-items: center;
+	max-width: 240px;
 	gap: var( --wp--preset--spacing--md );
 	padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
 	margin-bottom: var( --wp--preset--spacing--lg );
 	background: var( --wp--preset--color--white );
 	border: 1px solid var( --wp--preset--color--border );
 	border-radius: var( --wp--custom--radius--card );
+
+	/**
+	 * BugFix.9 (2026-09-03): контейнер сжат до 240px — каждая из двух
+	 * половин («2 часа»/«800 ₽» + подпись) занимает 120px.
+	 */
+	> div:not( .fs-price-plaque__divider ) {
+		width: 120px;
+	}
 
 	&__value {
 		font-size: var( --wp--preset--font-size--xl );
@@ -642,6 +713,18 @@ a {
 	height: 1px;
 	margin: 0 auto;
 	background: var( --wp--preset--color--border );
+}
+
+/**
+ * BugFix.10 (2026-09-03): заголовок страницы «О нас» — меньше и по
+ * центру. Scope через `.page-about` (WP сам добавляет этот класс на
+ * `<body>` по слагу страницы, Фаза 10.2 — `post_name=about`), не
+ * глобально: `templates/page-wide.html` используется и на `/courses/`,
+ * его `wp:post-title` там должен остаться как есть.
+ */
+.page-about .wp-block-post-title {
+	font-size: var( --wp--preset--font-size--xl );
+	text-align: center;
 }
 
 /**
@@ -1158,6 +1241,7 @@ a {
 }
 
 .fs-course-catalog-card {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
@@ -1171,7 +1255,7 @@ a {
 	}
 
 	&__media {
-		aspect-ratio: 16 / 7;
+		aspect-ratio: 4 / 3;
 	}
 
 	&__body {
@@ -1275,19 +1359,23 @@ a {
 		text-decoration: none;
 		white-space: nowrap;
 
-		&--ghost {
-			border: 1px solid var( --wp--preset--color--border );
-			color: var( --wp--preset--color--text-secondary );
-
-			&:hover {
-				background: var( --wp--preset--color--surface-2 );
-				color: var( --wp--preset--color--text-secondary );
-			}
-		}
-
+		/**
+		 * BugFix.8 (2026-09-03): осталась одна кнопка («Подробнее»,
+		 * `--solid` — вариант `--ghost` «Программа» убран из разметки).
+		 * Карточка целиком кликабельна тем же приёмом stretched-link, что
+		 * `fs-course-card` (`src/blocks/course-card/style.scss`) — кнопка
+		 * `position: static`, её `::after` растягивается на
+		 * `.fs-course-catalog-card` (`position: relative` в корне).
+		 */
 		&--solid {
 			background: var( --wp--preset--color--accent );
 			color: var( --wp--preset--color--white );
+
+			&::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+			}
 
 			&:hover {
 				background: var( --wp--preset--color--accent-600 );

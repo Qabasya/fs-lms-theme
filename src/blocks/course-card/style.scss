@@ -1,4 +1,5 @@
 .fs-course-card {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
@@ -8,7 +9,7 @@
 	box-shadow: var( --wp--custom--shadow--surface );
 
 	&__media {
-		aspect-ratio: 16 / 10;
+		aspect-ratio: 4 / 3;
 		border-bottom: 1px solid var( --wp--preset--color--border-light );
 
 		img {
@@ -85,6 +86,20 @@
 		font-size: var( --wp--preset--font-size--base );
 		font-weight: 600;
 		text-decoration: none;
+
+		/**
+		 * BugFix.8: карточка целиком кликабельна («stretched link») —
+		 * кнопка сама остаётся `position: static`, поэтому её `::after`
+		 * (без визуального содержимого) ищет ближайшего позиционированного
+		 * предка и растягивается на весь `.fs-course-card`
+		 * (`position: relative` в корне блока), а не только на свои
+		 * границы — без вложенных `<a>` внутри `<a>`.
+		 */
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+		}
 
 		&:hover {
 			background: var( --wp--preset--color--accent-600 );

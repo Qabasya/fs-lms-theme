@@ -1,8 +1,8 @@
 <?php
 /**
- * Корзина и оформление заказа (Фаза 16.3+) — редизайн по
- * `Корзина - мокап.dc.html`/`Оформление заказа - мокап.dc.html` (Claude
- * Design, тот же проект, что и остальные страницы Фазы 16).
+ * Корзина, оформление заказа и «Заказ получен» (Фаза 16.3-16.4) —
+ * редизайн по `Корзина - мокап.dc.html`/`Оформление заказа - мокап.dc.html`
+ * (Claude Design, тот же проект, что и остальные страницы Фазы 16).
  *
  * Обе страницы (Cart/Checkout) WooCommerce создаёт по умолчанию с
  * контентом на блоках `woocommerce/cart`/`woocommerce/checkout`
@@ -103,3 +103,27 @@ add_action( 'woocommerce_after_cart_table', function (): void {
  * язык блоки).
  */
 remove_action( 'woocommerce_cart_collaterals', 'woocommerce_cross_sell_display' );
+
+/**
+ * Оформление заказа (Фаза 16.4, по `Оформление заказа - мокап.dc.html`) —
+ * степпер (шаг 2), тот же `fs_lms_theme_checkout_steps()`, что на
+ * «Корзине» (шаг 1). Сетка «форма + сводка заказа» — без обёртки, чистой
+ * CSS-сеткой прямо на `form.checkout` (`_woocommerce.scss`,
+ * `.woocommerce-checkout form.checkout` — явный `grid-column`/`grid-row`
+ * на `#customer_details`/`#order_review_heading`/`#order_review`), в
+ * отличие от корзины обёртку в PHP заводить не пришлось — у `form.checkout`
+ * и так один родитель на все нужные элементы.
+ */
+add_action( 'woocommerce_before_checkout_form', function (): void {
+	fs_lms_theme_checkout_steps( 2 );
+}, 5 );
+
+/**
+ * Страница «Заказ получен» (thank-you, `order-received.php`) — третий шаг
+ * степпера, для единообразия с «Корзиной»/«Оформлением заказа» (сама
+ * страница и её контент — целиком штатный вывод WooCommerce, тема ничего
+ * в нём не меняет и не подменяет, только достраивает степпер сверху).
+ */
+add_action( 'woocommerce_before_thankyou', function (): void {
+	fs_lms_theme_checkout_steps( 3 );
+} );

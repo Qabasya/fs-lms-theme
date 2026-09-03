@@ -22,16 +22,31 @@
  * `wp:html`, что и в `hero.php` (разметка идентична дизайн-системе, менять
  * нечего), только без списка направлений слева — вместо него инфобокс
  * предмета.
+ *
+ * BugFix.7 (2026-09-03): `.fs-subject-hero-box` принимает модификатор
+ * `--robo`/`--python`/`--ege`/`--oge` (`theme.scss`) — красит фон/бордер/
+ * бейдж под направление (то же сопоставление цвета, что в BugFix.6).
+ * Текст по умолчанию в этом паттерне — вариант «ЕГЭ», поэтому класс здесь
+ * `--ege`.
+ *
+ * 2026-09-03 (по запросу пользователя): вместо ручной правки текста при
+ * каждой вставке заведены 3 готовых паттерна-близнеца —
+ * `patterns/subject-hero-oge.php` (`--oge`), `subject-hero-python.php`
+ * (`--python`), `subject-hero-robo.php` (`--robo`) — черновой текст под
+ * каждое направление уже на месте (сгенерирован по образцу
+ * `courses-grid.php`), редактор правит вручную после вставки на
+ * соответствующую страницу предмета. Этот файл (`subject-hero.php`)
+ * остаётся как есть — вариант «ЕГЭ».
  */
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"4.5rem","bottom":"0"}}}} -->
 <div class="wp-block-group" style="padding-top:4.5rem;padding-bottom:0">
-	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.5rem"}}}} -->
-	<div class="wp-block-columns">
+	<!-- wp:columns {"className":"fs-hero-columns","style":{"spacing":{"blockGap":{"left":"2.5rem"}}}} -->
+	<div class="wp-block-columns fs-hero-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:group {"className":"fs-subject-hero-box","layout":{"type":"constrained"}} -->
-			<div class="wp-block-group fs-subject-hero-box">
+			<!-- wp:group {"className":"fs-subject-hero-box fs-subject-hero-box--ege","layout":{"type":"constrained"}} -->
+			<div class="wp-block-group fs-subject-hero-box fs-subject-hero-box--ege">
 				<!-- wp:paragraph {"className":"fs-subject-hero-box__badge"} -->
 				<p class="fs-subject-hero-box__badge">11 класс</p>
 				<!-- /wp:paragraph -->
@@ -58,8 +73,14 @@
 			<form id="hero-form" class="fs-hero-form" data-fs-form>
 				<div class="fs-hero-form__title">Запишитесь на пробное занятие</div>
 				<div class="fs-hero-form__row">
-					<input type="text" name="parent_name" placeholder="ФИО" autocomplete="name" required>
-					<input type="tel" name="phone" placeholder="Телефон" autocomplete="tel" required>
+					<div class="fs-form-field">
+						<label for="fs-subject-hero-name">Имя родителя</label>
+						<input type="text" id="fs-subject-hero-name" name="parent_name" placeholder="Анна" autocomplete="name" required>
+					</div>
+					<div class="fs-form-field">
+						<label for="fs-subject-hero-phone">Телефон</label>
+						<input type="tel" id="fs-subject-hero-phone" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+					</div>
 				</div>
 				<input type="hidden" name="form_id" value="hero">
 				<input type="hidden" name="fs_form_token" value="<?php echo esc_attr( fs_lms_theme_form_timestamp_token() ); ?>">
