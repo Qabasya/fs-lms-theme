@@ -1389,26 +1389,19 @@ FAQ-аккордеон, feature-карточки) уже есть паттерн
 
 ---
 # BugFix
-1. [x] Ханипот fs_company должен быть скрыт от пользователя (не должен заполняться, его заполнение - признак бота) в обеих формах скрой
-   — CSS-правило `.fs-form-honeypot` (off-screen `position:absolute`,
-   не `display:none`, см. `theme.scss`) и разметка (`tabindex="-1"`,
-   `autocomplete="off"`, `aria-hidden="true"`) уже были в коде во всех
-   4 формах (`patterns/hero.php`, `subject-hero.php`,
-   `contact-section.php`, `subject-contact.php`); проблема была в том,
-   что `npm run build` не запускался после изменений в `theme.scss` —
-   скомпилированный `assets/css/theme.min.css` не содержал правило.
-   Пересобрано.
-2. [x] Кнопки splide__arrow splide__arrow--next и splide__arrow splide__arrow--prev должны быть по центру (по вертикали) контейнера splide__track splide__track--loop splide__track--ltr splide__track--draggable у правого и левого края контейнера
-   — `.fs-carousel-mask .splide__arrow` (`theme.scss`) уже содержит
-   `position:absolute; top:50%; transform:translateY(-50%)`; та же
-   причина, что в п.1 — не собранный билд.
-3. [x] Контейнер с вузами должен иметь высоту 160 пикселей splide fs-carousel-mask splide--loop splide--ltr splide--draggable is-active is-initialized
-   — добавлен модификатор `.fs-carousel-mask--strip` на карусель
-   вузов (`patterns/alumni-strip.php`, класс отдельный от
-   `.fs-carousel-mask`, т.к. карусель выпускников `alumni-carousel.php`
-   использует ту же базовую разметку с высотой по контенту, а не
-   фиксированной): `height:160px` на `.splide`,
-   `height:100%` на `.splide__track`/`.splide__list`,
-   `align-items:center` на `.splide__list` — логотипы (`.fs-alumni-logo`,
-   3.25rem) центрированы внутри 160px контейнера, а не прижаты к
-   верхнему краю. `npm run build`/`stylelint`/`php -l` — чисто.
+1. У нас есть две формы: сверху fs-hero-form и снизу apply-form. Нужно их привести к одному формату: одинаковые плейсхолдеры и названия. В первой оставить расположение инпутов горизонтальным, но увеличить высоту блока так, чтобы оба блока (from и stats) заполняли wp-block-column is-layout-flow wp-block-column-is-layout-flow по высоте
+2. В формы добавить подстановку +7. Заменять вводимые +7 и 8 на +7 (продолжать вписывать только цифры после этих значений). Если пользователь вводит любые другие цифры, значит это цифры после +7.
+3. Кнопку "О занятиях" покрасить в оранжевый wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button
+4. Нужно взять 4 цвета пастельных (возьми из токенов плагина) $wp-admin-blue-bg:  #c5d9ed; // blue 5 $wp-admin-yellow-bg:  #f5e6ab; // yellow 5 $wp-admin-green-bg:  #b8e6bf; // green 5 $wp-admin-purple-bg:    #ede9fe;
+5. Этими цветами покрась фон у иконок fs-feature-card__icon has-accent-color has-accent-soft-background-color has-text-color has-background
+6. Этими же цветами крась бейджи fs-course-card__badge has-accent-2-color has-accent-2-soft-background-color has-text-color has-background (робототехника фиолетовый, python зелёный, ЕГЭ - синий, ОГЭ - жёлтый)
+7. Этими же цветами крась блок с названием направления на странице направлений потом
+8. Сделай всю карточку wp-block-fs-lms-course-card fs-course-card кликабельной. И вместо кнопки "Записаться" пусть будет кнопка "Подробнее". Клик по карточке и кнопке ведёт на страницу этого направления
+9. Контейнер fs-price-plaque сжать по ширине (240 пикселей, 120 на каждую часть)
+10. На странице "О нас" сделать размер заголовка меньше и добавить переход на новую строку после "Индивидуальный предприниматель". Отцентрировать заголовок (выравнивание текста по центру)
+11. Сделать меньше отступ между заголовком и текстом class="has-text-align-center has-md-font-size wp-block-paragraph"
+12. Нужно привести все изображения на карточках к одному соотношению сторон (4:3) fs-course-card__media fs-placeholder-tile fs-course-catalog-card__media fs-placeholder-tile и в корзине
+13. На странице курсов в карточке направлений оставить только одну кнопку (синюю), назвать её "Подробнее". Она ведёт на странцу направления 
+13. Посмотри как нужно работать с woocommerce. Насколько я понимаю, страницу "Магазин", корзину и оформление товара уже даёт woocommerce, надо просто получить их элементы и стилизовать, а не создавать свои страницы. Там вот уже есть к примеру product/python-с-нуля/. Все почти ок, их чутка стилизовать только. У меня видны такие страницы от woocommerce: Товары по атрибуту Страница: Оформление заказа Страница: Корзина Результаты поиска товара Подтверждение заказа Отдельный товар. Надо просто их стили подтянуть немного и оформить как у нас.
+14. Добавь сразу фото (папка img): на карточки направлений на главной и на странице "Курсы": робототехника - dir-robo.png, python - dir-py.png, егэ - dir-ege.png, огэ - dir-oge.png; в карточки магазина: робототехника - shop-robo.png, python - shop-py.png, егэ - shop-ege.png, огэ - shop-oge.png; в блок "Фото занятия" - photo.png. Везде соотношение сторон 4 к 3
+15. Все еще при редактировании страниц темы внутри wordpress на каждом блоке надпись "Этот блок имеет неожидаемое или неверное содержимое."
