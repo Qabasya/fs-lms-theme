@@ -38,22 +38,22 @@
 			<!-- wp:html -->
 			<div class="fs-hero-dirs">
 				<h2 class="fs-hero-dirs__title">Направления<br>подготовки</h2>
-				<a href="#dirs" class="fs-hero-dirs__item">
+				<a href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_ege', 'overview' ) ); ?>" class="fs-hero-dirs__item">
 					<span class="fs-hero-dirs__arrow">→</span>
 					<span class="fs-hero-dirs__name">ЕГЭ по информатике</span>
 					<span class="fs-hero-dirs__grade">11 класс</span>
 				</a>
-				<a href="#dirs" class="fs-hero-dirs__item">
+				<a href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_oge', 'overview' ) ); ?>" class="fs-hero-dirs__item">
 					<span class="fs-hero-dirs__arrow">→</span>
 					<span class="fs-hero-dirs__name">ОГЭ по информатике</span>
 					<span class="fs-hero-dirs__grade">9 класс</span>
 				</a>
-				<a href="#dirs" class="fs-hero-dirs__item">
+				<a href="<?php echo esc_url( fs_lms_theme_subject_url( 'python', 'overview' ) ); ?>" class="fs-hero-dirs__item">
 					<span class="fs-hero-dirs__arrow">→</span>
 					<span class="fs-hero-dirs__name">Разработка на Python</span>
 					<span class="fs-hero-dirs__grade">10 класс</span>
 				</a>
-				<a href="#dirs" class="fs-hero-dirs__item fs-hero-dirs__item--last">
+				<a href="<?php echo esc_url( fs_lms_theme_subject_url( 'robo', 'overview' ) ); ?>" class="fs-hero-dirs__item fs-hero-dirs__item--last">
 					<span class="fs-hero-dirs__arrow">→</span>
 					<span class="fs-hero-dirs__name">Робототехника</span>
 					<span class="fs-hero-dirs__grade">5–8 класс</span>

@@ -81,7 +81,7 @@
 		height: 2.375rem;
 		padding: 0 var( --wp--preset--spacing--lg );
 		border-radius: var( --wp--custom--radius--control );
-		background: var( --wp--preset--color--accent );
+		background: var( --wp--preset--color--accent-2 );
 		color: var( --wp--preset--color--white );
 		font-size: var( --wp--preset--font-size--base );
 		font-weight: 600;
@@ -102,7 +102,7 @@
 		}
 
 		&:hover {
-			background: var( --wp--preset--color--accent-600 );
+			background: var( --wp--preset--color--accent-2-600 );
 			color: var( --wp--preset--color--white );
 		}
 	}

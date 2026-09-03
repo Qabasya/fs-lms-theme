@@ -27,22 +27,14 @@
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
 <div id="dirs" class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
-	<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"bottom"}} -->
+	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
-		<!-- wp:group {"layout":{"type":"constrained"}} -->
-		<div class="wp-block-group">
-			<!-- wp:heading {"fontSize":"xxl"} -->
-			<h2 class="wp-block-heading has-xxl-font-size">Направления</h2>
-			<!-- /wp:heading -->
+		<!-- wp:heading {"fontSize":"xxl"} -->
+		<h2 class="wp-block-heading has-xxl-font-size">Направления</h2>
+		<!-- /wp:heading -->
 
-			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
-			<p class="has-text-secondary-color has-text-color has-md-font-size">Можно начать с любого возраста и перейти на следующую ступень внутри школы.</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
-
-		<!-- wp:paragraph {"fontSize":"sm","style":{"typography":{"fontWeight":"500"}}} -->
-		<p class="has-sm-font-size" style="font-weight:500"><a href="#dirs">Все курсы и цены →</a></p>
+		<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
+		<p class="has-text-secondary-color has-text-color has-md-font-size">Можно начать с любого возраста и перейти на следующую ступень внутри школы.</p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
