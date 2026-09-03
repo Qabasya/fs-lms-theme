@@ -10,6 +10,16 @@
  * избыточно, предмет и так зафиксирован контекстом страницы. Класс формы
  * `.fs-apply-form`/`#signup` — общий с главной, стили не дублируются.
  *
+ * BugFix (2026-09-03): поле «Класс» тоже убрано — по прямому указанию
+ * пользователя убрать «Класс»/«Направление» из форм записи везде, не
+ * только на главной (см. `contact-section.php`/`courses-contact.php`).
+ * После этого набор полей совпадает с `contact-section.php» 1:1 (Имя
+ * родителя + Телефон) — паттерн всё равно оставлен отдельным файлом
+ * (не переиспользован напрямую): свой `id` формы (`apply-form`, тот же,
+ * что уже был, дублирование id на разных страницах не проблема) и он
+ * логически привязан к разделу «Фаза 13», решение 5 которой (без
+ * «Направление») остаётся в силе само по себе.
+ *
  * Фаза 14: реальная отправка — `data-fs-form` + honeypot/HMAC-таймер/капча
  * (если настроена), `src/js/forms.js` перехватывает `submit` и шлёт AJAX.
  */
@@ -52,19 +62,6 @@
 				<div class="fs-form-field">
 					<label for="fs-subject-apply-phone">Телефон</label>
 					<input type="tel" id="fs-subject-apply-phone" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
-				</div>
-
-				<div class="fs-form-field" style="max-width:100px">
-					<label for="fs-subject-apply-grade">Класс</label>
-					<select id="fs-subject-apply-grade" name="grade">
-						<option>5</option>
-						<option>6</option>
-						<option>7</option>
-						<option>8</option>
-						<option>9</option>
-						<option>10</option>
-						<option selected>11</option>
-					</select>
 				</div>
 
 				<input type="hidden" name="form_id" value="signup">

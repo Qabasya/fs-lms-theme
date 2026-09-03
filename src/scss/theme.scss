@@ -609,47 +609,39 @@ a {
 	}
 }
 
-.fs-form-row {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: var( --wp--preset--spacing--md );
-}
-
 /**
- * Реквизиты организации (Фаза 15, `patterns/about-header.php`) — 2×2 сетка
- * подпись/значение, складывается в 1 колонку на мобильных тем же
- * брейкпоинтом, что и остальные сетки темы (960px).
+ * Реквизиты организации (Фаза 15/16.1, `patterns/about-header.php`) —
+ * вертикальный список «подпись: значение» на одной строке (сверено с
+ * макетом `О нас - мокап.dc.html` в Фазе 16.1 — раньше была 2×2 сетка
+ * с подписью НАД значением отдельной строкой, макет так не делает).
  */
 .fs-about-requisites {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--xl );
+	display: flex;
+	flex-direction: column;
+	gap: .875rem;
 	margin: var( --wp--preset--spacing--lg ) 0;
 
 	&__item {
-		display: flex;
-		flex-direction: column;
-		gap: .125rem;
-		font-size: var( --wp--preset--font-size--sm );
+		font-size: var( --wp--preset--font-size--md );
+		line-height: 1.6;
 		color: var( --wp--preset--color--text );
 
 		a {
 			color: inherit;
 		}
 	}
-
-	&__label {
-		font-size: var( --wp--preset--font-size--xxs );
-		text-transform: uppercase;
-		letter-spacing: .02em;
-		color: var( --wp--preset--color--muted );
-	}
 }
 
-@media ( max-width: 960px ) {
-	.fs-about-requisites {
-		grid-template-columns: 1fr;
-	}
+/**
+ * Короткая центрированная черта над строкой ИНН/ОГРНИП (Фаза 16.1,
+ * `patterns/about-header.php`) — под заголовком страницы (`wp:post-title`
+ * = юридическое название ИП, решение 1 Фазы 15), сверено с макетом.
+ */
+.fs-about-divider {
+	width: 56px;
+	height: 1px;
+	margin: 0 auto;
+	background: var( --wp--preset--color--border );
 }
 
 /**
@@ -827,6 +819,24 @@ a {
 
 	&:disabled {
 		opacity: .35;
+	}
+}
+
+/**
+ * Карусель вузов (`patterns/alumni-strip.php`, BugFix из tasks.md) —
+ * контейнер фиксирован на 160px, логотипы центрированы по вертикали
+ * внутри (сами логотипы остаются 3.25rem — `.fs-alumni-logo`).
+ */
+.fs-carousel-mask--strip {
+	height: 160px;
+
+	.splide__track,
+	.splide__list {
+		height: 100%;
+	}
+
+	.splide__list {
+		align-items: center;
 	}
 }
 
@@ -1016,27 +1026,32 @@ a {
 
 /**
  * Аккордеон юридической страницы `/about/` (patterns/about-accordion.php,
- * Фаза 10.2). Тот же визуальный язык (Mantine `variant="separated"`,
- * Фаза 12.11), что у `fs-lms/faq-item` (`src/blocks/faq-item/style.scss`,
- * включая шеврон через `mask-image` — работает и на статичной разметке
- * без изменения 12 `<summary>` вручную), но не сам блок: разделам этой
- * страницы нужно несколько абзацев и ссылки на PDF на один ответ, а
- * `fs-lms/faq-item` хранит ответ как один `<p>` — не подходит, поэтому
- * здесь статичная разметка `<details>/<summary>`, стилизованная отдельным
- * классом. Точные цвета вопроса/рамки (`#f8f9fa`/`#f1f3f5`/`#dee2e6`) —
- * Фаза 15.1, сверка с `О нас - мокап.dc.html` (страница юридического
- * толка держит свою чуть более приглушённую палитру, а не акцентный
- * токен design-системы, как у `fs-lms/faq-item`).
+ * Фаза 10.2). Статичная разметка `<details>/<summary>` (не
+ * `fs-lms/faq-item` — разделам этой страницы нужно несколько абзацев и
+ * ссылки на PDF на один ответ, а `fs-lms/faq-item` хранит ответ как один
+ * `<p>`), стилизованная отдельным классом.
+ *
+ * Фаза 16.1 (сверка с `О нас - мокап.dc.html` через Design MCP,
+ * 2026-09-03): макет использует «связанный» вид (единая рамка со
+ * скруглением на всю группу, пункты разделены только внутренней чертой,
+ * `overflow:hidden` прячет углы внутренних пунктов) — было ошибочно
+ * реализовано в Фазе 15.1 как Mantine `variant="separated"`
+ * (`fs-lms/faq-item`, Фаза 12.11): у каждого пункта своя рамка/радиус и
+ * зазор между пунктами. Также в макете вопрос не меняет цвет/фон при
+ * открытии — крутится только шеврон.
  */
 .fs-legal-accordion {
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--md );
+	overflow: hidden;
+	background: var( --wp--preset--color--white );
+
 	&__item {
 		padding: 0;
-		border: 1px solid #dee2e6;
-		border-radius: var( --wp--custom--radius--md );
-		background: var( --wp--preset--color--white );
+		border-top: 1px solid var( --wp--preset--color--border );
 
-		& + & {
-			margin-top: .625rem;
+		&:first-child {
+			border-top: none;
 		}
 	}
 
@@ -1049,10 +1064,9 @@ a {
 		list-style: none;
 		padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
 		background: #f8f9fa;
-		border-radius: var( --wp--custom--radius--md );
 		font-weight: 700;
 		color: var( --wp--preset--color--text );
-		transition: color .15s ease, background-color .15s ease;
+		transition: background-color .15s ease;
 
 		&::-webkit-details-marker {
 			display: none;
@@ -1067,7 +1081,7 @@ a {
 			flex: 0 0 auto;
 			width: 1rem;
 			height: 1rem;
-			background-color: currentcolor;
+			background-color: var( --wp--preset--color--muted );
 			mask-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" );
 			mask-repeat: no-repeat;
 			mask-position: center;
@@ -1076,13 +1090,8 @@ a {
 		}
 	}
 
-	&__item[open] &__question {
-		border-radius: var( --wp--custom--radius--md ) var( --wp--custom--radius--md ) 0 0;
-		color: var( --wp--preset--color--accent );
-
-		&::after {
-			transform: rotate( 180deg );
-		}
+	&__item[open] &__question::after {
+		transform: rotate( 180deg );
 	}
 
 	&__answer {
@@ -1095,6 +1104,202 @@ a {
 		p + p {
 			margin-top: var( --wp--preset--spacing--sm );
 		}
+	}
+}
+
+/**
+ * Фильтр по классу на странице «Курсы» (Фаза 16.5,
+ * `patterns/courses-catalog.php`, `src/js/course-filter.js`) — чипсы,
+ * активная — акцентный `soft`-фон, как в макете (`#edf2ff`/`#3b5bdb` →
+ * токены `accent-soft`/`accent`).
+ */
+.fs-course-filter {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var( --wp--preset--spacing--sm );
+
+	&__chip {
+		display: inline-flex;
+		align-items: center;
+		height: 2.125rem;
+		padding: 0 var( --wp--preset--spacing--md );
+		border: 1px solid var( --wp--preset--color--border );
+		border-radius: var( --wp--custom--radius--pill );
+		background: var( --wp--preset--color--white );
+		font-family: inherit;
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 500;
+		color: var( --wp--preset--color--text-secondary );
+		cursor: pointer;
+		transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+
+		&:hover {
+			border-color: var( --wp--preset--color--muted-2 );
+		}
+
+		&.is-active {
+			border-color: transparent;
+			background: var( --wp--preset--color--accent-soft );
+			color: var( --wp--preset--color--accent );
+		}
+	}
+}
+
+/**
+ * Каталог направлений на странице «Курсы» (Фаза 16.5,
+ * `patterns/courses-catalog.php`) — 2 колонки, складывается в 1 на
+ * 960px (тот же брейкпоинт, что у остальных сеток темы).
+ */
+.fs-course-catalog {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var( --wp--preset--spacing--lg );
+	margin-top: var( --wp--preset--spacing--xl );
+}
+
+.fs-course-catalog-card {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+	box-shadow: var( --wp--custom--shadow--surface );
+
+	&[hidden] {
+		display: none;
+	}
+
+	&__media {
+		aspect-ratio: 16 / 7;
+	}
+
+	&__body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: var( --wp--preset--spacing--md );
+		padding: var( --wp--preset--spacing--xl );
+	}
+
+	&__meta {
+		display: flex;
+		align-items: center;
+		gap: var( --wp--preset--spacing--sm );
+	}
+
+	&__badge {
+		padding: .1875rem .5625rem;
+		border-radius: var( --wp--custom--radius--md );
+		background: var( --wp--preset--color--accent-2-soft );
+		font-size: var( --wp--preset--font-size--xxs );
+		font-weight: 500;
+		letter-spacing: .04em;
+		text-transform: uppercase;
+		color: var( --wp--preset--color--accent-2 );
+	}
+
+	&__format {
+		font-size: var( --wp--preset--font-size--xs );
+		color: var( --wp--preset--color--muted );
+	}
+
+	&__title {
+		margin: 0;
+		font-size: var( --wp--preset--font-size--lead );
+		font-weight: 700;
+		letter-spacing: -.01em;
+	}
+
+	&__text {
+		margin: 0;
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 300;
+		line-height: 1.6;
+		color: var( --wp--preset--color--text-secondary );
+	}
+
+	&__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var( --wp--preset--spacing--xs );
+	}
+
+	&__tag {
+		padding: .3125rem .6875rem;
+		border-radius: var( --wp--custom--radius--pill );
+		background: var( --wp--preset--color--surface-2 );
+		font-size: var( --wp--preset--font-size--xs );
+		color: var( --wp--preset--color--text-secondary );
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var( --wp--preset--spacing--md );
+		margin-top: auto;
+		padding-top: var( --wp--preset--spacing--md );
+	}
+
+	&__price {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__price-amount {
+		font-size: 1.25rem;
+		font-weight: 700;
+	}
+
+	&__price-note {
+		font-size: var( --wp--preset--font-size--xxs );
+		font-weight: 300;
+		color: var( --wp--preset--color--muted );
+	}
+
+	&__actions {
+		display: flex;
+		gap: var( --wp--preset--spacing--sm );
+	}
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		height: 2.375rem;
+		padding: 0 var( --wp--preset--spacing--lg );
+		border-radius: var( --wp--custom--radius--control );
+		font-size: var( --wp--preset--font-size--base );
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+
+		&--ghost {
+			border: 1px solid var( --wp--preset--color--border );
+			color: var( --wp--preset--color--text-secondary );
+
+			&:hover {
+				background: var( --wp--preset--color--surface-2 );
+				color: var( --wp--preset--color--text-secondary );
+			}
+		}
+
+		&--solid {
+			background: var( --wp--preset--color--accent );
+			color: var( --wp--preset--color--white );
+
+			&:hover {
+				background: var( --wp--preset--color--accent-600 );
+				color: var( --wp--preset--color--white );
+			}
+		}
+	}
+}
+
+@media ( max-width: 960px ) {
+	.fs-course-catalog {
+		grid-template-columns: 1fr;
 	}
 }
 

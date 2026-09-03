@@ -52,20 +52,8 @@ add_action( 'init', function (): void {
 } );
 
 /**
- * Сайдбар страницы магазина `/shop/` (Фаза 10.4) — категории товаров и
- * ценовой фильтр (виджеты WooCommerce), выводится через `get_sidebar('shop')`
- * из хука в `inc/WooCommerce.php`. Классы обёртки — под общий селектор
- * `.fs-widget` в `_woocommerce.scss`, без стандартных заголовков `<h2>`
- * виджет-зоны (у WooCommerce-виджетов свой `<h5>`/`<h3>`, тема его не дублирует).
+ * Сайдбар страницы магазина `/shop/` (Фаза 10.4: категории товаров + ценовой
+ * фильтр) удалён в Фазе 16.2 — новый макет (`Магазин - мокап.dc.html`) чистая
+ * сетка без сайдбара, по решению пользователя убран, а не просто перекрашен.
+ * `sidebar-shop.php` тоже удалён; связанные хуки — в `inc/WooCommerce.php`.
  */
-add_action( 'widgets_init', function (): void {
-	register_sidebar( array(
-		'name'          => __( 'Сайдбар магазина', 'fs-lms-theme' ),
-		'id'            => 'shop-sidebar',
-		'description'   => __( 'Категории и фильтр цены на странице /shop/.', 'fs-lms-theme' ),
-		'before_widget' => '<div id="%1$s" class="fs-widget sidebar-widget %2$s">',
-		'after_widget'  => '</div>',
-		'before_title'  => '<h5 class="fs-widget__title widget-title">',
-		'after_title'   => '</h5>',
-	) );
-} );

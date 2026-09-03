@@ -54,8 +54,14 @@ function fs_lms_theme_url( string $route ): string {
  * `Inc\Enums\Wp\SubjectPageType::path()`, если плагин активен, иначе —
  * тот же `/{$subjectKey}/{$page}/`-паттерн локально (решение 2, Фаза 13).
  *
+ * Фаза 16.5: добавлен `'overview'` — корневая страница предмета
+ * (`SubjectPageType::Overview`, слаг = сам `$subject_key`, путь без
+ * дополнительного сегмента) — кнопка «Программа» на карточках
+ * `patterns/courses-catalog.php` ведёт именно туда, а не на учебник/
+ * тренажёр.
+ *
  * @param string $subject_key Ключ предмета плагина (`inf_ege`, `inf_oge`, `python`, `robo`).
- * @param string $page        'articles' (учебник) или 'trainer' (тренажёр).
+ * @param string $page        'overview' (корневая), 'articles' (учебник) или 'trainer' (тренажёр).
  *
  * @return string Абсолютный URL раздела предмета.
  */
@@ -64,6 +70,7 @@ function fs_lms_theme_subject_url( string $subject_key, string $page ): string {
 
 	if ( class_exists( $enum_class ) ) {
 		$case_by_page = array(
+			'overview' => 'Overview',
 			'articles' => 'Articles',
 			'trainer'  => 'Trainer',
 		);
@@ -76,6 +83,10 @@ function fs_lms_theme_subject_url( string $subject_key, string $page ): string {
 				}
 			}
 		}
+	}
+
+	if ( 'overview' === $page ) {
+		return esc_url( home_url( '/' . $subject_key . '/' ) );
 	}
 
 	return esc_url( home_url( '/' . $subject_key . '/' . $page . '/' ) );

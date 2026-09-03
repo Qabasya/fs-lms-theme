@@ -1,11 +1,21 @@
 <?php
 /**
- * Каталог WooCommerce (Фаза 10.3+) — база подключения, без переопределения
- * шаблонов WooCommerce целиком: используем штатные хуки/фильтры плагина,
- * чтобы пережить его обновления и не тащить в тему копию его PHP-шаблонов
- * (см. tasks.md, Фаза 10, план `sequential-nibbling-cat.md`).
+ * Каталог WooCommerce (Фаза 10.3+, редизайн Фаза 16.2) — база подключения,
+ * без переопределения шаблонов WooCommerce целиком: используем штатные
+ * хуки/фильтры плагина, чтобы пережить его обновления и не тащить в тему
+ * копию его PHP-шаблонов (см. tasks.md, Фаза 10, план `sequential-nibbling-cat.md`).
  *
  * `add_theme_support('woocommerce')` — в inc/Setup.php.
+ *
+ * Фаза 16.2 (источник дизайна — `Магазин - мокап.dc.html`, Claude Design,
+ * импортирован через `DesignSync`): макет — чистая сетка 4 карточки в ряд,
+ * без сайдбара (категории/фильтр цены) и без тулбара (счётчик/сортировка),
+ * которые строила Фаза 10.4 — по прямому решению пользователя убраны
+ * полностью, а не просто перекрашены (см. `tasks.md`, обсуждение
+ * 2026-09-03). `sidebar-shop.php`/зона `shop-sidebar` (`inc/Setup.php`)
+ * удалены вместе с этим. Quick view (Фаза 10.5) в новом макете тоже не
+ * показан — убран целиком (кнопка на карточке, AJAX-хендлер,
+ * `src/js/quick-view.js`, `.fs-quick-view*` в CSS).
  */
 
 declare(strict_types=1);
@@ -32,33 +42,34 @@ add_action( 'after_setup_theme', function (): void {
 } );
 
 /**
- * 3 карточки товара в ряд на архиве/категории (как на референсе
- * `/shop/`, Фаза 10, а не дефолтные 4 у WooCommerce/WoodMart-настроек
- * Customizer'а, которые на чистой установке не заданы).
+ * 4 карточки товара в ряд (Фаза 16.2, по макету) — было 3 (Фаза 10, под
+ * прежний двухколоночный layout с сайдбаром, которого больше нет).
  */
 add_filter( 'loop_shop_columns', function (): int {
-	return 3;
+	return 4;
 } );
 
 /**
- * Двухколоночный layout страницы магазина (Фаза 10.4): сайдбар (категории +
- * фильтр цены, `sidebar-shop.php`) слева от сетки товаров. Даже в блочной
- * FSE-теме дефолтный шаблон WooCommerce `archive-product.html` рендерит
- * каталог через блок `woocommerce/legacy-template`, который вызывает те же
- * классические хуки, что и обычный `archive-product.php`
- * (проверено по `refs/woocommerce/src/Blocks/BlockTypes/ClassicTemplate.php`)
- * — значит эти хуки надёжно срабатывают и здесь, без переопределения
- * блочного шаблона.
+ * Вводный абзац под заголовком «Магазин» (Фаза 16.2) — в макете это
+ * статичный маркетинговый текст, не поле WooCommerce/CPT; выводится только
+ * на корневом архиве магазина (`is_shop()`), не на страницах категорий —
+ * там читать «Материалы для самостоятельной подготовки…» не в тему
+ * конкретной категории.
  */
-add_action( 'woocommerce_before_main_content', function (): void {
-	echo '<div class="fs-shop-layout">';
-	get_sidebar( 'shop' );
-	echo '<div class="fs-shop-layout__content">';
+add_action( 'woocommerce_before_shop_loop', function (): void {
+	if ( ! is_shop() ) {
+		return;
+	}
+
+	echo '<p class="fs-shop-intro">' . esc_html__( 'Материалы для самостоятельной подготовки и наборы для занятий. Доступ к электронным товарам открывается сразу после оплаты.', 'fs-lms-theme' ) . '</p>';
 }, 5 );
 
-add_action( 'woocommerce_after_main_content', function (): void {
-	echo '</div></div>';
-}, 15 );
+/**
+ * Тулбар (счётчик результатов + сортировка) — в новом макете его нет,
+ * снят целиком (Фаза 16.2, было в Фазе 10.4 как часть `.fs-shop-layout`).
+ */
+remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
+remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
 
 /**
  * В референсе (`refs/Абонементы - ЕГЭ по информатике Калининград.html`,
@@ -72,11 +83,28 @@ add_action( 'woocommerce_after_main_content', function (): void {
 remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5 );
 
 /**
- * Первая категория товара под заголовком карточки (Фаза 10.5, аналог
- * `wd-product-cats` в референсе WoodMart). Приоритет 6 — между снятым
- * рейтингом (был на 5) и ценой (10).
+ * Карточка товара (Фаза 16.2, по макету) — перестроена целиком относительно
+ * дефолтного порядка хуков WooCommerce:
+ *
+ * 1. Бейдж первой категории товара (было — простая ссылка `.fs-product-cat`
+ *    под заголовком, Фаза 10.5) — теперь бейдж-пилюля НАД заголовком, в
+ *    языке `fs-course-catalog-card__badge` (Фаза 16.5) — на
+ *    `before_shop_loop_item_title` после миниатюры (приоритет 15, миниатюра
+ *    — 10), т.е. до заголовка.
+ * 2. Ссылка карточки (`woocommerce_template_loop_product_link_open/close`)
+ *    закрывается сразу после заголовка, а не после цены, как в дефолте —
+ *    цена и кнопка «В корзину» лежат в общем футере СНАРУЖИ ссылки (кнопка
+ *    внутри `<a>` — невалидная вложенность интерактивных элементов, тот же
+ *    принцип, что был у quick view в Фазе 10.5, здесь применён к самой
+ *    ссылке карточки).
+ * 3. Короткое описание (новое, `get_short_description()`) — между
+ *    заголовком и футером, как в макете.
+ * 4. Цена и «В корзину» — один общий футер (`.fs-shop-card__footer`,
+ *    flex space-between, как в макете), а не два раздельных хука в разных
+ *    местах разметки (дефолт: цена на `after_shop_loop_item_title`, кнопка
+ *    — на `after_shop_loop_item`).
  */
-add_action( 'woocommerce_after_shop_loop_item_title', function (): void {
+add_action( 'woocommerce_before_shop_loop_item_title', function (): void {
 	global $product;
 
 	if ( ! $product instanceof WC_Product ) {
@@ -90,80 +118,55 @@ add_action( 'woocommerce_after_shop_loop_item_title', function (): void {
 
 	$term = reset( $terms );
 	printf(
-		'<div class="fs-product-cat"><a href="%1$s">%2$s</a></div>',
-		esc_url( get_term_link( $term ) ),
+		'<span class="fs-shop-card__badge">%s</span>',
 		esc_html( $term->name )
 	);
-}, 6 );
+}, 15 );
 
-/**
- * Кнопка quick view — не внутри `<a>`, которую открывает
- * `woocommerce_template_loop_product_link_open` на `woocommerce_before_shop_loop_item`
- * приоритетом 10 (сама ссылка оборачивает миниатюру+заголовок+цену до
- * `woocommerce_after_shop_loop_item` приоритета 5). Кнопка внутри `<a>` —
- * невалидная вложенность интерактивных элементов, поэтому хук — на том же
- * `woocommerce_before_shop_loop_item`, но раньше (приоритет 5, до открытия
- * ссылки): в разметке кнопка выходит перед `<a>`, визуально ложится поверх
- * миниатюры через `position: absolute` (`_woocommerce.scss`, `li.product`
- * — `position: relative`).
- */
-add_action( 'woocommerce_before_shop_loop_item', function (): void {
+remove_action( 'woocommerce_after_shop_loop_item', 'woocommerce_template_loop_product_link_close', 5 );
+add_action( 'woocommerce_shop_loop_item_title', 'woocommerce_template_loop_product_link_close', 20 );
+
+add_action( 'woocommerce_after_shop_loop_item_title', function (): void {
 	global $product;
 
 	if ( ! $product instanceof WC_Product ) {
 		return;
 	}
 
-	printf(
-		'<button type="button" class="fs-quick-view" data-product-id="%1$d" aria-label="%2$s"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg></button>',
-		$product->get_id(),
-		esc_attr__( 'Быстрый просмотр', 'fs-lms-theme' )
-	);
-}, 5 );
-
-/**
- * AJAX quick view (Фаза 10.5) — по `product_id` собирает мини-карточку
- * (фото/заголовок/цена/краткое описание/кнопка «В корзину») и возвращает
- * HTML; `src/js/quick-view.js` вставляет его в модалку. Кнопка «В корзину»
- * — тот же `woocommerce_template_loop_add_to_cart()`, что и в сетке, значит
- * AJAX-добавление в корзину работает и из модалки без дублирования кода.
- */
-function fs_lms_theme_ajax_quick_view(): void {
-	check_ajax_referer( 'fs-quick-view', 'nonce' );
-
-	$product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
-	$product    = $product_id ? wc_get_product( $product_id ) : null;
-
-	if ( ! $product instanceof WC_Product || ! $product->is_visible() ) {
-		wp_send_json_error( array( 'message' => __( 'Товар не найден.', 'fs-lms-theme' ) ), 404 );
+	$excerpt = $product->get_short_description();
+	if ( '' === $excerpt ) {
+		$excerpt = $product->get_description();
+	}
+	if ( '' === $excerpt ) {
+		return;
 	}
 
-	ob_start();
-	global $post;
-	$post = get_post( $product_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride -- нужен для setup_postdata() ниже, как в стандартном WC-цикле.
-	setup_postdata( $post );
-	?>
-	<div class="fs-quick-view-modal__media"><?php echo wp_kses_post( $product->get_image( 'woocommerce_single' ) ); ?></div>
-	<div class="fs-quick-view-modal__body">
-		<h3 class="fs-quick-view-modal__title"><?php echo esc_html( $product->get_name() ); ?></h3>
-		<div class="fs-quick-view-modal__price"><?php echo wp_kses_post( $product->get_price_html() ); ?></div>
-		<div class="fs-quick-view-modal__excerpt"><?php echo wp_kses_post( wpautop( $product->get_short_description() ) ); ?></div>
-		<?php woocommerce_template_loop_add_to_cart(); ?>
-	</div>
-	<?php
-	wp_reset_postdata();
-	$html = ob_get_clean();
+	printf(
+		'<p class="fs-shop-card__excerpt">%s</p>',
+		esc_html( wp_trim_words( wp_strip_all_tags( $excerpt ), 18 ) )
+	);
+}, 8 );
 
-	wp_send_json_success( array( 'html' => $html ) );
-}
-add_action( 'wp_ajax_fs_quick_view', 'fs_lms_theme_ajax_quick_view' );
-add_action( 'wp_ajax_nopriv_fs_quick_view', 'fs_lms_theme_ajax_quick_view' );
+remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_price', 10 );
+remove_action( 'woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 10 );
+
+add_action( 'woocommerce_after_shop_loop_item_title', function (): void {
+	echo '<div class="fs-shop-card__footer">';
+	woocommerce_template_loop_price();
+	woocommerce_template_loop_add_to_cart();
+	echo '</div>';
+}, 10 );
 
 /**
- * URL страницы магазина (Фаза 10, `patterns/header-nav.php`) — WooCommerce
- * сам создаёт эту страницу при активации плагина (`wc_get_page_permalink`
- * резолвит её реальный slug, не хардкод `/shop/`). Без активного плагина —
- * `#`, как и остальные пункты меню без готовой страницы темы.
+ * URL страницы магазина (Фаза 10, использовалась в `patterns/header-nav.php`
+ * до Фазы 16.5, где пункт «Курсы» переключили на новый каталог направлений
+ * `/courses/`). Страница `/shop/` по решению пользователя (2026-09-03) не
+ * входит в меню — функция остаётся на случай, если понадобится сослаться
+ * на магазин из другого места (например, с карточек `courses-catalog.php`
+ * в будущем). WooCommerce сам создаёт эту страницу при активации плагина
+ * (`wc_get_page_permalink` резолвит её реальный slug, не хардкод `/shop/`).
+ * Без активного плагина — `#`, как и остальные пункты меню без готовой
+ * страницы темы.
  *
  * @return string
  */

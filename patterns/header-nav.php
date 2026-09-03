@@ -10,16 +10,35 @@
  * основная навигация (лого, меню, CTA). Ссылка «Записаться» — якорь
  * `#hero-form` на форму первого экрана (Фаза 12, решение 5) — раньше вела на
  * страницу заявки плагина через `fs_lms_theme_url('apply')`, эта функция
- * остаётся для других страниц сайта. «Курсы» — на страницу магазина
- * WooCommerce через `fs_lms_theme_shop_url()` (Фаза 10.3,
- * inc/WooCommerce.php). «Учебник»/«Тренажёр» остаются заглушкой `#` — под
- * них ещё нет страниц темы.
+ * остаётся для других страниц сайта. «Учебник»/«Тренажёр» остаются
+ * заглушкой `#` — под них ещё нет страниц темы.
+ *
+ * Фаза 16.5: «Курсы» — на новую страницу-каталог направлений `/courses/`
+ * (`home_url('/courses/')`, тот же приём, что «О нас» → `/about/`), было —
+ * на страницу магазина WooCommerce через `fs_lms_theme_shop_url()` (Фаза
+ * 10.3) — подтверждено пользователем 2026-09-03: «Курсы» — это каталог
+ * направлений (ЕГЭ/ОГЭ/Python/Робототехника), не витрина товаров магазина.
+ * `fs_lms_theme_shop_url()` остаётся в `inc/WooCommerce.php` для витрины
+ * магазина (Фаза 16.2), просто эта конкретная ссылка её больше не
+ * использует.
  *
  * Соцсети (YouTube/VK/Telegram) в макете v4 нет (Фаза 12, решение 7) — в
  * шапке их и не было с самого начала (Фаза 3), убирать нечего. Иконка
  * корзины — из текущего сайта (WoodMart), в макете v4 её тоже нет, но она
  * не относится к соцсетям и оставлена как есть (см. tasks.md 12.1).
+ *
+ * BugFix (2026-09-03): «Главная» была захардкожена с `className:
+ * current-menu-item` безусловно — на `/courses/` (и на любой другой
+ * странице) подсвечивалась «Главная», а не текущий раздел. `wp:navigation-link`
+ * со статичным `url` (не ссылкой на реальный ID поста через
+ * `"kind":"post-type"`) не получает подсветку от ядра автоматически —
+ * ниже вычисляем активный пункт вручную через `is_front_page()`/`is_page()`
+ * и подставляем `className` в JSON-атрибуты блока (та же техника, что
+ * `esc_url()` в `url` этих же блоков).
  */
+$fs_nav_current_home    = is_front_page() ? 'current-menu-item' : '';
+$fs_nav_current_about   = is_page( 'about' ) ? 'current-menu-item' : '';
+$fs_nav_current_courses = is_page( 'courses' ) ? 'current-menu-item' : '';
 ?>
 <!-- wp:group {"tagName":"div","backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|xs","bottom":"var:preset|spacing|xs"}},"border":{"bottom":{"color":"var:preset|color|border-light","width":"1px"}}}} -->
 <div class="wp-block-group has-surface-2-background-color has-background" style="border-bottom-color:var(--wp--preset--color--border-light);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--xs);padding-bottom:var(--wp--preset--spacing--xs)">
@@ -62,11 +81,11 @@
 			<!-- /wp:group -->
 
 			<!-- wp:navigation {"overlayMenu":"mobile","layout":{"type":"flex","justifyContent":"center"},"style":{"typography":{"fontSize":"sm"}}} -->
-			<!-- wp:navigation-link {"label":"Главная","url":"<?php echo esc_url( home_url( '/' ) ); ?>","className":"current-menu-item"} /-->
+			<!-- wp:navigation-link {"label":"Главная","url":"<?php echo esc_url( home_url( '/' ) ); ?>","className":"<?php echo esc_attr( $fs_nav_current_home ); ?>"} /-->
 
-			<!-- wp:navigation-link {"label":"О нас","url":"<?php echo esc_url( home_url( '/about/' ) ); ?>"} /-->
+			<!-- wp:navigation-link {"label":"О нас","url":"<?php echo esc_url( home_url( '/about/' ) ); ?>","className":"<?php echo esc_attr( $fs_nav_current_about ); ?>"} /-->
 
-			<!-- wp:navigation-link {"label":"Курсы","url":"<?php echo esc_url( fs_lms_theme_shop_url() ); ?>"} /-->
+			<!-- wp:navigation-link {"label":"Курсы","url":"<?php echo esc_url( home_url( '/courses/' ) ); ?>","className":"<?php echo esc_attr( $fs_nav_current_courses ); ?>"} /-->
 
 			<!-- wp:navigation-link {"label":"Учебник","url":"#"} /-->
 

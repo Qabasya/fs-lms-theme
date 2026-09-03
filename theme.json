@@ -174,5 +174,12 @@
 	"templateParts": [
 		{ "name": "header", "title": "Шапка", "area": "header" },
 		{ "name": "footer", "title": "Подвал", "area": "footer" }
+	],
+	"customTemplates": [
+		{
+			"name": "page-wide",
+			"title": "Страница (широкая, 1200px)",
+			"postTypes": [ "page" ]
+		}
 	]
 }

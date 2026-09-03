@@ -12,6 +12,12 @@
  * без стрелок — автопрокрутка, как в мокапе), `data-fs-carousel` разбирает
  * `src/js/carousels.js` (Фаза 12.0). Логотипы — заглушки `.fs-placeholder-tile`,
  * реальные вставляет редактор через `wp:image`.
+ *
+ * BugFix (tasks.md): контейнер карусели вузов фиксирован на 160px по
+ * высоте (`.fs-carousel-mask--strip` в `theme.scss`) — модификатор
+ * отдельный от `.fs-carousel-mask`, т.к. карусель выпускников
+ * (`alumni-carousel.php`) использует ту же базовую разметку, но с
+ * высотой по содержимому карточек, а не фиксированной.
  */
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
@@ -23,7 +29,7 @@
 		<!-- /wp:paragraph -->
 
 		<!-- wp:html -->
-		<div class="splide fs-carousel-mask" data-fs-carousel data-per-page="5" data-autoplay="true" data-arrows="false">
+		<div class="splide fs-carousel-mask fs-carousel-mask--strip" data-fs-carousel data-per-page="5" data-autoplay="true" data-arrows="false">
 			<div class="splide__track">
 				<div class="splide__list">
 					<div class="fs-alumni-logo splide__slide">БФУ им. Канта</div>

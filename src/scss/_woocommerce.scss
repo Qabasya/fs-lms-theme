@@ -1,128 +1,41 @@
-// Каталог WooCommerce (`/shop/`, Фаза 10.4) — двухколоночный layout
-// (сайдбар + сетка товаров), под токены theme.json, тот же визуальный язык,
-// что у `.is-style-card` (theme.scss) для карточек товара.
-//
-// Карточки товара (10.5), тулбар сортировки и quick view — сюда же по мере
-// реализации следующих подзадач Фазы 10.
+// Каталог WooCommerce (`/shop/`) — Фаза 16.2, редизайн по
+// `Магазин - мокап.dc.html`: чистая сетка 4 карточки в ряд на всю ширину
+// `<main>` (`templates/page-wide.html`, 1200px), без сайдбара и без
+// тулбара сортировки/счётчика (были в Фазе 10.4, убраны по решению
+// пользователя вместе с хуками в `inc/WooCommerce.php`).
 
-.fs-shop-layout {
-	display: flex;
-	align-items: flex-start;
-	gap: var( --wp--preset--spacing--xxl );
-
-	&__content {
-		flex: 1 1 auto;
-		min-width: 0; // не даёт сетке карточек распирать flex-контейнер
-	}
+.fs-shop-intro {
+	max-width: 35rem;
+	margin: var( --wp--preset--spacing--sm ) 0 0;
+	font-size: var( --wp--preset--font-size--md );
+	font-weight: 300;
+	line-height: 1.6;
+	color: var( --wp--preset--color--text-secondary );
 }
 
-.fs-shop-sidebar {
-	flex: 0 0 25%;
-	max-width: 25%;
-	display: flex;
-	flex-direction: column;
-	gap: var( --wp--preset--spacing--xl );
-}
-
-.fs-widget {
-	&__title {
-		margin: 0 0 var( --wp--preset--spacing--md );
-		font-size: var( --wp--preset--font-size--base );
-		font-weight: 700;
-		color: var( --wp--preset--color--text );
-	}
-
-	// Список категорий (WC_Widget_Product_Categories) — без списковых точек,
-	// с count-бейджем справа, как в референсе WoodMart.
-	.product-categories {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: var( --wp--preset--spacing--sm );
-
-		a {
-			text-decoration: none;
-		}
-
-		.count {
-			margin-left: var( --wp--preset--spacing--xs );
-			color: var( --wp--preset--color--muted-2 );
-			font-size: var( --wp--preset--font-size--xs );
-		}
-	}
-
-	// Слайдер цены (WC_Widget_Price_Filter) — перекрашен в акцент темы
-	// вместо дефолтного WooCommerce-серого.
-	.price_slider_amount {
-		font-size: var( --wp--preset--font-size--sm );
-		color: var( --wp--preset--color--text-secondary );
-	}
-
-	.ui-slider .ui-slider-range {
-		background-color: var( --wp--preset--color--accent );
-	}
-
-	.ui-slider .ui-slider-handle {
-		background-color: var( --wp--preset--color--white );
-		border: 2px solid var( --wp--preset--color--accent );
-		border-radius: var( --wp--custom--radius--pill );
-	}
-}
-
-// Тулбар над сеткой — счётчик результатов + сортировка (штатный вывод
-// `woocommerce_before_shop_loop`, PHP не трогаем, только перестраиваем в
-// один ряд и красим под токены темы вместо WooCommerce-дефолта).
-.woocommerce {
-	.woocommerce-result-count,
-	.woocommerce-ordering {
-		margin: 0;
-		font-size: var( --wp--preset--font-size--sm );
-		color: var( --wp--preset--color--muted );
-	}
-
-	// `woocommerce_before_shop_loop` выводит оба элемента подряд без общей
-	// обёртки — flex по общему родителю `.fs-shop-layout__content` развёл бы
-	// заодно и сетку карточек, поэтому оборачиваем сам тулбар отдельно.
-	.woocommerce-result-count {
-		display: inline-block;
-	}
-
-	.woocommerce-ordering {
-		display: inline-block;
-		float: right;
-
-		select {
-			border: 1px solid var( --wp--preset--color--border );
-			border-radius: var( --wp--custom--radius--control );
-			padding: var( --wp--preset--spacing--xs ) var( --wp--preset--spacing--sm );
-			font-size: var( --wp--preset--font-size--sm );
-			background: var( --wp--preset--color--white );
-		}
-	}
-}
-
-// Сетка товаров (Фаза 10.5) — карточка визуально в языке `.is-style-card`
-// (theme.scss), но не переиспользует сам класс: WooCommerce не добавляет
-// его на `li.product` автоматически, а дублировать несколько строк проще,
-// чем городить общий SCSS-миксин ради одного места использования.
+// Сетка товаров — карточка в языке `.fs-course-catalog-card`
+// (`patterns/courses-catalog.php`, Фаза 16.5): медиа-плашка сверху,
+// бейдж+заголовок+описание+футер (цена/кнопка) снизу с паддингом. Не
+// переиспользует сам класс — WooCommerce не добавляет его на `li.product`,
+// а дублировать несколько строк проще, чем городить общий SCSS-миксин
+// ради одного места использования.
 .woocommerce ul.products {
 	display: grid;
-	grid-template-columns: repeat( 3, 1fr );
+	grid-template-columns: repeat( 4, 1fr );
 	gap: var( --wp--preset--spacing--xl );
 	list-style: none;
 	margin: var( --wp--preset--spacing--xl ) 0 0;
 	padding: 0;
 
 	li.product {
-		position: relative; // якорь для .fs-quick-view поверх миниатюры
+		display: flex;
+		flex-direction: column;
 		background: var( --wp--preset--color--white );
 		border: 1px solid var( --wp--preset--color--border );
-		border-radius: var( --wp--custom--radius--card );
+		border-radius: var( --wp--custom--radius--lg );
 		box-shadow: var( --wp--custom--shadow--surface );
 		overflow: hidden;
-		padding: var( --wp--preset--spacing--lg );
+		padding: 0;
 		transition: box-shadow .2s ease, transform .2s ease;
 
 		&:hover {
@@ -131,149 +44,498 @@
 		}
 
 		a.woocommerce-LoopProduct-link {
-			display: block;
+			display: flex;
+			flex-direction: column;
 			color: inherit;
 			text-decoration: none;
 		}
 
 		img {
-			border-radius: var( --wp--custom--radius--md );
-			aspect-ratio: 1 / 1;
+			display: block;
+			width: 100%;
+			aspect-ratio: 16 / 10;
 			object-fit: cover;
 		}
 
+		// Разметка WooCommerce не оборачивает бейдж/заголовок/описание/футер
+		// в общий контейнер — паддинг вешаем на каждый из них по отдельности
+		// (миниатюра — единственный элемент без паддинга, до края карточки).
+		.fs-shop-card__badge,
+		.woocommerce-loop-product__title,
+		.fs-shop-card__excerpt {
+			margin-left: var( --wp--preset--spacing--lg );
+			margin-right: var( --wp--preset--spacing--lg );
+		}
+
+		.fs-shop-card__badge {
+			align-self: flex-start;
+			margin-top: var( --wp--preset--spacing--md );
+			padding: .1875rem .5625rem;
+			border-radius: var( --wp--custom--radius--md );
+			background: var( --wp--preset--color--accent-2-soft );
+			font-size: var( --wp--preset--font-size--xxs );
+			font-weight: 500;
+			letter-spacing: .04em;
+			text-transform: uppercase;
+			color: var( --wp--preset--color--accent-2 );
+		}
+
 		.woocommerce-loop-product__title {
-			margin: var( --wp--preset--spacing--md ) 0 0;
+			margin-top: var( --wp--preset--spacing--sm );
+			margin-bottom: 0;
+			font-size: var( --wp--preset--font-size--lead );
+			font-weight: 700;
+			line-height: 1.25;
+			color: var( --wp--preset--color--text );
+		}
+
+		.fs-shop-card__excerpt {
+			flex: 1 1 auto;
+			margin-top: var( --wp--preset--spacing--sm );
+			margin-bottom: 0;
+			font-size: var( --wp--preset--font-size--sm );
+			font-weight: 300;
+			line-height: 1.55;
+			color: var( --wp--preset--color--text-secondary );
+		}
+
+		.fs-shop-card__footer {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: var( --wp--preset--spacing--sm );
+			margin-top: var( --wp--preset--spacing--md );
+			padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+			border-top: 1px solid var( --wp--preset--color--border-light );
+
+			.price {
+				font-size: var( --wp--preset--font-size--lead );
+				font-weight: 700;
+				color: var( --wp--preset--color--text );
+			}
+
+			.button.add_to_cart_button {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				height: 2.125rem;
+				padding: 0 var( --wp--preset--spacing--md );
+				border-radius: var( --wp--custom--radius--control );
+				background: var( --wp--preset--color--accent );
+				color: var( --wp--preset--color--white );
+				font-size: var( --wp--preset--font-size--sm );
+				font-weight: 600;
+				text-decoration: none;
+				white-space: nowrap;
+
+				&:hover {
+					background: var( --wp--preset--color--accent-600 );
+					color: var( --wp--preset--color--white );
+				}
+
+				&.loading {
+					opacity: .6;
+				}
+
+				&.added::after {
+					content: none; // дефолтная WC-иконка «добавлено» — не по макету
+				}
+			}
+		}
+	}
+}
+
+@media ( max-width: 1199px ) {
+	.woocommerce ul.products {
+		grid-template-columns: repeat( 2, 1fr );
+	}
+}
+
+@media ( max-width: 600px ) {
+	.woocommerce ul.products {
+		grid-template-columns: 1fr;
+	}
+}
+
+// Корзина/оформление заказа (Фаза 16.3+, `inc/Checkout.php`) — обе
+// страницы переключены на классические шорткоды, стили здесь общие для
+// обеих (степпер, таблица товаров), там, где разметка/классы совпадают.
+
+.fs-checkout-steps {
+	display: flex;
+	align-items: center;
+	gap: var( --wp--preset--spacing--md );
+	margin-bottom: var( --wp--preset--spacing--lg );
+	font-size: var( --wp--preset--font-size--sm );
+	font-weight: 500;
+
+	&__arrow {
+		color: var( --wp--preset--color--muted-2 );
+	}
+
+	&__step {
+		display: inline-flex;
+		align-items: center;
+		gap: var( --wp--preset--spacing--sm );
+		padding: .4375rem var( --wp--preset--spacing--md );
+		border-radius: var( --wp--custom--radius--pill );
+		color: var( --wp--preset--color--muted );
+	}
+
+	&__num {
+		display: grid;
+		place-items: center;
+		width: 18px;
+		height: 18px;
+		flex: 0 0 auto;
+		border: 1px solid var( --wp--preset--color--muted-2 );
+		border-radius: var( --wp--custom--radius--pill );
+		font-size: var( --wp--preset--font-size--xxs );
+		color: inherit;
+	}
+
+	&__step.is-active {
+		background: var( --wp--preset--color--accent-soft );
+		color: var( --wp--preset--color--accent );
+
+		.fs-checkout-steps__num {
+			border-color: var( --wp--preset--color--accent );
+			background: var( --wp--preset--color--accent );
+			color: var( --wp--preset--color--white );
+		}
+	}
+
+	&__step.is-done {
+		color: var( --wp--preset--color--text-secondary );
+
+		.fs-checkout-steps__num {
+			border-color: var( --wp--preset--color--text-secondary );
+		}
+	}
+}
+
+// Сетка «форма + сводка заказа» (Фаза 16.3) — `.fs-cart-layout` открыт/
+// закрыт хуками `woocommerce_before_cart`/`woocommerce_after_cart`
+// (`inc/Checkout.php`), оборачивает и таблицу товаров, и
+// `.cart-collaterals` (сводка WooCommerce) — прямые потомки без общей
+// обёртки в разметке, раскладка колонками через явный `grid-column`.
+.fs-cart-layout {
+	display: grid;
+	grid-template-columns: minmax( 0, 1fr ) 380px;
+	gap: var( --wp--preset--spacing--lg );
+	align-items: start;
+
+	.woocommerce-cart-form,
+	.fs-cart-continue {
+		grid-column: 1;
+	}
+
+	.cart-collaterals {
+		grid-column: 2;
+		grid-row: 1 / span 2;
+	}
+}
+
+.fs-cart-continue {
+	margin-top: var( --wp--preset--spacing--md );
+
+	a {
+		font-size: var( --wp--preset--font-size--base );
+		color: var( --wp--preset--color--text );
+	}
+}
+
+// Таблица товаров корзины (`table.cart`, `cart/cart.php`) — `display:block`
+// на table/thead/tbody снимает табличный layout-алгоритм, `tr` — CSS grid
+// с явным порядком колонок вместо порядка `<td>` в разметке (миниатюра +
+// имя объединены визуально под одним заголовком «Товар», remove-иконка
+// (первая в разметке) визуально уходит в конец, к «Подытогу», как в
+// макете).
+.woocommerce {
+	table.cart {
+		display: block;
+		width: 100%;
+		border: 1px solid var( --wp--preset--color--border );
+		border-radius: var( --wp--custom--radius--lg );
+		overflow: hidden;
+		border-collapse: collapse;
+
+		thead,
+		tbody {
+			display: block;
+		}
+
+		tr {
+			display: grid;
+			grid-template-columns: 64px minmax( 0, 1fr ) 120px 130px 120px 26px;
+			align-items: center;
+			gap: var( --wp--preset--spacing--md );
+			padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+		}
+
+		thead tr {
+			background: var( --wp--preset--color--surface-2 );
+			border-bottom: 1px solid var( --wp--preset--color--border );
+
+			th {
+				font-size: var( --wp--preset--font-size--xxs );
+				font-weight: 500;
+				letter-spacing: .05em;
+				text-transform: uppercase;
+				color: var( --wp--preset--color--muted );
+			}
+
+			.product-name {
+				grid-column: 1 / span 2;
+			}
+		}
+
+		tbody tr.cart_item + tr.cart_item {
+			border-top: 1px solid var( --wp--preset--color--border-light );
+		}
+
+		.product-thumbnail {
+			grid-column: 1;
+
+			img {
+				display: block;
+				width: 64px;
+				height: 64px;
+				border-radius: var( --wp--custom--radius--md );
+				object-fit: cover;
+			}
+		}
+
+		.product-name {
+			grid-column: 2;
+			font-size: var( --wp--preset--font-size--base );
+			font-weight: 700;
+			color: var( --wp--preset--color--text );
+
+			a {
+				color: inherit;
+			}
+
+			.variation {
+				margin-top: .1875rem;
+				font-size: var( --wp--preset--font-size--sm );
+				font-weight: 300;
+				color: var( --wp--preset--color--muted );
+			}
+		}
+
+		.product-price {
+			grid-column: 3;
+			font-size: var( --wp--preset--font-size--sm );
+			color: var( --wp--preset--color--text-secondary );
+		}
+
+		.product-quantity {
+			grid-column: 4;
+
+			.quantity .qty {
+				width: 4.5rem;
+				height: 2.25rem;
+				padding: 0 var( --wp--preset--spacing--sm );
+				border: 1px solid var( --wp--preset--color--border );
+				border-radius: var( --wp--custom--radius--control );
+				text-align: center;
+				font-family: inherit;
+				font-size: var( --wp--preset--font-size--sm );
+			}
+		}
+
+		.product-subtotal {
+			grid-column: 5;
+			text-align: right;
 			font-size: var( --wp--preset--font-size--base );
 			font-weight: 700;
 			color: var( --wp--preset--color--text );
 		}
 
-		.price {
-			display: block;
-			margin-top: var( --wp--preset--spacing--sm );
-			font-weight: 700;
-			color: var( --wp--preset--color--accent-700 );
+		.product-remove {
+			grid-column: 6;
+			text-align: center;
+
+			a.remove {
+				display: grid;
+				place-items: center;
+				width: 26px;
+				height: 26px;
+				margin: 0 auto;
+				border-radius: var( --wp--custom--radius--sm );
+				color: var( --wp--preset--color--muted-2 );
+				font-size: var( --wp--preset--font-size--lg );
+				line-height: 1;
+				text-decoration: none;
+
+				&:hover {
+					background: var( --wp--preset--color--surface-2 );
+					color: var( --wp--preset--color--text-secondary );
+				}
+			}
 		}
 
-		.button.add_to_cart_button {
-			display: inline-block;
-			margin-top: var( --wp--preset--spacing--md );
+		tr.actions {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: var( --wp--preset--spacing--md );
+			padding: var( --wp--preset--spacing--lg );
+			background: var( --wp--preset--color--surface-2 );
+			border-top: 1px solid var( --wp--preset--color--border );
+
+			td.actions {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: space-between;
+				gap: var( --wp--preset--spacing--md );
+				width: 100%;
+			}
+
+			.coupon {
+				display: flex;
+				gap: var( --wp--preset--spacing--sm );
+
+				#coupon_code {
+					width: 12.5rem;
+					height: 2.375rem;
+					padding: 0 var( --wp--preset--spacing--md );
+					border: 1px solid var( --wp--preset--color--border );
+					border-radius: var( --wp--custom--radius--control );
+					font-family: inherit;
+					font-size: var( --wp--preset--font-size--base );
+				}
+			}
+
+			.button {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				height: 2.375rem;
+				padding: 0 var( --wp--preset--spacing--lg );
+				border: 1px solid var( --wp--preset--color--border );
+				border-radius: var( --wp--custom--radius--control );
+				background: var( --wp--preset--color--white );
+				color: var( --wp--preset--color--text-secondary );
+				font-size: var( --wp--preset--font-size--sm );
+				font-weight: 500;
+				cursor: pointer;
+
+				&:hover {
+					background: var( --wp--preset--color--surface-2 );
+				}
+			}
 		}
 	}
-}
 
-.fs-product-cat {
-	margin-top: var( --wp--preset--spacing--xs );
-	font-size: var( --wp--preset--font-size--xs );
-
-	a {
-		color: var( --wp--preset--color--muted );
-		text-decoration: none;
-	}
-}
-
-// Кнопка quick view — оверлей поверх миниатюры (см. разметку и комментарий
-// в inc/WooCommerce.php: кнопка вне `<a>` карточки, позиционируется поверх
-// через `position: absolute` от `li.product`).
-.fs-quick-view {
-	position: absolute;
-	top: var( --wp--preset--spacing--md );
-	right: var( --wp--preset--spacing--md );
-	z-index: 2;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 2.25rem;
-	height: 2.25rem;
-	border: none;
-	border-radius: var( --wp--custom--radius--pill );
-	background: var( --wp--preset--color--white );
-	color: var( --wp--preset--color--text );
-	box-shadow: var( --wp--custom--shadow--surface );
-	cursor: pointer;
-	opacity: 0;
-	transition: opacity .2s ease, background-color .15s ease, color .15s ease;
-
-	li.product:hover & {
-		opacity: 1;
-	}
-
-	&:hover {
-		background: var( --wp--preset--color--accent );
-		color: var( --wp--preset--color--white );
-	}
-}
-
-// Модалка quick view (src/js/quick-view.js добавляет/снимает `.is-open`).
-.fs-quick-view-modal {
-	position: fixed;
-	inset: 0;
-	z-index: 1000;
-	display: none;
-
-	&.is-open {
-		display: block;
-	}
-
-	&__backdrop {
-		position: absolute;
-		inset: 0;
-		background: rgba( 24, 27, 35, .5 );
-	}
-
-	&__panel {
-		position: relative;
-		z-index: 1;
-		max-width: 40rem;
-		margin: 8vh auto 0;
-		padding: var( --wp--preset--spacing--xxl );
-		background: var( --wp--preset--color--white );
-		border-radius: var( --wp--custom--radius--card );
-		box-shadow: var( --wp--custom--shadow--hover );
-		max-height: 84vh;
-		overflow-y: auto;
-	}
-
-	&__close {
-		position: absolute;
-		top: var( --wp--preset--spacing--md );
-		right: var( --wp--preset--spacing--md );
-		width: 2rem;
-		height: 2rem;
-		border: none;
-		border-radius: var( --wp--custom--radius--pill );
+	// Сводка заказа (`.cart_totals`, `cart/cart-totals.php`) — карточка
+	// surface-2, как в макете.
+	.cart_totals {
+		padding: var( --wp--preset--spacing--xl );
 		background: var( --wp--preset--color--surface-2 );
-		font-size: var( --wp--preset--font-size--lg );
-		line-height: 1;
-		cursor: pointer;
-	}
+		border: 1px solid var( --wp--preset--color--border );
+		border-radius: var( --wp--custom--radius--lg );
 
-	&__content {
-		display: flex;
-		gap: var( --wp--preset--spacing--xl );
+		h2 {
+			margin: 0 0 var( --wp--preset--spacing--md );
+			font-size: var( --wp--preset--font-size--lead );
+			font-weight: 700;
+		}
 
-		img {
-			border-radius: var( --wp--custom--radius--md );
+		table {
+			width: 100%;
+			border-collapse: collapse;
+
+			tr {
+				th,
+				td {
+					padding: var( --wp--preset--spacing--xs ) 0;
+					font-weight: 400;
+					font-size: var( --wp--preset--font-size--sm );
+					color: var( --wp--preset--color--text-secondary );
+					text-align: left;
+				}
+
+				td {
+					text-align: right;
+					color: var( --wp--preset--color--text );
+				}
+			}
+
+			tr.order-total {
+				th,
+				td {
+					padding-top: var( --wp--preset--spacing--md );
+					border-top: 1px solid var( --wp--preset--color--border );
+					font-size: var( --wp--preset--font-size--base );
+					font-weight: 500;
+					color: var( --wp--preset--color--text );
+				}
+
+				td {
+					font-size: 1.625rem;
+					font-weight: 700;
+				}
+			}
+		}
+
+		.wc-proceed-to-checkout {
+			margin-top: var( --wp--preset--spacing--sm );
+
+			a.checkout-button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				height: 2.625rem;
+				border-radius: var( --wp--custom--radius--control );
+				background: var( --wp--preset--color--accent );
+				color: var( --wp--preset--color--white );
+				font-size: var( --wp--preset--font-size--base );
+				font-weight: 600;
+				text-decoration: none;
+
+				&:hover {
+					background: var( --wp--preset--color--accent-600 );
+				}
+			}
 		}
 	}
 }
 
 @media ( max-width: 960px ) {
-	.fs-shop-layout {
-		flex-direction: column;
-	}
-
-	.fs-shop-sidebar {
-		max-width: 100%;
-		flex-basis: auto;
-	}
-
-	.woocommerce ul.products {
+	.fs-cart-layout {
 		grid-template-columns: 1fr;
+
+		.woocommerce-cart-form,
+		.fs-cart-continue,
+		.cart-collaterals {
+			grid-column: 1;
+			grid-row: auto;
+		}
 	}
 
-	.fs-quick-view-modal__content {
-		flex-direction: column;
+	.woocommerce table.cart tr {
+		grid-template-columns: 48px minmax( 0, 1fr ) auto;
+		grid-template-areas:
+			"thumb name remove"
+			"price price price"
+			"qty qty qty"
+			"subtotal subtotal subtotal";
+		row-gap: var( --wp--preset--spacing--xs );
+
+		.product-thumbnail { grid-area: thumb; }
+		.product-name { grid-area: name; }
+		.product-remove { grid-area: remove; }
+		.product-price { grid-area: price; grid-column: auto; }
+		.product-quantity { grid-area: qty; grid-column: auto; }
+		.product-subtotal { grid-area: subtotal; grid-column: auto; text-align: left; }
+	}
+
+	.woocommerce table.cart thead {
+		display: none; // мобильный стек не нуждается в отдельной шапке-гриде
 	}
 }
