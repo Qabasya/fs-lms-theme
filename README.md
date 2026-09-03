@@ -38,10 +38,14 @@ inc/                  PHP-модули bootstrap'а (functions.php их прос
   Assets.php            шрифты + подключение собранных assets/css|js
   Blocks.php            регистрация кастомных блоков (glob по src/blocks/*/block.json)
   PluginRoutes.php      fs_lms_theme_url() — резолвер URL страниц плагина
+  Forms.php             лид-формы (#hero-form/#signup): AJAX-приём, honeypot/
+                        HMAC-таймер, rate-limit, Yandex SmartCaptcha, письмо
+  WooCommerce.php       интеграция каталога с блоком «Товары»
 
 src/
   scss/                theme.scss (фронт), editor.scss (редактор)
-  js/                  theme.js (фронт-интерактив)
+  js/                  theme.js (фронт-интерактив), forms.js (AJAX-отправка
+                        лид-форм), carousels.js (Splide-карусели)
   blocks/              кастомные Gutenberg-блоки, см. src/blocks/README.md
   blocks/shared/       общие модули блоков (иконки, цвета, рейтинг, инициалы)
 
@@ -67,7 +71,7 @@ theme.json              дизайн-токены (источник — fs-lms p
 
 ## Блоки (`src/blocks/`)
 
-7 кастомных Gutenberg-блоков, категория инсёртера `fs-lms-cards`. Каждый —
+8 кастомных Gutenberg-блоков, категория инсёртера `fs-lms-cards`. Каждый —
 папка `src/blocks/<name>/`: `block.json` (атрибуты), `edit.js` (вид в
 редакторе + инспектор), `save.js` (что сохраняется в разметку страницы),
 `style.scss` (стили фронта+редактора). Чтобы поменять поля блока (что можно
@@ -84,9 +88,17 @@ theme.json              дизайн-токены (источник — fs-lms p
 | `fs-lms/stat-tile` | Крупное число, подпись, пояснение — плитка статистики | `src/blocks/stat-tile/` |
 | `fs-lms/faq-item` | Вопрос/ответ на нативном `<details>/<summary>` — аккордеон без JS | `src/blocks/faq-item/` |
 | `fs-lms/cta-banner` | Заголовок, текст, 1–2 кнопки, вариант фона solid/soft | `src/blocks/cta-banner/` |
+| `fs-lms/alumni-card` | Фото, баллы, имя, короткий отзыв выпускника — слайд карусели «Наши выпускники» | `src/blocks/alumni-card/` |
 
 Общие для блоков модули — `src/blocks/shared/` (иконки, цветовые пары
 бейджей, инициалы из имени, рендер звёзд рейтинга, пикер картинки).
+
+Чтобы поменять внешний вид готовой карточки/плитки на конкретной странице —
+не обязательно лезть в код блока: открыть страницу в редакторе, кликнуть по
+блоку и поправить поля в инспекторе справа (текст, картинка, цвет — всё,
+что вынесено в атрибуты `block.json`) — правки блока в коде (`edit.js`/
+`save.js`/`style.scss`) нужны только когда меняется сам набор полей блока
+или его вёрстка/стили во всех местах использования разом.
 
 ## Как добавить новый паттерн
 
@@ -127,21 +139,117 @@ PHP (можно `<?php if/echo ?>` внутри — паттерны не ста
 |---|---|---|
 | `header-nav` | Шапка: топбар, лого, меню, соцсети, «Записаться», корзина | `patterns/header-nav.php` |
 | `footer-columns` | Футер: контакты+адрес, карта Яндекса, юр. реквизиты, копирайт | `patterns/footer-columns.php` |
-| `hero-split` | Первый экран: заголовок, лид, кнопки, 3 факта, код-карточка | `patterns/hero-split.php` |
+| `hero` | Первый экран главной: 4 направления + карточка формы записи (`#hero-form`) + 3 факта — в `front-page.html` по умолчанию | `patterns/hero.php` |
+| `hero-split` | Более старый вариант первого экрана (заголовок, лид, кнопки, 3 факта, код-карточка `main.py`) — не в шаблоне, оставлен в библиотеке про запас | `patterns/hero-split.php` |
+| `alumni-carousel` | «Наши выпускники» — Splide-карусель отзывов из `fs-lms/alumni-card` | `patterns/alumni-carousel.php` |
 | `alumni-strip` | Ряд логотипов вузов-партнёров | `patterns/alumni-strip.php` |
 | `features-grid` | «Сделаем вместе» — текст слева + сетка 2×2 карточек-преимуществ | `patterns/features-grid.php` |
 | `courses-grid` | «Курсы и направления» — 3 карточки курсов с ценой | `patterns/courses-grid.php` |
 | `intensive-split` | «Интенсивная подготовка» — фото, чек-лист, плашка цены | `patterns/intensive-split.php` |
-| `stats-row` | 3 плитки статистики (цена/средний балл/лучший балл) | `patterns/stats-row.php` |
-| `blog-grid` | «Как проходят занятия» — 3 последних поста блога (реальный `WP_Query`, секция скрывается, если постов < 3) | `patterns/blog-grid.php` |
-| `contact-section` | CTA + форма заявки на пробное занятие | `patterns/contact-section.php` |
+| `stats-row` | Библиотечный паттерн — 3 плитки статистики (цена/средний балл/лучший балл), не в шаблоне по умолчанию | `patterns/stats-row.php` |
+| `blog-grid` | Библиотечный паттерн — «Как проходят занятия», 3 последних поста блога (реальный `WP_Query`, секция скрывается, если постов < 3), не в шаблоне по умолчанию | `patterns/blog-grid.php` |
+| `contact-section` | CTA + форма заявки на пробное занятие (`#signup`), с полем «Направление» — используется на главной | `patterns/contact-section.php` |
+| `about-header` | Реквизиты организации над юридическим аккордеоном (используется на `/about/`) | `patterns/about-header.php` |
 | `about-accordion` | Юридический аккордеон организации (используется на `/about/`, см. ниже) | `patterns/about-accordion.php` |
+| `subject-hero` | Первый экран страницы направления: инфобокс + мини-форма записи (`#hero-form`) — общий шаблон для ЕГЭ/ОГЭ/Python/Робототехники, тексты правятся вручную при вставке | `patterns/subject-hero.php` |
+| `subject-contact` | Та же форма записи, что `contact-section`, но без поля «Направление» — для страницы направления, где предмет уже задан контекстом | `patterns/subject-contact.php` |
+| `subject-more` | «Хочешь больше?» — 2 карточки-ссылки на учебник/тренажёр предмета (URL через `fs_lms_theme_subject_url()`) | `patterns/subject-more.php` |
 | `faq` | Библиотечный паттерн — FAQ-аккордеон (`fs-lms/faq-item`), не привязан к конкретной странице | `patterns/faq.php` |
 | `testimonials` | Библиотечный паттерн — сетка карточек отзывов | `patterns/testimonials.php` |
 | `cta-banner` | Библиотечный паттерн — обёртка вокруг блока `fs-lms/cta-banner` | `patterns/cta-banner.php` |
 
 «Библиотечные» — не встроены ни в один шаблон по умолчанию, вставляются
 вручную из инсёртера на любой странице, где нужны.
+
+Формы (`hero`/`subject-hero` → `#hero-form`, `contact-section`/
+`subject-contact` → `#signup`) — не статичная вёрстка, а рабочие формы с
+реальной отправкой на почту; как их настраивать — раздел «Формы и
+Yandex SmartCaptcha» ниже.
+
+## Формы и Yandex SmartCaptcha
+
+В теме две рабочие лид-формы «оставьте контакты, перезвоним» —
+`#hero-form` (паттерны `hero.php`/`subject-hero.php`) и `#signup`
+(паттерны `contact-section.php`/`subject-contact.php`). Это **не** тот же
+поток, что заявка на зачисление плагина `fs-lms` (OTP, шифрование
+персональных данных, личный кабинет) — своя лёгкая логика в теме,
+`inc/Forms.php` + `src/js/forms.js`, без зависимости от классов плагина.
+
+### Как это работает
+
+1. Каждая форма — обычный `<form data-fs-form>` в `wp:html` внутри
+   паттерна. `src/js/forms.js` (`initForms()`, вызывается из
+   `src/js/theme.js`) перехватывает `submit`, шлёт `fetch` на
+   `admin-ajax.php` (`action=fs_theme_submit_form`) и без перезагрузки
+   страницы показывает ответ в `.fs-form-message` внутри формы.
+2. Обработчик на сервере — `fs_lms_theme_handle_form_submit()` в
+   `inc/Forms.php`. Проверяет по порядку: nonce (`check_ajax_referer`) →
+   honeypot + HMAC-таймер (защита от ботов) → rate-limit по IP
+   (`FS_LMS_THEME_FORM_RATE_LIMIT` — 5 сабмитов за
+   `FS_LMS_THEME_FORM_RATE_WINDOW`, 10 минут) → капча Yandex SmartCaptcha
+   (только если настроена, см. ниже) → валидация имени/телефона → письмо
+   через `wp_mail()` на `FS_LMS_THEME_FORM_RECIPIENT` (сейчас
+   `info@future-step.ru`, константа в `inc/Forms.php`).
+3. Honeypot — скрытое поле `fs_company` (класс `.fs-form-honeypot`,
+   `tabindex="-1" aria-hidden="true"`) — бот его заполняет, человек не
+   видит и не трогает. HMAC-таймер — скрытое поле `fs_form_token`
+   (`{timestamp}.{hmac}`, подписано `AUTH_KEY` или константой
+   `FS_LMS_THEME_FORM_SALT`, если задана в `wp-config.php`) — отсекает
+   сабмит раньше `FS_LMS_THEME_FORM_MIN_FILL_SECONDS` (3 сек, слишком
+   быстро для человека) и токены старше часа.
+
+### Как подключить капчу и куда вписывать ключи Яндекса
+
+Капча — **опциональна**: если ключи не заданы, формы работают на одном
+honeypot+таймере+rate-limit, ничего не ломается на голой установке.
+
+1. Получить пару ключей Yandex SmartCaptcha в
+   [Yandex Cloud](https://cloud.yandex.ru/services/smartcaptcha) —
+   **Client-side (site) key** и **Server-side (secret) key** для домена
+   сайта.
+2. В админке WordPress: **Настройки → Формы** (пункт меню добавляет
+   `inc/Forms.php`, `admin_menu`) — вписать оба ключа в поля **Site key**
+   и **Server key**, «Сохранить изменения».
+3. Дальше ничего делать не нужно — как только оба поля заполнены:
+   - `fs_lms_theme_captcha_configured()` начинает возвращать `true`;
+   - фронт подключает `https://smartcaptcha.yandexcloud.net/captcha.js`
+     (`wp_enqueue_script`, только если капча настроена — не грузится
+     вхолостую);
+   - оба паттерна форм сами рисуют виджет `<div class="smart-captcha"
+     data-sitekey="…">` перед кнопкой отправки (условие
+     `fs_lms_theme_captcha_configured()` уже зашито в PHP паттерна, руками
+     ничего не включать);
+   - `fs_lms_theme_handle_form_submit()` начинает требовать и проверять
+     `smart-token` через `POST https://smartcaptcha.yandexcloud.net/validate`
+     с server key (таймаут 5 сек, **fail-open** — если API Яндекса
+     недоступен/ошибся, сабмит не блокируется, чтобы сторонний сервис не
+     клал форму).
+4. Ключи темы **не совпадают и не переиспользуют** ключи капчи плагина
+   `fs-lms` (`SmartCaptchaSettingsController`) — это два независимых
+   инстанса SmartCaptcha (можно оформить один сайт на два ключа в Yandex
+   Cloud, или использовать разные пары), хранятся в отдельных опциях
+   (`fs_lms_theme_captcha_site_key`/`fs_lms_theme_captcha_server_key`).
+
+### Как поменять получателя писем, лимиты или добавить поле в форму
+
+- Email получателя заявок — константа `FS_LMS_THEME_FORM_RECIPIENT` в
+  `inc/Forms.php`.
+- Лимиты rate-limit/таймера — константы `FS_LMS_THEME_FORM_RATE_LIMIT`,
+  `FS_LMS_THEME_FORM_RATE_WINDOW`, `FS_LMS_THEME_FORM_MIN_FILL_SECONDS`,
+  `FS_LMS_THEME_FORM_MAX_TOKEN_AGE` в начале `inc/Forms.php`.
+- Новое поле в форме — добавить `<input>`/`<select>` с нужным `name` в
+  разметке паттерна (`hero.php`/`subject-hero.php`/`contact-section.php`/
+  `subject-contact.php`) **и** прочитать это поле (`sanitize_text_field`
+  + добавить строку в `$lines`) в `fs_lms_theme_handle_form_submit()` —
+  без второго шага значение просто не попадёт в письмо, сервер игнорирует
+  неизвестные поля `$_POST`.
+- Обязательные служебные поля, которые должны быть в разметке любой формы
+  темы: `form_id` (скрытое, различает `hero`/`signup` в письме),
+  `fs_form_token` (`<?php echo esc_attr( fs_lms_theme_form_timestamp_token() ); ?>`),
+  honeypot (`name="<?php echo esc_attr( fs_lms_theme_honeypot_field() ); ?>"`,
+  класс `.fs-form-honeypot`), контейнер `.fs-form-message` для ответа JS и
+  сам `<form data-fs-form>` — без них `src/js/forms.js` не найдёт форму
+  или сервер отклонит сабмит как «не человек».
 
 ## Как собрать свою страницу (на примере `/about/`)
 
@@ -179,6 +287,15 @@ Site Editor/редакторе страницы из готовых паттер
    образом, но через блок «Товары» (`Products`/`All Products Block`) — он
    сам тянет реальные `WC_Product`, подробности и живая логика каталога —
    `inc/WooCommerce.php` и `tasks.md`, Фаза 10.
+
+Похожим образом собирается страница направления (ЕГЭ/ОГЭ/Python/
+Робототехника) — из трёх паттернов подряд: `subject-hero` (инфобокс +
+`#hero-form`) → `subject-more` (ссылки на учебник/тренажёр) →
+`subject-contact` (`#signup` без поля «Направление»). У всех трёх, кроме
+`subject-more`, контент общий шаблон под ЕГЭ по умолчанию — при вставке на
+страницу другого предмета текст (бейдж/`<h1>`/описание) и переменная
+`$subject_key` в начале `subject-more.php` правятся вручную прямо в файле
+паттерна (см. докблок `subject-more.php` и `tasks.md`, Фаза 13).
 
 ## Где искать токены
 
