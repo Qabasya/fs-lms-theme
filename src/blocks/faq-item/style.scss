@@ -1,6 +1,19 @@
+/**
+ * Аккордеон в стиле Mantine `variant="separated"` (Фаза 12.11) — каждый
+ * вопрос своя рамка+радиус панель вместо общего списка с разделителями,
+ * шеврон — SVG через `mask-image` (не JS/не doc-markup: работает и на
+ * уже собранном `save.js`, и на 12 статичных `<summary>`
+ * `.fs-legal-accordion`, — та же техника, см. `theme.scss`).
+ */
 .fs-faq-item {
-	padding: var( --wp--preset--spacing--lg ) 0;
-	border-bottom: 1px solid var( --wp--preset--color--border-light );
+	padding: 0;
+	border: 1px solid var( --wp--preset--color--border-light );
+	border-radius: var( --wp--custom--radius--md );
+	background: var( --wp--preset--color--white );
+
+	& + & {
+		margin-top: .625rem;
+	}
 
 	&__question {
 		display: flex;
@@ -9,32 +22,50 @@
 		gap: var( --wp--preset--spacing--md );
 		cursor: pointer;
 		list-style: none;
+		padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
 		font-size: var( --wp--preset--font-size--base );
 		font-weight: 700;
 		color: var( --wp--preset--color--text );
+		transition: color .15s ease;
 
 		&::-webkit-details-marker {
 			display: none;
 		}
 
+		&:hover {
+			color: var( --wp--preset--color--accent );
+		}
+
 		&::after {
 			content: '';
 			flex: 0 0 auto;
-			width: .625rem;
-			height: .625rem;
-			border-right: 2px solid var( --wp--preset--color--muted-2 );
-			border-bottom: 2px solid var( --wp--preset--color--muted-2 );
-			transform: rotate( 45deg );
+			width: 1rem;
+			height: 1rem;
+			background-color: currentcolor;
+			mask-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" );
+			mask-repeat: no-repeat;
+			mask-position: center;
+			mask-size: contain;
 			transition: transform .2s ease;
 		}
 	}
 
-	&[open] &__question::after {
-		transform: rotate( -135deg );
+	&[open] {
+		border-color: var( --wp--preset--color--accent );
+	}
+
+	&[open] &__question {
+		color: var( --wp--preset--color--accent );
+		font-weight: 600;
+
+		&::after {
+			transform: rotate( 180deg );
+		}
 	}
 
 	&__answer {
-		margin: var( --wp--preset--spacing--sm ) 0 0;
+		margin: 0;
+		padding: 0 var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--md );
 		color: var( --wp--preset--color--text-secondary );
 		font-size: var( --wp--preset--font-size--sm );
 		font-weight: 300;

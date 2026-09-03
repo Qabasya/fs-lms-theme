@@ -79,8 +79,19 @@ add_action( 'wp_enqueue_scripts', function (): void {
 		 * что в `inc/WooCommerce.php`.
 		 */
 		wp_localize_script( 'fs-lms-theme', 'fsLmsTheme', array(
-			'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
+			'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
 			'quickViewNonce' => wp_create_nonce( 'fs-quick-view' ),
+			/**
+			 * Формы (Фаза 14, src/js/forms.js) — тот же AJAX-эндпоинт,
+			 * отдельный nonce под `check_ajax_referer('fs-theme-form', …)`
+			 * в `inc/Forms.php`. `captchaSiteKey` пуст, если Yandex
+			 * SmartCaptcha не настроена в Настройки → Формы — тогда JS не
+			 * рендерит виджет капчи, форма отправляется без него.
+			 */
+			'formNonce'      => wp_create_nonce( 'fs-theme-form' ),
+			'captchaSiteKey' => function_exists( 'fs_lms_theme_captcha_configured' ) && fs_lms_theme_captcha_configured()
+				? get_option( 'fs_lms_theme_captcha_site_key', '' )
+				: '',
 		) );
 	}
 } );

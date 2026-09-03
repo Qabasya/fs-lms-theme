@@ -9,11 +9,17 @@
  * заменяет `hero-split.php` (Фаза 11, код-карточка `main.py`) в
  * `templates/front-page.html`. Левая колонка — список 4 направлений
  * (простые ссылки, не `fs-lms/course-card` — другая разметка и контент,
- * см. tasks.md 12.2), правая — карточка формы `id="hero-form"` (поля ФИО +
- * Телефон, без реальной отправки — Фаза 14) и плашка из 3 фактов.
+ * см. tasks.md 12.2), правая — карточка формы `id="hero-form"` и плашка
+ * из 3 фактов.
  *
  * `hero-split.php` не удалён — остаётся в библиотеке паттернов на случай,
  * если понадобится для другой страницы; из `front-page.html` исключён.
+ *
+ * Фаза 14: `#hero-form` — реальная форма (`<form data-fs-form>`, не
+ * `<div>`), с honeypot/HMAC-таймером/капчей (если настроена) — их кладёт
+ * сюда PHP (`inc/Forms.php`) при рендере паттерна, `src/js/forms.js`
+ * перехватывает `submit` и шлёт AJAX. Кнопка — `<button type="submit">`
+ * вместо якоря `<a href="#hero-form">`.
  */
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"4.5rem","bottom":"0"}}}} -->
@@ -53,15 +59,22 @@
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:html -->
-			<div id="hero-form" class="fs-hero-form">
+			<form id="hero-form" class="fs-hero-form" data-fs-form>
 				<div class="fs-hero-form__title">Запишитесь на пробное занятие</div>
 				<div class="fs-hero-form__row">
-					<input type="text" name="parent_name" placeholder="ФИО" autocomplete="name">
-					<input type="tel" name="phone" placeholder="Телефон" autocomplete="tel">
+					<input type="text" name="parent_name" placeholder="ФИО" autocomplete="name" required>
+					<input type="tel" name="phone" placeholder="Телефон" autocomplete="tel" required>
 				</div>
-				<a href="#hero-form" class="fs-hero-form__submit">Отправить</a>
+				<input type="hidden" name="form_id" value="hero">
+				<input type="hidden" name="fs_form_token" value="<?php echo esc_attr( fs_lms_theme_form_timestamp_token() ); ?>">
+				<input type="text" name="<?php echo esc_attr( fs_lms_theme_honeypot_field() ); ?>" class="fs-form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+				<?php if ( function_exists( 'fs_lms_theme_captcha_configured' ) && fs_lms_theme_captcha_configured() ) : ?>
+				<div class="smart-captcha" data-sitekey="<?php echo esc_attr( get_option( 'fs_lms_theme_captcha_site_key', '' ) ); ?>"></div>
+				<?php endif; ?>
+				<button type="submit" class="fs-hero-form__submit">Отправить</button>
 				<div class="fs-hero-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</div>
-			</div>
+				<div class="fs-form-message" role="status"></div>
+			</form>
 			<!-- /wp:html -->
 
 			<!-- wp:html -->

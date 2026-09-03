@@ -122,7 +122,7 @@ a {
 	}
 }
 
-@media ( max-width: 991px ) {
+@media ( max-width: 1199px ) {
 	.fs-courses-grid {
 		grid-template-columns: repeat( 2, 1fr );
 	}
@@ -193,7 +193,8 @@ a {
 	&__item {
 		display: flex;
 		align-items: baseline;
-		gap: .75rem;
+		flex-wrap: wrap;
+		gap: .375rem .75rem;
 		padding: .75rem 0;
 		border-bottom: 1px solid #ece3d6;
 		color: var( --wp--preset--color--text );
@@ -213,6 +214,7 @@ a {
 	}
 
 	&__name {
+		min-width: 0;
 		font-size: 1.3125rem;
 	}
 
@@ -243,6 +245,7 @@ a {
 		margin-bottom: 1rem;
 
 		input {
+			min-width: 0;
 			height: 2.375rem;
 			padding: 0 var( --wp--preset--spacing--md );
 			background: var( --wp--preset--color--white );
@@ -266,17 +269,28 @@ a {
 	&__submit {
 		display: inline-flex;
 		align-items: center;
+		justify-content: center;
+		width: 100%;
 		height: 2.375rem;
 		padding: 0 1.375rem;
 		background: var( --wp--preset--color--accent );
 		color: var( --wp--preset--color--white );
+		border: none;
 		border-radius: var( --wp--custom--radius--control );
+		font-family: inherit;
 		font-size: var( --wp--preset--font-size--base );
 		font-weight: 500;
+		cursor: pointer;
+		transition: background-color .15s ease, opacity .15s ease;
 
 		&:hover {
 			background: var( --wp--preset--color--accent-600 );
 			color: var( --wp--preset--color--white );
+		}
+
+		&:disabled {
+			opacity: .6;
+			cursor: default;
 		}
 	}
 
@@ -313,6 +327,75 @@ a {
 	&__label {
 		font-size: var( --wp--preset--font-size--base );
 		color: var( --wp--preset--color--text-secondary );
+	}
+}
+
+/**
+ * Карточки-ссылки «Учебник»/«Тренажёр» (Фаза 13, `patterns/subject-more.php`)
+ * — сама карточка `<a>` переиспользует базовую поверхность `.is-style-card`
+ * (см. выше), здесь только внутренняя раскладка иконка/заголовок/текст.
+ */
+.fs-subject-more-card {
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+	padding: var( --wp--preset--spacing--xl );
+	text-decoration: none;
+	color: inherit;
+
+	&__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		margin-bottom: .25rem;
+		background: var( --wp--preset--color--accent-soft );
+		border-radius: var( --wp--custom--radius--md );
+		color: var( --wp--preset--color--accent );
+	}
+
+	&__title {
+		font-size: var( --wp--preset--font-size--lg );
+		font-weight: 700;
+		color: var( --wp--preset--color--text );
+	}
+
+	&__text {
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 300;
+		color: var( --wp--preset--color--text-secondary );
+	}
+}
+
+/**
+ * Hero-инфобокс страницы направления (Фаза 13, `patterns/subject-hero.php`)
+ * — тот же визуальный язык, что у `.fs-hero-dirs` на главной (кремовая
+ * панель + акцентный левый бордер), но текст внутри — настоящие
+ * Gutenberg-блоки (не `wp:html`), поэтому паддинг/фон вынесены на
+ * класс группы, а не на строчную разметку.
+ */
+.fs-subject-hero-box {
+	height: 100%;
+	padding: 2.75rem 2.5rem;
+	background: var( --wp--preset--color--accent-2-soft );
+	border-left: 3px solid var( --wp--preset--color--accent-2 );
+	border-radius: var( --wp--custom--radius--card );
+
+	&__badge {
+		display: inline-block;
+		margin: 0 0 .75rem;
+		padding: .25rem .625rem;
+		background: var( --wp--preset--color--white );
+		border-radius: var( --wp--custom--radius--pill );
+		font-size: var( --wp--preset--font-size--xs );
+		font-weight: 600;
+		color: var( --wp--preset--color--accent-2 );
+	}
+
+	h1 {
+		margin: 0 0 .75rem;
+		line-height: 1.1;
 	}
 }
 
@@ -477,10 +560,9 @@ a {
 }
 
 /**
- * Форма заявки (Фаза 11) — реальные поля для визуального соответствия
- * макету, без обработчика (`action` ведёт на страницу заявки плагина,
- * см. docblock паттерна) — GET-навигация, как и раньше у кнопки-ссылки,
- * просто с полями вместо голой кнопки.
+ * Форма заявки (Фаза 11, реальная отправка — Фаза 14) — `src/js/forms.js`
+ * перехватывает `submit`, шлёт `fetch` на `admin-ajax.php`
+ * (`inc/Forms.php`), без перезагрузки/редиректа на страницу плагина.
  */
 .fs-apply-form {
 	display: flex;
@@ -512,6 +594,11 @@ a {
 		&:hover {
 			background: var( --wp--preset--color--accent-2-600 );
 		}
+
+		&:disabled {
+			opacity: .6;
+			cursor: default;
+		}
 	}
 
 	&__note {
@@ -528,10 +615,85 @@ a {
 	gap: var( --wp--preset--spacing--md );
 }
 
+/**
+ * Реквизиты организации (Фаза 15, `patterns/about-header.php`) — 2×2 сетка
+ * подпись/значение, складывается в 1 колонку на мобильных тем же
+ * брейкпоинтом, что и остальные сетки темы (960px).
+ */
+.fs-about-requisites {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--xl );
+	margin: var( --wp--preset--spacing--lg ) 0;
+
+	&__item {
+		display: flex;
+		flex-direction: column;
+		gap: .125rem;
+		font-size: var( --wp--preset--font-size--sm );
+		color: var( --wp--preset--color--text );
+
+		a {
+			color: inherit;
+		}
+	}
+
+	&__label {
+		font-size: var( --wp--preset--font-size--xxs );
+		text-transform: uppercase;
+		letter-spacing: .02em;
+		color: var( --wp--preset--color--muted );
+	}
+}
+
+@media ( max-width: 960px ) {
+	.fs-about-requisites {
+		grid-template-columns: 1fr;
+	}
+}
+
+/**
+ * Honeypot-поле (Фаза 14, `fs_lms_theme_honeypot_field()`) — визуально
+ * скрыт off-screen, не `display:none`/`visibility:hidden`: часть ботов
+ * пропускает поля, скрытые этими двумя способами, `position:absolute`
+ * за пределами экрана — более надёжная (хоть и не абсолютная) ловушка.
+ * `tabindex="-1"`/`autocomplete="off"` в разметке паттерна — человек до
+ * поля не доберётся ни табом, ни автозаполнением браузера.
+ */
+.fs-form-honeypot {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+/**
+ * Статус отправки формы (Фаза 14, `src/js/forms.js`) — токены
+ * `ok`/`err` дизайн-системы (Фаза 2), без своей палитры.
+ */
+.fs-form-message {
+	margin-top: .75rem;
+	font-size: var( --wp--preset--font-size--sm );
+
+	&:empty {
+		display: none;
+	}
+
+	&.is-success {
+		color: var( --wp--preset--color--ok );
+	}
+
+	&.is-error {
+		color: var( --wp--preset--color--err );
+	}
+}
+
 .fs-form-field {
 	display: flex;
 	flex-direction: column;
 	gap: var( --wp--preset--spacing--xs );
+	min-width: 0;
 
 	label {
 		font-size: var( --wp--preset--font-size--xs );
@@ -541,6 +703,8 @@ a {
 
 	input,
 	select {
+		min-width: 0;
+		width: 100%;
 		height: 2.625rem;
 		padding: 0 var( --wp--preset--spacing--md );
 		border: 1px solid var( --wp--preset--color--border );
@@ -626,8 +790,13 @@ a {
 .fs-carousel-mask .splide__arrow {
 	display: grid;
 	place-items: center;
+	position: absolute;
+	top: 50%;
+	z-index: 1;
+	transform: translateY( -50% );
 	width: 2.25rem;
 	height: 2.25rem;
+	padding: 0;
 	background: var( --wp--preset--color--white );
 	border: 1px solid var( --wp--preset--color--border );
 	border-radius: var( --wp--custom--radius--pill );
@@ -638,6 +807,18 @@ a {
 		width: 1rem;
 		height: 1rem;
 		fill: var( --wp--preset--color--text-secondary );
+	}
+
+	&.splide__arrow--prev {
+		left: -1.125rem;
+
+		svg {
+			transform: scaleX( -1 );
+		}
+	}
+
+	&.splide__arrow--next {
+		right: -1.125rem;
 	}
 
 	&:hover {
@@ -786,32 +967,76 @@ a {
 	text-align: center;
 }
 
+/**
+ * 768–991px — 2 колонки (лого+описание / «Информация» в ряд, карта на всю
+ * ширину под ними); <768px — 1 колонка (спека `tasks.md` 12.10).
+ */
 @media ( max-width: 991px ) {
+	.fs-footer-grid {
+		grid-template-columns: 1fr 1fr;
+
+		/* Разметка в DOM — колонка/карта/колонка (Фаза 12.9): без явного
+		   `grid-row`/`grid-column` карта (растянутая на всю ширину) встаёт
+		   между колонками и отправляет вторую колонку в одиночный третий
+		   ряд вместо пары с первой. */
+		&__col:first-child {
+			grid-column: 1;
+			grid-row: 1;
+		}
+
+		&__col:last-child {
+			grid-column: 2;
+			grid-row: 1;
+		}
+
+		&__map {
+			grid-column: 1 / -1;
+			grid-row: 2;
+			max-width: none;
+		}
+	}
+}
+
+@media ( max-width: 767px ) {
 	.fs-footer-grid {
 		grid-template-columns: 1fr;
 
+		&__col:first-child,
+		&__col:last-child {
+			grid-column: auto;
+			grid-row: auto;
+		}
+
 		&__map {
-			max-width: none;
+			grid-column: auto;
+			grid-row: auto;
 		}
 	}
 }
 
 /**
  * Аккордеон юридической страницы `/about/` (patterns/about-accordion.php,
- * Фаза 10.2). Тот же визуальный язык, что у `fs-lms/faq-item`
- * (`src/blocks/faq-item/style.scss`), но не сам блок: разделам этой
+ * Фаза 10.2). Тот же визуальный язык (Mantine `variant="separated"`,
+ * Фаза 12.11), что у `fs-lms/faq-item` (`src/blocks/faq-item/style.scss`,
+ * включая шеврон через `mask-image` — работает и на статичной разметке
+ * без изменения 12 `<summary>` вручную), но не сам блок: разделам этой
  * страницы нужно несколько абзацев и ссылки на PDF на один ответ, а
  * `fs-lms/faq-item` хранит ответ как один `<p>` — не подходит, поэтому
  * здесь статичная разметка `<details>/<summary>`, стилизованная отдельным
- * классом.
+ * классом. Точные цвета вопроса/рамки (`#f8f9fa`/`#f1f3f5`/`#dee2e6`) —
+ * Фаза 15.1, сверка с `О нас - мокап.dc.html` (страница юридического
+ * толка держит свою чуть более приглушённую палитру, а не акцентный
+ * токен design-системы, как у `fs-lms/faq-item`).
  */
 .fs-legal-accordion {
 	&__item {
-		padding: var( --wp--preset--spacing--lg ) 0;
-		border-bottom: 1px solid var( --wp--preset--color--border-light );
+		padding: 0;
+		border: 1px solid #dee2e6;
+		border-radius: var( --wp--custom--radius--md );
+		background: var( --wp--preset--color--white );
 
-		&:last-child {
-			border-bottom: none;
+		& + & {
+			margin-top: .625rem;
 		}
 	}
 
@@ -822,31 +1047,47 @@ a {
 		gap: var( --wp--preset--spacing--md );
 		cursor: pointer;
 		list-style: none;
+		padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+		background: #f8f9fa;
+		border-radius: var( --wp--custom--radius--md );
 		font-weight: 700;
 		color: var( --wp--preset--color--text );
+		transition: color .15s ease, background-color .15s ease;
 
 		&::-webkit-details-marker {
 			display: none;
 		}
 
+		&:hover {
+			background: #f1f3f5;
+		}
+
 		&::after {
 			content: '';
 			flex: 0 0 auto;
-			width: .625rem;
-			height: .625rem;
-			border-right: 2px solid var( --wp--preset--color--muted-2 );
-			border-bottom: 2px solid var( --wp--preset--color--muted-2 );
-			transform: rotate( 45deg );
+			width: 1rem;
+			height: 1rem;
+			background-color: currentcolor;
+			mask-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" );
+			mask-repeat: no-repeat;
+			mask-position: center;
+			mask-size: contain;
 			transition: transform .2s ease;
 		}
 	}
 
-	&__item[open] &__question::after {
-		transform: rotate( -135deg );
+	&__item[open] &__question {
+		border-radius: var( --wp--custom--radius--md ) var( --wp--custom--radius--md ) 0 0;
+		color: var( --wp--preset--color--accent );
+
+		&::after {
+			transform: rotate( 180deg );
+		}
 	}
 
 	&__answer {
-		margin-top: var( --wp--preset--spacing--sm );
+		margin: 0;
+		padding: var( --wp--preset--spacing--sm ) var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--md );
 		color: var( --wp--preset--color--text-secondary );
 		font-size: var( --wp--preset--font-size--sm );
 		line-height: 1.62;

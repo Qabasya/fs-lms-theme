@@ -1,20 +1,17 @@
 <?php
 /**
- * Title: Контакты — текст + витрина заявки на пробное занятие
- * Slug: fs-lms-theme/contact-section
+ * Title: Контакты — форма записи страницы направления (без выбора предмета)
+ * Slug: fs-lms-theme/subject-contact
  * Categories: fs-lms-sections
- * Keywords: контакты, заявка, форма, contact
+ * Keywords: контакты, заявка, форма, направление, contact
  *
- * Источник: блок «форма» в «Главная v4 - сборка.dc.html» (Фаза 12.8,
- * `id="signup"` — якорь из hero/курсов/блока занятий, решение 5 Фазы 12).
- *
- * Фаза 12.8: набор полей синхронизирован с v4 — «Имя родителя» + Телефон +
- * Класс (100px) + Направление (`<select>`, в паре с Классом) — поле «ФИО
- * ребёнка» (было в Фазе 11) убрано, в v4 его нет.
+ * Фаза 13.0, решение 5: та же секция, что `patterns/contact-section.php`
+ * (Фаза 12.8), но без поля «Направление» — на странице направления оно
+ * избыточно, предмет и так зафиксирован контекстом страницы. Класс формы
+ * `.fs-apply-form`/`#signup` — общий с главной, стили не дублируются.
  *
  * Фаза 14: реальная отправка — `data-fs-form` + honeypot/HMAC-таймер/капча
- * (если настроена в Настройки → Формы), `src/js/forms.js` перехватывает
- * `submit` и шлёт AJAX на `inc/Forms.php`, без `action`/редиректа.
+ * (если настроена), `src/js/forms.js` перехватывает `submit` и шлёт AJAX.
  */
 ?>
 <!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
@@ -48,38 +45,26 @@
 				<div class="fs-apply-form__title">Записаться на пробное занятие</div>
 
 				<div class="fs-form-field">
-					<label for="fs-apply-name">Имя родителя</label>
-					<input type="text" id="fs-apply-name" name="parent_name" placeholder="Анна" autocomplete="name" required>
+					<label for="fs-subject-apply-name">Имя родителя</label>
+					<input type="text" id="fs-subject-apply-name" name="parent_name" placeholder="Анна" autocomplete="name" required>
 				</div>
 
 				<div class="fs-form-field">
-					<label for="fs-apply-phone">Телефон</label>
-					<input type="tel" id="fs-apply-phone" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+					<label for="fs-subject-apply-phone">Телефон</label>
+					<input type="tel" id="fs-subject-apply-phone" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
 				</div>
 
-				<div class="fs-form-row" style="grid-template-columns:100px 1fr">
-					<div class="fs-form-field">
-						<label for="fs-apply-grade">Класс</label>
-						<select id="fs-apply-grade" name="grade">
-							<option>5</option>
-							<option>6</option>
-							<option>7</option>
-							<option>8</option>
-							<option>9</option>
-							<option>10</option>
-							<option selected>11</option>
-						</select>
-					</div>
-
-					<div class="fs-form-field">
-						<label for="fs-apply-subject">Направление</label>
-						<select id="fs-apply-subject" name="subject">
-							<option>ЕГЭ по информатике</option>
-							<option>ОГЭ по информатике</option>
-							<option>Разработка на Python</option>
-							<option>Робототехника</option>
-						</select>
-					</div>
+				<div class="fs-form-field" style="max-width:100px">
+					<label for="fs-subject-apply-grade">Класс</label>
+					<select id="fs-subject-apply-grade" name="grade">
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+						<option>8</option>
+						<option>9</option>
+						<option>10</option>
+						<option selected>11</option>
+					</select>
 				</div>
 
 				<input type="hidden" name="form_id" value="signup">

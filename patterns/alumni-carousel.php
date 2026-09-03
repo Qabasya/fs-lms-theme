@@ -20,7 +20,7 @@
 	<!-- /wp:heading -->
 
 	<!-- wp:html -->
-	<div class="fs-carousel-mask" data-fs-carousel data-per-page="3" data-autoplay="false">
+	<div class="splide fs-carousel-mask" data-fs-carousel data-per-page="3" data-autoplay="false">
 		<div class="splide__track">
 			<div class="splide__list">
 	<!-- /wp:html -->

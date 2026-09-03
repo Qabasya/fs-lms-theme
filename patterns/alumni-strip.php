@@ -23,7 +23,7 @@
 		<!-- /wp:paragraph -->
 
 		<!-- wp:html -->
-		<div class="fs-carousel-mask" data-fs-carousel data-per-page="5" data-autoplay="true" data-arrows="false">
+		<div class="splide fs-carousel-mask" data-fs-carousel data-per-page="5" data-autoplay="true" data-arrows="false">
 			<div class="splide__track">
 				<div class="splide__list">
 					<div class="fs-alumni-logo splide__slide">БФУ им. Канта</div>
