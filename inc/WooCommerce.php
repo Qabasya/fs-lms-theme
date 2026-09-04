@@ -83,6 +83,20 @@ remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 3
 remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_rating', 5 );
 
 /**
+ * BugFix (2026-09-04): та же причина, что у рейтинга в каталоге (никто не
+ * ведёт отзывы/оценки) — по указанию пользователя убрана и звезда рейтинга
+ * над заголовком страницы товара, и сама вкладка «Отзывы» (вместе с формой
+ * комментария) в `woocommerce_product_tabs`.
+ */
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
+
+add_filter( 'woocommerce_product_tabs', function ( array $tabs ): array {
+	unset( $tabs['reviews'] );
+
+	return $tabs;
+} );
+
+/**
  * Карточка товара (Фаза 16.2, по макету) — перестроена целиком относительно
  * дефолтного порядка хуков WooCommerce:
  *

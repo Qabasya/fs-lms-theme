@@ -18,15 +18,23 @@
  * отдельный от `.fs-carousel-mask`, т.к. карусель выпускников
  * (`alumni-carousel.php`) использует ту же базовую разметку, но с
  * высотой по содержимому карточек, а не фиксированной.
+ *
+ * Задача 5 (tasks.md, 2026-09-04): названия вузов текстом заменены на
+ * `wp:image` — временно везде один и тот же плейсхолдер
+ * `images/main_univer_5.png` (по прямому указанию), `alt` оставлен
+ * названием вуза (доступность/SEO не теряются, даже когда картинка у
+ * всех слайдов одна и та же). Реальные логотипы редактор подставит
+ * через медиатеку на каждый слайд отдельно.
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
+<!-- wp:group {"className":"fs-section"} -->
+<div class="wp-block-group fs-section">
 	<!-- wp:group {"backgroundColor":"surface-2","style":{"border":{"color":"var:preset|color|border","width":"1px","radius":"var:preset|spacing|md"},"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xxl"}}}} -->
 	<div class="wp-block-group has-surface-2-background-color has-background" style="border-color:var(--wp--preset--color--border);border-width:1px;border-radius:var(--wp--preset--spacing--md);padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xxl)">
-		<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"sm","style":{"typography":{"textAlign":"center"}}} -->
-		<p class="has-text-secondary-color has-text-color has-sm-font-size" style="text-align:center">Наши выпускники поступают</p>
-		<!-- /wp:paragraph -->
+
+        <!-- wp:heading {"textAlign":"center","fontSize":"xxl"} -->
+        <h2 class="wp-block-heading has-text-align-center has-xxl-font-size">Наши выпускники поступают</h2>
+        <!-- /wp:heading -->
 
 		<!-- wp:group {"className":"splide fs-carousel fs-carousel--per-5 fs-carousel--autoplay fs-carousel--no-arrows fs-carousel-mask fs-carousel-mask--strip"} -->
 		<div class="wp-block-group splide fs-carousel fs-carousel--per-5 fs-carousel--autoplay fs-carousel--no-arrows fs-carousel-mask fs-carousel-mask--strip">
@@ -34,25 +42,25 @@
 			<div class="wp-block-group splide__track">
 				<!-- wp:group {"className":"splide__list"} -->
 				<div class="wp-block-group splide__list">
-					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
-					<p class="fs-alumni-logo splide__slide">БФУ им. Канта</p>
-					<!-- /wp:paragraph -->
+					<!-- wp:image {"className":"fs-alumni-logo splide__slide"} -->
+					<figure class="wp-block-image fs-alumni-logo splide__slide"><img src="<?php echo esc_url( get_theme_file_uri( 'images/main_univer_5.png' ) ); ?>" alt="БФУ им. Канта"/></figure>
+					<!-- /wp:image -->
 
-					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
-					<p class="fs-alumni-logo splide__slide">МИРЭА</p>
-					<!-- /wp:paragraph -->
+					<!-- wp:image {"className":"fs-alumni-logo splide__slide"} -->
+					<figure class="wp-block-image fs-alumni-logo splide__slide"><img src="<?php echo esc_url( get_theme_file_uri( 'images/main_univer_5.png' ) ); ?>" alt="МИРЭА"/></figure>
+					<!-- /wp:image -->
 
-					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
-					<p class="fs-alumni-logo splide__slide">ИТМО</p>
-					<!-- /wp:paragraph -->
+					<!-- wp:image {"className":"fs-alumni-logo splide__slide"} -->
+					<figure class="wp-block-image fs-alumni-logo splide__slide"><img src="<?php echo esc_url( get_theme_file_uri( 'images/main_univer_5.png' ) ); ?>" alt="ИТМО"/></figure>
+					<!-- /wp:image -->
 
-					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
-					<p class="fs-alumni-logo splide__slide">МГТУ</p>
-					<!-- /wp:paragraph -->
+					<!-- wp:image {"className":"fs-alumni-logo splide__slide"} -->
+					<figure class="wp-block-image fs-alumni-logo splide__slide"><img src="<?php echo esc_url( get_theme_file_uri( 'images/main_univer_5.png' ) ); ?>" alt="МГТУ"/></figure>
+					<!-- /wp:image -->
 
-					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
-					<p class="fs-alumni-logo splide__slide">РУДН</p>
-					<!-- /wp:paragraph -->
+					<!-- wp:image {"className":"fs-alumni-logo splide__slide"} -->
+					<figure class="wp-block-image fs-alumni-logo splide__slide"><img src="<?php echo esc_url( get_theme_file_uri( 'images/main_univer_5.png' ) ); ?>" alt="РУДН"/></figure>
+					<!-- /wp:image -->
 				</div>
 				<!-- /wp:group -->
 			</div>

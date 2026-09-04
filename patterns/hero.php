@@ -29,8 +29,8 @@
  * `.fs-hero-stats` на всю высоту левой колонки (см. `theme.scss`).
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"4.5rem","bottom":"0"}}}} -->
-<div class="wp-block-group" style="padding-top:4.5rem;padding-bottom:0">
+<!-- wp:group {"className":"fs-section-lead"} -->
+<div class="wp-block-group fs-section-lead">
 	<!-- wp:columns {"className":"fs-hero-columns","style":{"spacing":{"blockGap":{"left":"2.5rem"}}}} -->
 	<div class="wp-block-columns fs-hero-columns">
 		<!-- wp:column -->
@@ -100,8 +100,8 @@
 				<div class="fs-hero-form__title">Запишитесь на пробное занятие</div>
 				<div class="fs-hero-form__row">
 					<div class="fs-form-field">
-						<label for="fs-hero-name">Имя родителя</label>
-						<input type="text" id="fs-hero-name" name="parent_name" placeholder="Анна" autocomplete="name" required>
+						<label for="fs-hero-name">ФИО родителя</label>
+						<input type="text" id="fs-hero-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" required>
 					</div>
 					<div class="fs-form-field">
 						<label for="fs-hero-phone">Телефон</label>
@@ -137,7 +137,7 @@
 				<!-- wp:group {"className":"fs-hero-stats__item"} -->
 				<div class="wp-block-group fs-hero-stats__item">
 					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
-					<p class="fs-hero-stats__value">800 ₽</p>
+					<p class="fs-hero-stats__value">до 800 ₽</p>
 					<!-- /wp:paragraph -->
 
 					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->

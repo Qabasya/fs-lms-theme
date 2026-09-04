@@ -23,9 +23,7 @@
  * использует.
  *
  * Соцсети (YouTube/VK/Telegram) в макете v4 нет (Фаза 12, решение 7) — в
- * шапке их и не было с самого начала (Фаза 3), убирать нечего. Иконка
- * корзины — из текущего сайта (WoodMart), в макете v4 её тоже нет, но она
- * не относится к соцсетям и оставлена как есть (см. tasks.md 12.1).
+ * шапке их и не было с самого начала (Фаза 3), убирать нечего.
  *
  * BugFix (2026-09-03): «Главная» была захардкожена с `className:
  * current-menu-item` безусловно — на `/courses/` (и на любой другой
@@ -41,6 +39,19 @@
  * решение 2 Фазы 12, разворот по прямому указанию пользователя); ширина
  * пересчитана под реальное соотношение сторон файла (2800×816), высота
  * не менялась (64px).
+ *
+ * BugFix (2026-09-04): кнопка «Личный кабинет» убрана из CTA-группы (была
+ * дублем одноимённого пункта меню) — по прямому указанию пользователя.
+ * Внешний ряд (лого + меню + CTA) переносился на вторую строку на десктопе
+ * из-за `flexWrap:wrap` по умолчанию у layout-типа `flex` — добавлен класс
+ * `fs-header-row` с `flex-wrap:nowrap` (`theme.scss`), чтобы кнопки всегда
+ * оставались на одном уровне со ссылками навигации.
+ *
+ * BugFix (2026-09-04): иконка корзины WooCommerce заменена на иконку
+ * личного кабинета (ссылка на `/profile/`, `fs_lms_theme_url('profile')`)
+ * — по прямому указанию пользователя. `wc_get_cart_url()`/проверка
+ * `function_exists('wc_get_cart_url')` больше не нужны — ссылка на профиль
+ * не зависит от активности WooCommerce.
  */
 $fs_nav_id = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navigation_id() : 0;
 ?>
@@ -48,10 +59,10 @@ $fs_nav_id = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navi
 <div class="wp-block-group has-surface-2-background-color has-background" style="border-bottom-color:var(--wp--preset--color--border-light);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--xs);padding-bottom:var(--wp--preset--spacing--xs)">
 	<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
 	<div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
-		<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->
-		<div class="wp-block-group">
+		<!-- wp:group {"className":"fs-topbar","layout":{"type":"flex","justifyContent":"space-between"}} -->
+		<div class="wp-block-group fs-topbar">
 			<!-- wp:site-tagline {"textColor":"muted","fontSize":"xxs"} /-->
-            <p class="has-muted-2-color has-text-color has-xxs-font-size">ЕГЭ, ОГЭ, программирование и робототехника в Калининграде</p>
+            <h1 class="has-muted-2-color has-text-color has-xxs-font-size" style="font-weight: 400;">ЕГЭ, ОГЭ, программирование и робототехника в Калининграде</h1>
 			<!-- wp:group {"layout":{"type":"flex"},"style":{"spacing":{"blockGap":"var:preset|spacing|xl","margin":{"left":"auto"}}}} -->
 			<div class="wp-block-group" style="margin-left:auto">
 				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
@@ -74,8 +85,8 @@ $fs_nav_id = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navi
 <div class="wp-block-group has-white-background-color has-background" style="margin-top:0;border-bottom-color:var(--wp--preset--color--border);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--lg);padding-bottom:var(--wp--preset--spacing--lg)">
 	<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
 	<div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
-		<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->
-		<div class="wp-block-group">
+		<!-- wp:group {"className":"fs-header-row","layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"center"}} -->
+		<div class="wp-block-group fs-header-row">
 			<!-- wp:group {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|md"}}} -->
 			<div class="wp-block-group">
 				<!-- wp:image {"width":"220px","className":"fs-header-logo","linkDestination":"custom"} -->
@@ -104,18 +115,12 @@ $fs_nav_id = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navi
 					<!-- wp:button {"backgroundColor":"accent-2"} -->
 					<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="#hero-form">Записаться</a></div>
 					<!-- /wp:button -->
-
-					<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
-					<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'profile' ) ); ?>">Личный кабинет</a></div>
-					<!-- /wp:button -->
 				</div>
 				<!-- /wp:buttons -->
 
-				<?php if ( function_exists( 'wc_get_cart_url' ) ) : ?>
 				<!-- wp:html -->
-				<a class="fs-header-cart" href="<?php echo esc_url( wc_get_cart_url() ); ?>" aria-label="<?php echo esc_attr__( 'Корзина', 'fs-lms-theme' ); ?>"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.8h7.2a2 2 0 0 0 2-1.6L20 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.5" fill="currentColor"/><circle cx="17" cy="21" r="1.5" fill="currentColor"/></svg></a>
+				<a class="fs-header-account" href="<?php echo esc_url( fs_lms_theme_url( 'profile' ) ); ?>" aria-label="<?php echo esc_attr__( 'Личный кабинет', 'fs-lms-theme' ); ?>"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
 				<!-- /wp:html -->
-				<?php endif; ?>
 			</div>
 			<!-- /wp:group -->
 		</div>

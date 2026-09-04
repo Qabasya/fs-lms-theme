@@ -85,7 +85,11 @@ function fs_lms_theme_nav_subject_submenu( string $page, string $label ): string
 
 /**
  * Стартовое содержимое меню — то же, что раньше было зашито в паттерне,
- * плюс выпадающие «Учебник»/«Тренажёр» по направлениям и «Личный кабинет».
+ * плюс выпадающие «Учебник»/«Тренажёр» по направлениям.
+ *
+ * BugFix (2026-09-04): пункт «Личный кабинет» убран из меню по прямому
+ * указанию пользователя (дублировал одноимённую кнопку в шапке, которая
+ * тоже убрана — см. `patterns/header-nav.php`).
  */
 function fs_lms_theme_nav_default_content(): string {
 	$items = array(
@@ -94,10 +98,6 @@ function fs_lms_theme_nav_default_content(): string {
 		fs_lms_theme_nav_page_link( 'courses', 'Курсы' ),
 		fs_lms_theme_nav_subject_submenu( 'articles', 'Учебник' ),
 		fs_lms_theme_nav_subject_submenu( 'trainer', 'Тренажёр' ),
-		sprintf(
-			'<!-- wp:navigation-link {"label":"Личный кабинет","url":"%s","kind":"custom"} /-->',
-			esc_url( fs_lms_theme_url( 'profile' ) )
-		),
 	);
 
 	return implode( "\n\n", $items );

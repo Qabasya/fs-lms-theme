@@ -27,8 +27,8 @@
  * на `inc/Forms.php` — без изменений, тот же обработчик.
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"4.5rem","bottom":"0"}}}} -->
-<div id="signup" class="wp-block-group" style="padding-top:4.5rem;padding-bottom:0">
+<!-- wp:group -->
+<div id="signup" class="wp-block-group">
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
 	<div class="wp-block-columns">
 		<!-- wp:column -->
@@ -66,8 +66,8 @@
 				<div class="fs-apply-form__title">Записаться на пробное занятие</div>
 
 				<div class="fs-form-field">
-					<label for="fs-courses-apply-name">Имя родителя</label>
-					<input type="text" id="fs-courses-apply-name" name="parent_name" placeholder="Анна" autocomplete="name" required>
+					<label for="fs-courses-apply-name">ФИО родителя</label>
+					<input type="text" id="fs-courses-apply-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" required>
 				</div>
 
 				<div class="fs-form-field">
@@ -82,7 +82,7 @@
 				<div class="smart-captcha" data-sitekey="<?php echo esc_attr( get_option( 'fs_lms_theme_captcha_site_key', '' ) ); ?>"></div>
 				<?php endif; ?>
 				<button type="submit" class="fs-apply-form__submit">Отправить заявку</button>
-				<div class="fs-apply-form__note">Перезвоним в течение рабочего дня. Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
+				<div class="fs-apply-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
 				<div class="fs-form-message" role="status"></div>
 			</form>
 			<!-- /wp:html -->

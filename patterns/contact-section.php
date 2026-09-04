@@ -25,8 +25,8 @@
  * `submit` и шлёт AJAX на `inc/Forms.php`, без `action`/редиректа.
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
-<div id="signup" class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
+<!-- wp:group {"className":"fs-section"} -->
+<div id="signup" class="wp-block-group fs-section">
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
 	<div class="wp-block-columns">
 		<!-- wp:column -->
@@ -36,7 +36,7 @@
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
-			<p class="has-text-secondary-color has-text-color has-md-font-size">Заполни форму и мы ответим на все интересующие вопросы. Первое занятие — бесплатно.</p>
+			<p class="has-text-secondary-color has-text-color has-md-font-size">Заполните форму и мы ответим на все интересующие вопросы.<br>Первое занятие — бесплатно.<br><br>Контакты для связи:</p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:group {"className":"fs-contact-list"} -->
@@ -64,8 +64,8 @@
 				<div class="fs-apply-form__title">Записаться на пробное занятие</div>
 
 				<div class="fs-form-field">
-					<label for="fs-apply-name">Имя родителя</label>
-					<input type="text" id="fs-apply-name" name="parent_name" placeholder="Анна" autocomplete="name" required>
+					<label for="fs-apply-name">ФИО родителя</label>
+					<input type="text" id="fs-apply-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" required>
 				</div>
 
 				<div class="fs-form-field">
@@ -80,7 +80,7 @@
 				<div class="smart-captcha" data-sitekey="<?php echo esc_attr( get_option( 'fs_lms_theme_captcha_site_key', '' ) ); ?>"></div>
 				<?php endif; ?>
 				<button type="submit" class="fs-apply-form__submit">Отправить заявку</button>
-				<div class="fs-apply-form__note">Перезвоним в течение рабочего дня. Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
+				<div class="fs-apply-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
 				<div class="fs-form-message" role="status"></div>
 			</form>
 			<!-- /wp:html -->

@@ -10,8 +10,8 @@
  * Без JS-слайдера на первом проходе — просто сетка (см. tasks.md backlog).
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xxxl","left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
-<div class="wp-block-group" style="padding-top:var(--wp--preset--spacing--xl);padding-right:var(--wp--preset--spacing--xxl);padding-bottom:var(--wp--preset--spacing--xxxl);padding-left:var(--wp--preset--spacing--xxl)">
+<!-- wp:group {"className":"fs-section","style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
+<div class="wp-block-group fs-section" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 	<!-- wp:heading {"textAlign":"center","fontSize":"xxl"} -->
 	<h2 class="wp-block-heading has-text-align-center has-xxl-font-size">Отзывы учеников и родителей</h2>
 	<!-- /wp:heading -->

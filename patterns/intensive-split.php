@@ -27,10 +27,14 @@
  * BugFix.14 (2026-09-03): плейсхолдер «фото занятия» заменён на реальное
  * фото `img/photo.png`, `fs-aspect-4-3` сохранён на `<img>` (тот же
  * класс, что раньше держал соотношение сторон на заглушке).
+ *
+ * BugFix (2026-09-04): «Все направления» вела на якорь `#dirs` (секция
+ * направлений на главной) — по указанию пользователя ведёт на страницу
+ * каталога `/courses/`, как и одноимённый пункт меню.
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
-<div id="lessons" class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
+<!-- wp:group {"className":"fs-section"} -->
+<div id="lessons" class="wp-block-group fs-section">
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
 	<div class="wp-block-columns">
 		<!-- wp:column -->
@@ -58,23 +62,31 @@
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Запись и онлайн-трансляция каждого занятия</p>
+				<p class="fs-checklist__item">Параллельная онлайн-трансляция каждого занятия</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Домашнее задание после каждого занятия</p>
-				<!-- /wp:paragraph -->
+                <!-- wp:paragraph {"className":"fs-checklist__item"} -->
+                <p class="fs-checklist__item">Видеозаписи занятий в личном кабинете</p>
+                <!-- /wp:paragraph -->
+
+                <!-- wp:paragraph {"className":"fs-checklist__item"} -->
+                <p class="fs-checklist__item">Домашнее задание после каждого занятия</p>
+                <!-- /wp:paragraph -->
+
+                <!-- wp:paragraph {"className":"fs-checklist__item"} -->
+                <p class="fs-checklist__item">Регулярные контрольные и пробные экзамены</p>
+                <!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
 				<p class="fs-checklist__item">Индивидуальные консультации с преподавателем</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Материалы, теория и шпаргалки в личном кабинете</p>
+				<p class="fs-checklist__item">Вся теория и шпаргалки в личном кабинете</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Дополнительные видеоматериалы по каждой теме</p>
+				<p class="fs-checklist__item">Дополнительные материалы по каждой теме</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
@@ -114,7 +126,7 @@
 				<!-- /wp:button -->
 
 				<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
-				<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="#dirs">Все направления</a></div>
+				<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="<?php echo esc_url( home_url( '/courses/' ) ); ?>">Все направления</a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->

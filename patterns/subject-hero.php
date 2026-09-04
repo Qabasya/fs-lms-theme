@@ -39,8 +39,8 @@
  * остаётся как есть — вариант «ЕГЭ».
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"4.5rem","bottom":"0"}}}} -->
-<div class="wp-block-group" style="padding-top:4.5rem;padding-bottom:0">
+<!-- wp:group {"className":"fs-section"} -->
+<div class="wp-block-group fs-section">
 	<!-- wp:columns {"className":"fs-hero-columns","style":{"spacing":{"blockGap":{"left":"2.5rem"}}}} -->
 	<div class="wp-block-columns fs-hero-columns">
 		<!-- wp:column -->
@@ -74,8 +74,8 @@
 				<div class="fs-hero-form__title">Запишитесь на пробное занятие</div>
 				<div class="fs-hero-form__row">
 					<div class="fs-form-field">
-						<label for="fs-subject-hero-name">Имя родителя</label>
-						<input type="text" id="fs-subject-hero-name" name="parent_name" placeholder="Анна" autocomplete="name" required>
+						<label for="fs-subject-hero-name">ФИО родителя</label>
+						<input type="text" id="fs-subject-hero-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" required>
 					</div>
 					<div class="fs-form-field">
 						<label for="fs-subject-hero-phone">Телефон</label>

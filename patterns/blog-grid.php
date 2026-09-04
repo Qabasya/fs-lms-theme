@@ -24,8 +24,8 @@ if ( wp_count_posts()->publish < 3 ) {
 	return;
 }
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
+<!-- wp:group {"className":"fs-section"} -->
+<div class="wp-block-group fs-section">
 	<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"bottom"}} -->
 	<div class="wp-block-group">
 		<!-- wp:heading {"fontSize":"xxl"} -->

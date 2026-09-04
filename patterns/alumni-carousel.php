@@ -13,8 +13,8 @@
  * `theme.scss`, `mask-image` по краям — класс `.fs-carousel-mask`.
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
+<!-- wp:group {"className":"fs-section"} -->
+<div class="wp-block-group fs-section">
 	<!-- wp:heading {"textAlign":"center","fontSize":"xxl"} -->
 	<h2 class="wp-block-heading has-text-align-center has-xxl-font-size">Наши выпускники</h2>
 	<!-- /wp:heading -->

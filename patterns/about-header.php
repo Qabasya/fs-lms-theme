@@ -65,8 +65,8 @@
  * `templates/page-wide.html` нельзя (общий для `/courses/`).
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"1rem","bottom":"2rem"}}}} -->
-<div class="wp-block-group" style="padding-top:1rem;padding-bottom:2rem">
+<!-- wp:group {"className":"fs-section"} -->
+<div class="wp-block-group fs-section">
 	<!-- wp:html -->
 	<div class="fs-about-divider"></div>
 	<!-- /wp:html -->

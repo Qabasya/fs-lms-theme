@@ -14,6 +14,63 @@
 	box-sizing: border-box;
 }
 
+/**
+ * BugFix (2026-09-04): переход по якорным ссылкам (`#hero-form`, `#dirs`
+ * и т.п. — кнопки хедера/секций) раньше телепортировал страницу мгновенно;
+ * теперь прокрутка плавная. `@media (prefers-reduced-motion)` уважает
+ * настройку ОС — пользователям с укачиванием/вестибулярными проблемами
+ * скролл остаётся мгновенным.
+ */
+html {
+	scroll-behavior: smooth;
+}
+
+@media ( prefers-reduced-motion: reduce ) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+/**
+ * BugFix (2026-09-04): единый вертикальный отступ между секциями страницы.
+ * Раньше каждый паттерн задавал свой `style.spacing.padding` инлайном
+ * (обычный способ авторства паттернов в Gutenberg — блок хранит стиль в
+ * своих атрибутах, не в общем CSS) — из-за этого набежал разнобой (4.5rem,
+ * 5.5rem, токены xxxl/xxxxl) в разных паттернах и шаблонах `<main>`. Теперь
+ * величина отступа — в одном месте: класс на `wp:group`-обёртке секции,
+ * как уже сделано для `.fs-hero-stats`/`.fs-price-plaque`/остальных
+ * компонентов темы, а не инлайн-стиль внутри JSON-атрибутов блока.
+ *
+ * `.fs-section` — обычная секция (весь отступ — её собственный `bottom`,
+ * следующая секция начинается с `top:0`). `.fs-section-lead` — первая
+ * секция страницы, чей шаблон (`front-page.html`, у которого `<main>` без
+ * своего паддинга) сам не даёт отступа под шапкой — секция даёт его себе
+ * сверху и снизу. Паттерны на страницах с `templates/page.html`/
+ * `page-wide.html`/`single-product.html`/`archive-product.html` (у них
+ * `<main>` уже даёт 3.5rem сверху/снизу) используют обычный `.fs-section`
+ * даже будучи первой/последней секцией — отступ уже даёт сам шаблон.
+ */
+.fs-section {
+	padding-top: 0;
+	padding-bottom: 3.5rem;
+}
+
+.fs-section-lead {
+	padding-top: 3.5rem;
+	padding-bottom: 3.5rem;
+}
+
+/**
+ * Обёртка `<main>` generic-шаблонов (`templates/page.html`,
+ * `page-wide.html`, `single-product.html`, `archive-product.html`,
+ * `index.html`, `404.html`) — та же величина 3.5rem, что и у `.fs-section`,
+ * тем же приёмом (класс вместо инлайн-стиля в JSON-атрибутах шаблона).
+ */
+.fs-main {
+	padding-top: 3.5rem;
+	padding-bottom: 3.5rem;
+}
+
 img {
 	height: auto;
 	max-width: 100%;
@@ -107,6 +164,21 @@ a {
 }
 
 /**
+ * Задача 4 (tasks.md, 2026-09-04): на мобильном — 1 карточка на всю
+ * ширину. `columnCount:2` в JSON-атрибутах блока (`patterns/features-grid.php`)
+ * — нативный layout-тип `grid` ядра Gutenberg, он пишет
+ * `grid-template-columns` инлайн-стилем на самом блоке и не переключается
+ * по вьюпорту сам по себе (в отличие от `wp:columns`, которая стекается
+ * ниже 960px через общее правило выше) — поэтому здесь `!important`, тем
+ * же приёмом, что и у стекинга колонок.
+ */
+@media ( max-width: 767px ) {
+	.fs-features-grid {
+		grid-template-columns: 1fr !important;
+	}
+}
+
+/**
  * Сетка из 4 карточек направлений (Фаза 12.6, `patterns/courses-grid.php`)
  * — тот же приём `grid` + `stretch`, что и у `.fs-features-grid`, но 4
  * колонки вместо 2 (десктоп); складывается по тем же брейкпоинтам сеток
@@ -176,7 +248,7 @@ a {
  */
 .fs-hero-dirs {
 	height: 100%;
-	padding: 2.75rem 2.5rem;
+	padding: 1.7rem 2.5rem;
 	background: var( --wp--preset--color--accent-2-soft );
 	border-left: 3px solid var( --wp--preset--color--accent-2 );
 	border-radius: var( --wp--custom--radius--card );
@@ -303,18 +375,31 @@ a {
 		font-size: var( --wp--preset--font-size--xxs );
 		font-weight: 300;
 		color: var( --wp--preset--color--muted-2 );
+		text-align: center;
 	}
 }
 
 .fs-hero-stats {
 	display: grid;
 	grid-template-columns: repeat( 3, 1fr );
+	align-items: center;
 	padding: 1.375rem 0;
 	background: var( --wp--preset--color--surface-2 );
 	border: 1px solid var( --wp--preset--color--border );
 	border-radius: var( --wp--custom--radius--card );
 
+	/**
+	 * BugFix (2026-09-04): значение/подпись центрировались только по
+	 * горизонтали (`text-align`) — по вертикали текст прилипал к верху
+	 * ячейки. `align-items:center` на гриде центрирует саму ячейку
+	 * относительно строки, `flex` + `justify-content:center` на `__item`
+	 * центрирует текст внутри неё.
+	 */
 	&__item {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 		text-align: center;
 		border-right: 1px solid var( --wp--preset--color--border );
 
@@ -369,76 +454,77 @@ a {
 }
 
 /**
- * Карточки-ссылки «Учебник»/«Тренажёр» (Фаза 13, `patterns/subject-more.php`)
- * — сама карточка `<a>` переиспользует базовую поверхность `.is-style-card`
- * (см. выше), здесь только внутренняя раскладка иконка/заголовок/текст.
- */
-
-/**
- * Фаза 17.3: карточка — `wp:group` с настоящими блоками внутри (заголовок
- * со ссылкой + текст правятся в редакторе), а не одна большая `<a>` с
- * сырым HTML. Кликабельна вся карточка — «stretched link» через
- * `::after` на ссылке заголовка (тот же приём, что `fs-lms/course-card`,
- * BugFix.8). Иконка — `::before` c `mask-image` вместо `<svg>` в разметке.
+ * Карточки «Учебник»/«Тренажёр» (`patterns/subject-more.php`) — по мокапу
+ * «ЕГЭ информатика - мокап.dc.html» (BugFix.1, задача 1 tasks.md,
+ * DesignSync). Раньше вся карточка была ссылкой (stretched-link на
+ * заголовке), иконка — CSS `background-image`; теперь заголовок — обычный
+ * текст, иконка — `<svg>` в разметке (цвет через утилитные классы палитры
+ * `has-*-color`/`has-*-background-color`, тот же приём, что
+ * `fs-feature-card__icon`), кликабельна только кнопка внизу — она же несёт
+ * цвет направления (синий — «Учебник», оранжевый — «Тренажёр»).
  */
 .fs-subject-more-card {
-	position: relative;
 	display: flex;
 	flex-direction: column;
-	gap: .5rem;
-	padding: var( --wp--preset--spacing--xl );
-	text-decoration: none;
-	color: inherit;
+	gap: .75rem;
+	padding: var( --wp--preset--spacing--xxxxl );
+	background: var( --wp--preset--color--surface-2 );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
 
-	/**
-	 * Иконка целиком в CSS: подложка — `background-color`, сам знак —
-	 * `background-image` с инлайн-SVG (не `mask-image`: маска съела бы
-	 * подложку, а так оба слоя живут на одном псевдоэлементе).
-	 */
-	&::before {
-		content: "";
-		width: 2.75rem;
-		height: 2.75rem;
-		margin-bottom: .25rem;
-		background-color: var( --wp--preset--color--accent-soft );
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: 1.375rem;
-		border-radius: var( --wp--custom--radius--md );
-	}
-
-	&--articles::before {
-		background-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 2.5h6.2L15.5 6.8V17.5H5V2.5z' fill='none' stroke='%233b5bdb' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M11 3v4.3h4.3' fill='none' stroke='%233b5bdb' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E" );
-	}
-
-	&--trainer::before {
-		background-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 3 12 7l4.5.6-3.3 3.2.8 4.5L10 13.2 6 15.5l.8-4.5L3.5 7.7 8 7z' fill='none' stroke='%233b5bdb' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E" );
+	&__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.375rem;
+		height: 2.375rem;
+		flex: 0 0 2.375rem;
+		border-radius: var( --wp--custom--radius--control );
 	}
 
 	&__title {
 		margin: 0;
-		font-size: var( --wp--preset--font-size--lg );
+		font-size: var( --wp--preset--font-size--xl );
 		font-weight: 700;
-		color: var( --wp--preset--color--text );
-
-		a {
-			color: inherit;
-			text-decoration: none;
-
-			// Кликабельна вся карточка, а не только заголовок.
-			&::after {
-				content: "";
-				position: absolute;
-				inset: 0;
-			}
-		}
 	}
 
 	&__text {
 		margin: 0;
-		font-size: var( --wp--preset--font-size--sm );
+		font-size: var( --wp--preset--font-size--base );
 		font-weight: 300;
+		line-height: 1.6;
 		color: var( --wp--preset--color--text-secondary );
+	}
+
+	&__button {
+		align-self: flex-start;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		height: 2.375rem;
+		margin-top: .25rem;
+		padding: 0 var( --wp--preset--spacing--lg );
+		border-radius: var( --wp--custom--radius--control );
+		color: var( --wp--preset--color--white );
+		font-size: var( --wp--preset--font-size--base );
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	&--articles &__button {
+		background: var( --wp--preset--color--accent );
+
+		&:hover {
+			background: var( --wp--preset--color--accent-600 );
+		}
+	}
+
+	&--trainer &__button {
+		background: var( --wp--preset--color--accent-2 );
+
+		&:hover {
+			background: var( --wp--preset--color--accent-2-600 );
+		}
 	}
 }
 
@@ -650,10 +736,11 @@ a {
  */
 .fs-price-plaque {
 	display: flex;
+	text-align: center;
 	align-items: center;
 	max-width: 240px;
 	gap: var( --wp--preset--spacing--md );
-	padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+	padding: 1.5rem var( --wp--preset--spacing--lg );
 	margin-bottom: var( --wp--preset--spacing--lg );
 	background: var( --wp--preset--color--white );
 	border: 1px solid var( --wp--preset--color--border );
@@ -669,6 +756,10 @@ a {
 	 * мешал редактировать плашку.
 	 */
 	&__part {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 		width: 120px;
 
 		& + & {
@@ -943,10 +1034,14 @@ a {
 }
 
 /**
- * Иконка корзины в шапке (`patterns/header-nav.php`, Фаза 10) — появляется
- * только если активен WooCommerce (`wc_get_cart_url()`).
+ * Иконка личного кабинета в шапке (`patterns/header-nav.php`) — ссылка на
+ * `/profile/` (`fs_lms_theme_url('profile')`). Раньше здесь была иконка
+ * корзины WooCommerce (Фаза 10); по прямому указанию пользователя
+ * (2026-09-04) заменена на иконку профиля — ссылку на личный кабинет
+ * убрали и из меню, и из кнопки в CTA-группе (BugFix 2026-09-04), она
+ * осталась доступна из шапки только здесь.
  */
-.fs-header-cart {
+.fs-header-account {
 	display: flex;
 	align-items: center;
 	color: var( --wp--preset--color--text-secondary );
@@ -966,6 +1061,24 @@ a {
 	align-items: center;
 	height: 2.75rem;
 	white-space: nowrap;
+}
+
+/**
+ * BugFix (2026-09-04): hover для всех оранжевых кнопок (`accent-2`), как у
+ * `.fs-course-card__button` (`src/blocks/course-card/style.scss`) — темнее
+ * до `accent-2-600` при наведении. Глобальный дефолт кнопки в `theme.json`
+ * (`styles.elements.button`) уже описывает такой hover, но он выводится
+ * через `:where()` (нулевая специфичность) и проигрывает
+ * `.has-accent-2-background-color{background-color:...!important}` — тому
+ * же классу, что ставит `"backgroundColor":"accent-2"` в JSON-атрибутах
+ * блока «Записаться»/«В корзину» и т.п., поэтому кнопки с явным оранжевым
+ * фоном на hover визуально не темнели. `!important` здесь — по той же
+ * причине, что у `!important` брейкпоинта колонок ниже: нужно перебить
+ * `!important` самого ядра.
+ */
+.wp-element-button.has-accent-2-background-color:hover,
+.wp-block-button__link.has-accent-2-background-color:hover {
+	background-color: var( --wp--preset--color--accent-2-600 ) !important;
 }
 
 /**
@@ -1052,8 +1165,14 @@ a {
 	}
 }
 
-/* Фаза 17.3: слайд-логотип — `wp:paragraph` (название вуза правится в
-   редакторе), поэтому сбрасываем собственный отступ абзаца. */
+/**
+ * Задача 5 (tasks.md, 2026-09-04): слайд-логотип был `wp:paragraph`
+ * (название вуза текстом) — теперь `wp:image` (`figure.wp-block-image`),
+ * плитка та же самая (серая подложка, скругление), но центрирует
+ * картинку, а не текст. `img` — `object-fit:contain`, чтобы неквадратный
+ * логотип не растягивался и не обрезался, вместо старых текстовых
+ * `font-size`/`color`.
+ */
 .fs-alumni-logo {
 	display: flex;
 	align-items: center;
@@ -1063,10 +1182,14 @@ a {
 	padding: 0 var( --wp--preset--spacing--md );
 	background: var( --wp--preset--color--border-light );
 	border-radius: var( --wp--custom--radius--md );
-	font-size: var( --wp--preset--font-size--sm );
-	font-weight: 500;
-	color: var( --wp--preset--color--muted-2 );
-	text-align: center;
+
+	img {
+		max-width: 100%;
+		max-height: 100%;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+	}
 }
 
 /**
@@ -1166,9 +1289,14 @@ a {
 		font-size: var( --wp--preset--font-size--sm );
 
 		/* Фаза 17.3: строки контактов — `wp:paragraph`, сбрасываем их
-		   собственные отступы, расстояние держит `gap` контейнера. */
+		   собственные отступы, расстояние держит `gap` контейнера.
+		   BugFix (2026-09-04): адрес — обычный `<p>` без ссылки внутри,
+		   раньше цвет ему не задавался явно и он остался тёмным (наследовал
+		   базовый `--wp--preset--color--text`, а не белый цвет футера) —
+		   добавлен в тот же список, что `a`/`div`. */
 		p {
 			margin: 0;
+			color: #dee2e6;
 		}
 
 		a,
@@ -1195,6 +1323,58 @@ a {
  * заменить прямо в редакторе через медиатеку), поэтому размеры больше не
  * висят инлайном в разметке паттерна, а заданы здесь.
  */
+
+/**
+ * BugFix (2026-09-04): у layout-типа `flex` (`patterns/header-nav.php`)
+ * по умолчанию `flex-wrap:wrap` — лого+меню занимали почти всю ширину
+ * ряда, и кнопки/корзина переносились под них второй строкой. `nowrap`
+ * держит весь ряд (лого, меню, кнопки) на одном уровне.
+ */
+
+/**
+ * Задача 4 (tasks.md, 2026-09-04): `nowrap` держит лого+меню+кнопки на
+ * одном уровне только там, где рядом с ними есть настоящее инлайн-меню
+ * (`overlayMenu:"mobile"` ядра переключает `core/navigation` на гамбургер
+ * ниже 600px, `wp-includes/blocks/navigation/style.min.css`) — на мобильном
+ * `nowrap` сжимал в одну строку лого+гамбургер+кнопку+иконку профиля и
+ * обрезал текст кнопки. Ниже 600px возвращаем обычный перенос.
+ */
+.fs-header-row {
+	flex-wrap: nowrap;
+}
+
+@media ( max-width: 600px ) {
+	.fs-header-row {
+		flex-wrap: wrap;
+		row-gap: var( --wp--preset--spacing--sm );
+	}
+}
+
+/**
+ * Задача 4 (tasks.md, 2026-09-04): тонкая инфо-полоса шапки (слоган +
+ * телефон/почта, `patterns/header-nav.php`) — на мобильном слоган и
+ * телефон/почта не помещались в одну строку и вылезали за пределы
+ * вьюпорта (горизонтальный скролл всей страницы). Ниже 600px слоган
+ * прячется (декоративный текст, не критичная информация — телефон/почта
+ * остаются), инлайновый `margin-left:auto` у блока телефон/почта
+ * (`style.spacing.margin.left` в JSON-атрибутах блока) перебивается
+ * `!important`, чтобы блок центрировался, а не улетал вправо от
+ * пропавшего соседа.
+ */
+@media ( max-width: 600px ) {
+	.fs-topbar {
+		justify-content: center;
+
+		> :first-child {
+			display: none;
+		}
+
+		> .wp-block-group {
+			margin-left: 0 !important;
+		}
+	}
+}
+
 .fs-header-logo,
 .fs-footer-logo {
 	margin: 0;
@@ -1413,11 +1593,24 @@ a {
  * `patterns/courses-catalog.php`) — 2 колонки, складывается в 1 на
  * 960px (тот же брейкпоинт, что у остальных сеток темы).
  */
+
+/**
+ * BugFix (2026-09-04): без `grid-auto-rows:1fr` строки грида считают
+ * высоту независимо друг от друга — карточка ЕГЭ (более длинный текст,
+ * первая строка) визуально выше/ниже карточек из второй строки (Python/
+ * Робототехника). Тот же приём, что `.fs-courses-grid` выше.
+ */
 .fs-course-catalog {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	gap: var( --wp--preset--spacing--lg );
+	grid-auto-rows: 1fr;
+	align-items: stretch;
+	gap: var( --wp--preset--spacing--xxxxl ) var( --wp--preset--spacing--lg );
 	margin-top: var( --wp--preset--spacing--xl );
+
+	> * {
+		height: 100%;
+	}
 }
 
 /* `.fs-course-catalog-card` переехал в `src/blocks/catalog-card/style.scss`

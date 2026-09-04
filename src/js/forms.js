@@ -10,10 +10,15 @@
  * BugFix.2 (2026-09-03): `initPhoneMask()` — маска +7 на всех полях
  * `input[name="phone"]` (не только внутри `[data-fs-form]` — на случай
  * форм без AJAX-обвязки в будущем), не зависит от `window.fsLmsTheme`.
+ *
+ * `initAnchorAutofocus()` (задача 3, 2026-09-04) — тоже не зависит от
+ * `window.fsLmsTheme`: переход по якорю на форму записи ставит фокус на
+ * поле «ФИО родителя», это чистый UX-хук, не связанный с AJAX-отправкой.
  */
 
 export function initForms() {
 	initPhoneMask();
+	initAnchorAutofocus();
 
 	if ( typeof window.fsLmsTheme === 'undefined' ) {
 		return;
@@ -67,6 +72,53 @@ export function formatPhoneValue( raw ) {
 	}
 
 	return result;
+}
+
+/**
+ * Задача 3 (tasks.md, 2026-09-04): переход по якорю на форму записи
+ * (`#hero-form`/`#signup` — кнопки «Записаться» в шапке/секциях,
+ * `patterns/hero.php`/`subject-hero*.php`/`contact-section.php`/
+ * `subject-contact.php`/`courses-contact.php`) — ставит фокус на поле
+ * «ФИО родителя» (`input[name="parent_name"]`), а не только скроллит к
+ * форме. Ловит и клик по ссылке на этой же странице, и заход по прямой
+ * ссылке с хэшем (`/#hero-form` с другой страницы, см. задачу 9).
+ * Задержка перед фокусом — под длительность плавного скролла
+ * (`scroll-behavior: smooth`, `theme.scss`): фокус раньше окончания
+ * скролла сбивает позицию прокрутки в некоторых браузерах.
+ */
+function initAnchorAutofocus() {
+	document.querySelectorAll( 'a[href^="#"]' ).forEach( ( link ) => {
+		link.addEventListener( 'click', () => {
+			focusFormNameField( link.getAttribute( 'href' ) );
+		} );
+	} );
+
+	if ( window.location.hash ) {
+		focusFormNameField( window.location.hash );
+	}
+}
+
+function focusFormNameField( hash ) {
+	let target;
+
+	try {
+		target = document.querySelector( hash );
+	} catch {
+		return;
+	}
+
+	if ( ! target ) {
+		return;
+	}
+
+	const form = target.matches( 'form' ) ? target : target.querySelector( 'form[data-fs-form]' );
+	const nameField = form && form.querySelector( 'input[name="parent_name"]' );
+
+	if ( ! nameField ) {
+		return;
+	}
+
+	window.setTimeout( () => nameField.focus(), 500 );
 }
 
 function initPhoneMask() {

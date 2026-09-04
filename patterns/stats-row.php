@@ -8,8 +8,8 @@
  * Источник: блок «цифры» в «Главная — мокап.dc.html» (1a).
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
+<!-- wp:group {"className":"fs-section"} -->
+<div class="wp-block-group fs-section">
 	<!-- wp:columns {"className":"fs-stats-row"} -->
 	<div class="wp-block-columns fs-stats-row">
 		<!-- wp:column -->

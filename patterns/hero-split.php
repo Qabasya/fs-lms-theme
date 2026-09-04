@@ -13,8 +13,8 @@
  * инспектор (тот же приём, что у карты в footer-columns.php).
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"4.5rem","bottom":"5.5rem"}}}} -->
-<div class="wp-block-group" style="padding-top:4.5rem;padding-bottom:5.5rem">
+<!-- wp:group {"className":"fs-section-lead"} -->
+<div class="wp-block-group fs-section-lead">
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"3.5rem"}}}} -->
 	<div class="wp-block-columns">
 		<!-- wp:column -->

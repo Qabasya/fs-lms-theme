@@ -20,6 +20,16 @@
 	max-width: none;
 }
 
+/**
+ * BugFix (2026-09-04): `.woocommerce-breadcrumb a{color:#767676}` — правило
+ * самого плагина (`woocommerce.css`), специфичнее нашего общего `a{color:
+ * accent}` (`theme.scss`), поэтому ссылки в хлебных крошках были серыми, а
+ * не акцентно-синими, как остальные ссылки на сайте.
+ */
+.woocommerce-breadcrumb a {
+	color: var( --wp--preset--color--accent );
+}
+
 .fs-shop-intro {
 	max-width: 35rem;
 	margin: var( --wp--preset--spacing--sm ) 0 0;

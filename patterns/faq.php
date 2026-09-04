@@ -10,8 +10,8 @@
  * частых вопросов.
  */
 ?>
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"var:preset|spacing|xxxl","left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-right:var(--wp--preset--spacing--xxl);padding-bottom:var(--wp--preset--spacing--xxxl);padding-left:var(--wp--preset--spacing--xxl)">
+<!-- wp:group {"className":"fs-section","style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
+<div class="wp-block-group fs-section" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 	<!-- wp:group {"layout":{"type":"constrained","contentSize":"640px"}} -->
 	<div class="wp-block-group">
 		<!-- wp:heading {"textAlign":"center","fontSize":"xxl"} -->

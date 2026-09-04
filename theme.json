@@ -185,6 +185,11 @@
 			"name": "page-wide",
 			"title": "Страница (широкая, 1200px)",
 			"postTypes": [ "page" ]
+		},
+		{
+			"name": "page-subject",
+			"title": "Страница направления (без заголовка страницы)",
+			"postTypes": [ "page" ]
 		}
 	]
 }
