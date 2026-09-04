@@ -1,3 +1,5 @@
+@import '../../scss/mixins';
+
 .fs-course-card {
 	position: relative;
 	display: flex;
@@ -8,18 +10,7 @@
 	border-radius: var( --wp--custom--radius--card );
 	box-shadow: var( --wp--custom--shadow--surface );
 
-	/**
-	 * Подъём по hover — тот же эффект, что у общего стиля карточки
-	 * (`.wp-block-group.is-style-card`, `theme.scss`): по указанию
-	 * пользователя (2026-09-04) распространён на карточки направлений,
-	 * которые своей рамкой/тенью этот стиль не используют.
-	 */
-	transition: box-shadow .2s ease, transform .2s ease;
-
-	&:hover {
-		box-shadow: var( --wp--custom--shadow--hover );
-		transform: translateY( -2px );
-	}
+	@include fs-card-lift;
 
 	&__media {
 		aspect-ratio: 4 / 3;

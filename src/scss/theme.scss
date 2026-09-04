@@ -6,6 +6,7 @@
 // переиспользуют паттерны и кастомные блоки Фазы 4/5) и декоративные
 // заглушки под изображения, пока в паттернах нет реальных картинок.
 
+@import 'mixins';
 @import 'woocommerce';
 
 *,
@@ -145,12 +146,8 @@ a {
 	border-radius: var( --wp--custom--radius--card );
 	box-shadow: var( --wp--custom--shadow--surface );
 	overflow: hidden;
-	transition: box-shadow .2s ease, transform .2s ease;
 
-	&:hover {
-		box-shadow: var( --wp--custom--shadow--hover );
-		transform: translateY( -2px );
-	}
+	@include fs-card-lift;
 }
 
 /**
@@ -539,18 +536,7 @@ $fs-gap-containers:
 	border: 1px solid var( --wp--preset--color--border );
 	border-radius: var( --wp--custom--radius--card );
 
-	/**
-	 * Подъём по hover — раньше приезжал вместе с `is-style-card` на
-	 * автособранных страницах направлений (`inc/SubjectPages.php`). Тот
-	 * класс убран (он рисовал вторую, белую подложку поверх карточки), а
-	 * эффект пользователю нравится — оставляем его на самой карточке.
-	 */
-	transition: box-shadow .2s ease, transform .2s ease;
-
-	&:hover {
-		box-shadow: var( --wp--custom--shadow--hover );
-		transform: translateY( -2px );
-	}
+	@include fs-card-lift;
 
 	&__icon {
 		display: inline-flex;
@@ -1536,13 +1522,16 @@ $fs-gap-containers:
 	.fs-topbar {
 		justify-content: center;
 
-		> :first-child {
+		// Слоган — декоративный текст, на мобильном уступает место контактам.
+		.fs-topbar__slogan {
 			display: none;
 		}
 
+		// `margin-left:auto` у блока контактов задан инлайном в атрибутах
+		// блока, перебить можно только `!important`.
 		> .wp-block-group {
 			margin-left: 0 !important;
-            margin-top: 0 !important;
+			margin-top: 0 !important;
 		}
 	}
 }

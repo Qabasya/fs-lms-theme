@@ -57,6 +57,10 @@
  * `#hero-form` — `fs_lms_theme_signup_button_url()` (`inc/Forms.php`)
  * отдаёт якорь формы на текущей странице либо, если её нет, якорь формы
  * главной страницы.
+ *
+ * Слоган в инфо-полосе — абзац, а не `<h1>`: заголовок первого уровня на
+ * странице должен быть один (и это заголовок самой страницы), иначе
+ * поисковик видит на каждой странице сайта один и тот же h1.
  */
 $fs_nav_id  = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navigation_id() : 0;
 $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme_signup_button_url() : '#hero-form';
@@ -67,8 +71,9 @@ $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme
 	<div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 		<!-- wp:group {"className":"fs-topbar","layout":{"type":"flex","justifyContent":"space-between"}} -->
 		<div class="wp-block-group fs-topbar">
-			<!-- wp:site-tagline {"textColor":"muted","fontSize":"xxs"} /-->
-            <h1 class="has-muted-2-color has-text-color has-xxs-font-size" style="font-weight: 400;">ЕГЭ, ОГЭ, программирование и робототехника в Калининграде</h1>
+			<!-- wp:paragraph {"className":"fs-topbar__slogan","textColor":"muted-2","fontSize":"xxs"} -->
+			<p class="fs-topbar__slogan has-muted-2-color has-text-color has-xxs-font-size">ЕГЭ, ОГЭ, программирование и робототехника в Калининграде</p>
+			<!-- /wp:paragraph -->
 			<!-- wp:group {"layout":{"type":"flex"},"style":{"spacing":{"blockGap":"var:preset|spacing|xl","margin":{"left":"auto"}}}} -->
 			<div class="wp-block-group" style="margin-left:auto">
 				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->

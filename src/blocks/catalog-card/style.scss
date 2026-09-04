@@ -11,6 +11,9 @@
  * классами `has-*-color`/`has-*-background-color` из палитры theme.json —
  * тот же приём, что у `fs-lms/course-card`.
  */
+
+@import '../../scss/mixins';
+
 .fs-course-catalog-card {
 	position: relative;
 	display: flex;
@@ -21,17 +24,7 @@
 	border-radius: var( --wp--custom--radius--card );
 	box-shadow: var( --wp--custom--shadow--surface );
 
-	/**
-	 * Подъём по hover — тот же эффект, что у общего стиля карточки
-	 * (`.wp-block-group.is-style-card`, `theme.scss`), по указанию
-	 * пользователя (2026-09-04) распространён и на карточки каталога.
-	 */
-	transition: box-shadow .2s ease, transform .2s ease;
-
-	&:hover {
-		box-shadow: var( --wp--custom--shadow--hover );
-		transform: translateY( -2px );
-	}
+	@include fs-card-lift;
 
 	&[hidden] {
 		display: none;

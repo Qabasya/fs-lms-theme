@@ -1,0 +1,25 @@
+// Общие приёмы оформления, которые нужны и теме, и отдельным блокам
+// (`src/blocks/*/style.scss` компилируются в свои файлы, поэтому подключают
+// этот партиал относительным путём).
+
+/// Лёгкий подъём карточки под курсором — общий язык всех карточек сайта.
+@mixin fs-card-lift {
+	transition: box-shadow .2s ease, transform .2s ease;
+
+	&:hover {
+		box-shadow: var( --wp--custom--shadow--hover );
+		transform: translateY( -2px );
+	}
+}
+
+/// Шеврон аккордеона (смотрит вниз; разворот — через `transform` у вызова).
+@mixin fs-chevron( $color: var( --wp--preset--color--muted ) ) {
+	content: "";
+	flex: 0 0 auto;
+	width: .5rem;
+	height: .5rem;
+	margin-bottom: .2rem;
+	border-right: 2px solid $color;
+	border-bottom: 2px solid $color;
+	transform: rotate( 45deg );
+}
