@@ -11,6 +11,7 @@
  *   - Blocks.php   — регистрация кастомных блоков (src/blocks/*, Фаза 4)
  *   - PluginRoutes.php — резолвер URL служебных страниц плагина (Фаза 7)
  *   - SubjectPages.php — автосборка пустых страниц направлений (Фаза 13)
+ *   - Navigation.php — меню шапки как объект `wp_navigation` (Фаза 17.4)
  *   - WooCommerce.php — каталог товаров (Фаза 10.3+)
  *   - Checkout.php — корзина/оформление заказа, степпер шагов (Фаза 16.3+)
  *   - Forms.php    — AJAX-приём лид-форм (`#hero-form`/`#signup`), honeypot +
@@ -23,6 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'PluginRoutes', 'SubjectPages', 'WooCommerce', 'Checkout', 'Forms' ) as $module ) {
+foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'PluginRoutes', 'SubjectPages', 'Navigation', 'WooCommerce', 'Checkout', 'Forms' ) as $module ) {
 	require_once get_template_directory() . "/inc/{$module}.php";
 }

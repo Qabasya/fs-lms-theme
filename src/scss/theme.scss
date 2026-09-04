@@ -190,7 +190,16 @@ a {
 		font-weight: 700;
 	}
 
+	/**
+	 * Фаза 17.3: строка направления — `wp:group` с двумя абзацами внутри
+	 * (название со ссылкой + класс), а не одна `<a>` с сырым HTML: теперь
+	 * текст и адрес ссылки правятся в редакторе. Стрелка — `::before`
+	 * (была `<span class="__arrow">`), кликабельна вся строка — ссылка
+	 * названия растягивается через `::after` (тот же приём, что у
+	 * `fs-lms/course-card`, BugFix.8).
+	 */
 	&__item {
+		position: relative;
 		display: flex;
 		align-items: baseline;
 		flex-wrap: wrap;
@@ -199,6 +208,12 @@ a {
 		border-bottom: 1px solid #ece3d6;
 		color: var( --wp--preset--color--text );
 
+		&::before {
+			content: "→";
+			color: var( --wp--preset--color--accent-2 );
+			font-size: 1.125rem;
+		}
+
 		&--last {
 			border-bottom: none;
 		}
@@ -206,16 +221,26 @@ a {
 		&:hover {
 			color: var( --wp--preset--color--accent-2 );
 		}
-	}
 
-	&__arrow {
-		color: var( --wp--preset--color--accent-2 );
-		font-size: 1.125rem;
+		p {
+			margin: 0;
+		}
 	}
 
 	&__name {
 		min-width: 0;
 		font-size: 1.3125rem;
+
+		a {
+			color: inherit;
+			text-decoration: none;
+
+			&::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+			}
+		}
 	}
 
 	&__grade {
@@ -298,12 +323,16 @@ a {
 		}
 	}
 
+	/* Фаза 17.3: значения/подписи — `wp:paragraph` (правятся в редакторе),
+	   свои отступы абзаца здесь не нужны. */
 	&__value {
+		margin: 0;
 		font-size: var( --wp--preset--font-size--xl );
 		font-weight: 700;
 	}
 
 	&__label {
+		margin: 0;
 		font-size: var( --wp--preset--font-size--base );
 		color: var( --wp--preset--color--text-secondary );
 	}
@@ -344,7 +373,16 @@ a {
  * — сама карточка `<a>` переиспользует базовую поверхность `.is-style-card`
  * (см. выше), здесь только внутренняя раскладка иконка/заголовок/текст.
  */
+
+/**
+ * Фаза 17.3: карточка — `wp:group` с настоящими блоками внутри (заголовок
+ * со ссылкой + текст правятся в редакторе), а не одна большая `<a>` с
+ * сырым HTML. Кликабельна вся карточка — «stretched link» через
+ * `::after` на ссылке заголовка (тот же приём, что `fs-lms/course-card`,
+ * BugFix.8). Иконка — `::before` c `mask-image` вместо `<svg>` в разметке.
+ */
 .fs-subject-more-card {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: .5rem;
@@ -352,25 +390,52 @@ a {
 	text-decoration: none;
 	color: inherit;
 
-	&__icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
+	/**
+	 * Иконка целиком в CSS: подложка — `background-color`, сам знак —
+	 * `background-image` с инлайн-SVG (не `mask-image`: маска съела бы
+	 * подложку, а так оба слоя живут на одном псевдоэлементе).
+	 */
+	&::before {
+		content: "";
 		width: 2.75rem;
 		height: 2.75rem;
 		margin-bottom: .25rem;
-		background: var( --wp--preset--color--accent-soft );
+		background-color: var( --wp--preset--color--accent-soft );
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 1.375rem;
 		border-radius: var( --wp--custom--radius--md );
-		color: var( --wp--preset--color--accent );
+	}
+
+	&--articles::before {
+		background-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 2.5h6.2L15.5 6.8V17.5H5V2.5z' fill='none' stroke='%233b5bdb' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M11 3v4.3h4.3' fill='none' stroke='%233b5bdb' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E" );
+	}
+
+	&--trainer::before {
+		background-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 3 12 7l4.5.6-3.3 3.2.8 4.5L10 13.2 6 15.5l.8-4.5L3.5 7.7 8 7z' fill='none' stroke='%233b5bdb' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E" );
 	}
 
 	&__title {
+		margin: 0;
 		font-size: var( --wp--preset--font-size--lg );
 		font-weight: 700;
 		color: var( --wp--preset--color--text );
+
+		a {
+			color: inherit;
+			text-decoration: none;
+
+			// Кликабельна вся карточка, а не только заголовок.
+			&::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+			}
+		}
 	}
 
 	&__text {
+		margin: 0;
 		font-size: var( --wp--preset--font-size--sm );
 		font-weight: 300;
 		color: var( --wp--preset--color--text-secondary );
@@ -538,6 +603,14 @@ a {
  * Чек-лист с галочкой в кружке (Фаза 11, `patterns/intensive-split.php`)
  * — замена маркера `»` на иконку.
  */
+
+/**
+ * Фаза 17.3: пункт чек-листа — обычный `wp:paragraph` (редактируемый
+ * текст), иконка-галочка уехала из разметки в CSS (`::before` +
+ * `mask-image` с инлайн-SVG — тот же приём, что шеврон
+ * `.fs-legal-accordion`/`.fs-faq-item`, Фаза 12.11). Раньше каждый пункт
+ * был сырым HTML со вложенным `<svg>` и в редакторе не правился.
+ */
 .fs-checklist {
 	display: flex;
 	flex-direction: column;
@@ -548,13 +621,26 @@ a {
 		display: flex;
 		align-items: flex-start;
 		gap: var( --wp--preset--spacing--sm );
+		margin: 0;
 		font-size: var( --wp--preset--font-size--base );
 		color: var( --wp--preset--color--text-secondary );
-	}
 
-	&__icon {
-		flex: 0 0 auto;
-		margin-top: .0625rem;
+		/* Светлый кружок + акцентная галочка — как было в исходном SVG
+		   (`circle fill=#edf0fe` + `path stroke=accent`): фон даёт
+		   `background-color`, знак — `background-image`. */
+		&::before {
+			content: "";
+			flex: 0 0 auto;
+			width: 1.125rem;
+			height: 1.125rem;
+			margin-top: .0625rem;
+			background-color: var( --wp--preset--color--accent-soft );
+			background-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m6.5 10.2 2.4 2.3 4.6-4.8' fill='none' stroke='%233b5bdb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" );
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: contain;
+			border-radius: 50%;
+		}
 	}
 }
 
@@ -576,12 +662,34 @@ a {
 	/**
 	 * BugFix.9 (2026-09-03): контейнер сжат до 240px — каждая из двух
 	 * половин («2 часа»/«800 ₽» + подпись) занимает 120px.
+	 *
+	 * Фаза 17.3: половины — обычные `wp:group` (`__part`), разделитель между
+	 * ними рисует CSS (`+ &__part::before`), а не пустой `<div>` в разметке:
+	 * пустой блок-разделитель в редакторе выглядел как «мусорный» блок и
+	 * мешал редактировать плашку.
 	 */
-	> div:not( .fs-price-plaque__divider ) {
+	&__part {
 		width: 120px;
+
+		& + & {
+			position: relative;
+			padding-left: var( --wp--preset--spacing--md );
+
+			&::before {
+				content: "";
+				position: absolute;
+				top: 50%;
+				left: 0;
+				width: 1px;
+				height: 2.25rem;
+				background: var( --wp--preset--color--border );
+				transform: translateY( -50% );
+			}
+		}
 	}
 
 	&__value {
+		margin: 0;
 		font-size: var( --wp--preset--font-size--xl );
 		font-weight: 700;
 
@@ -591,14 +699,9 @@ a {
 	}
 
 	&__label {
+		margin: 0;
 		font-size: var( --wp--preset--font-size--xs );
 		color: var( --wp--preset--color--muted );
-	}
-
-	&__divider {
-		width: 1px;
-		height: 2.25rem;
-		background: var( --wp--preset--color--border );
 	}
 }
 
@@ -612,15 +715,41 @@ a {
 	gap: var( --wp--preset--spacing--md );
 	margin-top: var( --wp--preset--spacing--md );
 
+	/**
+	 * Фаза 17.3: строка контакта — обычный `wp:paragraph` (текст и ссылка
+	 * правятся в редакторе), иконка задаётся модификатором класса и
+	 * рисуется через `mask-image`, как галочки `.fs-checklist__item`.
+	 * Раньше вся строка была сырым HTML со вложенным `<svg>`.
+	 */
 	&__item {
 		display: flex;
 		align-items: center;
 		gap: var( --wp--preset--spacing--sm );
+		margin: 0;
 		font-size: var( --wp--preset--font-size--base );
 		color: var( --wp--preset--color--text );
 
-		svg {
+		&::before {
+			content: "";
 			flex: 0 0 auto;
+			width: 1.125rem;
+			height: 1.125rem;
+			background-color: var( --wp--preset--color--accent );
+			mask-repeat: no-repeat;
+			mask-size: contain;
+			mask-position: center;
+		}
+
+		&--phone::before {
+			mask-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round' d='M4.5 3.5h3l1.2 3-1.7 1.3a10 10 0 0 0 4.2 4.2l1.3-1.7 3 1.2v3a1 1 0 0 1-1.1 1C8.6 15 5 11.4 3.5 4.6a1 1 0 0 1 1-1.1z'/%3E%3C/svg%3E" );
+		}
+
+		&--mail::before {
+			mask-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect x='2.5' y='4.5' width='15' height='11' rx='2' fill='none' stroke='black' stroke-width='1.6'/%3E%3Cpath d='m3 6 7 5 7-5' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E" );
+		}
+
+		&--pin::before {
+			mask-image: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 17.5s5.5-4.9 5.5-9a5.5 5.5 0 1 0-11 0c0 4.1 5.5 9 5.5 9z' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round'/%3E%3Ccircle cx='10' cy='8.5' r='2' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E" );
 		}
 
 		a {
@@ -923,11 +1052,14 @@ a {
 	}
 }
 
+/* Фаза 17.3: слайд-логотип — `wp:paragraph` (название вуза правится в
+   редакторе), поэтому сбрасываем собственный отступ абзаца. */
 .fs-alumni-logo {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	height: 3.25rem;
+	margin: 0;
 	padding: 0 var( --wp--preset--spacing--md );
 	background: var( --wp--preset--color--border-light );
 	border-radius: var( --wp--custom--radius--md );
@@ -1033,6 +1165,12 @@ a {
 		gap: .375rem;
 		font-size: var( --wp--preset--font-size--sm );
 
+		/* Фаза 17.3: строки контактов — `wp:paragraph`, сбрасываем их
+		   собственные отступы, расстояние держит `gap` контейнера. */
+		p {
+			margin: 0;
+		}
+
 		a,
 		div {
 			color: #dee2e6;
@@ -1044,7 +1182,36 @@ a {
 		justify-self: center;
 		width: 100%;
 		max-width: 412px;
+
+		figure,
+		p {
+			margin: 0;
+		}
 	}
+}
+
+/**
+ * Логотипы шапки/футера — Фаза 17.3: это `wp:image` (картинку можно
+ * заменить прямо в редакторе через медиатеку), поэтому размеры больше не
+ * висят инлайном в разметке паттерна, а заданы здесь.
+ */
+.fs-header-logo,
+.fs-footer-logo {
+	margin: 0;
+
+	img {
+		display: block;
+		height: auto;
+		object-fit: contain;
+	}
+}
+
+.fs-header-logo img {
+	max-height: 64px;
+}
+
+.fs-footer-logo img {
+	max-height: 50px;
 }
 
 .fs-footer-bottom {
@@ -1197,7 +1364,21 @@ a {
 	flex-wrap: wrap;
 	gap: var( --wp--preset--spacing--sm );
 
-	&__chip {
+	/**
+	 * Фаза 17.3: чипсы — обычные `wp:button` (текст и адрес правятся
+	 * штатным интерфейсом кнопки), а не сырые `<button data-filter>`.
+	 * Значение фильтра лежит в адресе ссылки (`#grade-11`), его читает
+	 * `src/js/course-filter.js`. Поэтому стили висят и на своём классе,
+	 * и на разметке кнопки ядра.
+	 */
+	.wp-block-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var( --wp--preset--spacing--sm );
+	}
+
+	&__chip,
+	.wp-block-button__link {
 		display: inline-flex;
 		align-items: center;
 		height: 2.125rem;
@@ -1210,10 +1391,13 @@ a {
 		font-weight: 500;
 		color: var( --wp--preset--color--text-secondary );
 		cursor: pointer;
+		text-decoration: none;
 		transition: background-color .15s ease, color .15s ease, border-color .15s ease;
 
 		&:hover {
 			border-color: var( --wp--preset--color--muted-2 );
+			background: var( --wp--preset--color--white );
+			color: var( --wp--preset--color--text-secondary );
 		}
 
 		&.is-active {
@@ -1236,150 +1420,9 @@ a {
 	margin-top: var( --wp--preset--spacing--xl );
 }
 
-.fs-course-catalog-card {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-	background: var( --wp--preset--color--white );
-	border: 1px solid var( --wp--preset--color--border );
-	border-radius: var( --wp--custom--radius--card );
-	box-shadow: var( --wp--custom--shadow--surface );
-
-	&[hidden] {
-		display: none;
-	}
-
-	&__media {
-		aspect-ratio: 4 / 3;
-	}
-
-	&__body {
-		display: flex;
-		flex: 1;
-		flex-direction: column;
-		gap: var( --wp--preset--spacing--md );
-		padding: var( --wp--preset--spacing--xl );
-	}
-
-	&__meta {
-		display: flex;
-		align-items: center;
-		gap: var( --wp--preset--spacing--sm );
-	}
-
-	&__badge {
-		padding: .1875rem .5625rem;
-		border-radius: var( --wp--custom--radius--md );
-		background: var( --wp--preset--color--accent-2-soft );
-		font-size: var( --wp--preset--font-size--xxs );
-		font-weight: 500;
-		letter-spacing: .04em;
-		text-transform: uppercase;
-		color: var( --wp--preset--color--accent-2 );
-	}
-
-	&__format {
-		font-size: var( --wp--preset--font-size--xs );
-		color: var( --wp--preset--color--muted );
-	}
-
-	&__title {
-		margin: 0;
-		font-size: var( --wp--preset--font-size--lead );
-		font-weight: 700;
-		letter-spacing: -.01em;
-	}
-
-	&__text {
-		margin: 0;
-		font-size: var( --wp--preset--font-size--sm );
-		font-weight: 300;
-		line-height: 1.6;
-		color: var( --wp--preset--color--text-secondary );
-	}
-
-	&__tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var( --wp--preset--spacing--xs );
-	}
-
-	&__tag {
-		padding: .3125rem .6875rem;
-		border-radius: var( --wp--custom--radius--pill );
-		background: var( --wp--preset--color--surface-2 );
-		font-size: var( --wp--preset--font-size--xs );
-		color: var( --wp--preset--color--text-secondary );
-	}
-
-	&__footer {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: var( --wp--preset--spacing--md );
-		margin-top: auto;
-		padding-top: var( --wp--preset--spacing--md );
-	}
-
-	&__price {
-		display: flex;
-		flex-direction: column;
-	}
-
-	&__price-amount {
-		font-size: 1.25rem;
-		font-weight: 700;
-	}
-
-	&__price-note {
-		font-size: var( --wp--preset--font-size--xxs );
-		font-weight: 300;
-		color: var( --wp--preset--color--muted );
-	}
-
-	&__actions {
-		display: flex;
-		gap: var( --wp--preset--spacing--sm );
-	}
-
-	&__button {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		height: 2.375rem;
-		padding: 0 var( --wp--preset--spacing--lg );
-		border-radius: var( --wp--custom--radius--control );
-		font-size: var( --wp--preset--font-size--base );
-		font-weight: 600;
-		text-decoration: none;
-		white-space: nowrap;
-
-		/**
-		 * BugFix.8 (2026-09-03): осталась одна кнопка («Подробнее»,
-		 * `--solid` — вариант `--ghost` «Программа» убран из разметки).
-		 * Карточка целиком кликабельна тем же приёмом stretched-link, что
-		 * `fs-course-card` (`src/blocks/course-card/style.scss`) — кнопка
-		 * `position: static`, её `::after` растягивается на
-		 * `.fs-course-catalog-card` (`position: relative` в корне).
-		 */
-		&--solid {
-			background: var( --wp--preset--color--accent );
-			color: var( --wp--preset--color--white );
-
-			&::after {
-				content: "";
-				position: absolute;
-				inset: 0;
-			}
-
-			&:hover {
-				background: var( --wp--preset--color--accent-600 );
-				color: var( --wp--preset--color--white );
-			}
-		}
-	}
-}
+/* `.fs-course-catalog-card` переехал в `src/blocks/catalog-card/style.scss`
+   (Фаза 17.3): карточка стала блоком `fs-lms/catalog-card`, её стили
+   живут рядом с блоком, как у остальных `src/blocks/*`. */
 
 @media ( max-width: 960px ) {
 	.fs-course-catalog {

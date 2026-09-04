@@ -51,24 +51,61 @@
 			<p class="has-text-secondary-color has-text-color has-md-font-size">Формат одинаковый на всех направлениях — меняется только программа.</p>
 			<!-- /wp:paragraph -->
 
-			<!-- wp:html -->
-			<div class="fs-checklist">
-				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Занятия 2 раза в неделю</span></div>
-				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Запись и онлайн-трансляция каждого занятия</span></div>
-				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Домашнее задание после каждого занятия</span></div>
-				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Индивидуальные консультации с преподавателем</span></div>
-				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Материалы, теория и шпаргалки в личном кабинете</span></div>
-				<div class="fs-checklist__item"><span class="fs-checklist__icon"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="#edf0fe"/><path d="m6.5 10.2 2.4 2.3 4.6-4.8" stroke="#3b5bdb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Дополнительные видеоматериалы по каждой теме</span></div>
-			</div>
-			<!-- /wp:html -->
+			<!-- wp:group {"className":"fs-checklist"} -->
+			<div class="wp-block-group fs-checklist">
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Занятия 2 раза в неделю</p>
+				<!-- /wp:paragraph -->
 
-			<!-- wp:html -->
-			<div class="fs-price-plaque">
-				<div><div class="fs-price-plaque__value">2 часа</div><div class="fs-price-plaque__label">одно занятие</div></div>
-				<div class="fs-price-plaque__divider"></div>
-				<div><div class="fs-price-plaque__value fs-price-plaque__value--accent">800 ₽</div><div class="fs-price-plaque__label">за час</div></div>
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Запись и онлайн-трансляция каждого занятия</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Домашнее задание после каждого занятия</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Индивидуальные консультации с преподавателем</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Материалы, теория и шпаргалки в личном кабинете</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Дополнительные видеоматериалы по каждой теме</p>
+				<!-- /wp:paragraph -->
 			</div>
-			<!-- /wp:html -->
+			<!-- /wp:group -->
+
+			<!-- wp:group {"className":"fs-price-plaque"} -->
+			<div class="wp-block-group fs-price-plaque">
+				<!-- wp:group {"className":"fs-price-plaque__part"} -->
+				<div class="wp-block-group fs-price-plaque__part">
+					<!-- wp:paragraph {"className":"fs-price-plaque__value"} -->
+					<p class="fs-price-plaque__value">2 часа</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-price-plaque__label"} -->
+					<p class="fs-price-plaque__label">одно занятие</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"fs-price-plaque__part"} -->
+				<div class="wp-block-group fs-price-plaque__part">
+					<!-- wp:paragraph {"className":"fs-price-plaque__value fs-price-plaque__value--accent"} -->
+					<p class="fs-price-plaque__value fs-price-plaque__value--accent">800 ₽</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-price-plaque__label"} -->
+					<p class="fs-price-plaque__label">за час</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+			</div>
+			<!-- /wp:group -->
 
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">

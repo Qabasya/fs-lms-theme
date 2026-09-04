@@ -28,19 +28,37 @@
 		<p class="has-text-secondary-color has-text-color has-sm-font-size" style="text-align:center">Наши выпускники поступают</p>
 		<!-- /wp:paragraph -->
 
-		<!-- wp:html -->
-		<div class="splide fs-carousel-mask fs-carousel-mask--strip" data-fs-carousel data-per-page="5" data-autoplay="true" data-arrows="false">
-			<div class="splide__track">
-				<div class="splide__list">
-					<div class="fs-alumni-logo splide__slide">БФУ им. Канта</div>
-					<div class="fs-alumni-logo splide__slide">МИРЭА</div>
-					<div class="fs-alumni-logo splide__slide">ИТМО</div>
-					<div class="fs-alumni-logo splide__slide">МГТУ</div>
-					<div class="fs-alumni-logo splide__slide">РУДН</div>
+		<!-- wp:group {"className":"splide fs-carousel fs-carousel--per-5 fs-carousel--autoplay fs-carousel--no-arrows fs-carousel-mask fs-carousel-mask--strip"} -->
+		<div class="wp-block-group splide fs-carousel fs-carousel--per-5 fs-carousel--autoplay fs-carousel--no-arrows fs-carousel-mask fs-carousel-mask--strip">
+			<!-- wp:group {"className":"splide__track"} -->
+			<div class="wp-block-group splide__track">
+				<!-- wp:group {"className":"splide__list"} -->
+				<div class="wp-block-group splide__list">
+					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
+					<p class="fs-alumni-logo splide__slide">БФУ им. Канта</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
+					<p class="fs-alumni-logo splide__slide">МИРЭА</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
+					<p class="fs-alumni-logo splide__slide">ИТМО</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
+					<p class="fs-alumni-logo splide__slide">МГТУ</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-alumni-logo splide__slide"} -->
+					<p class="fs-alumni-logo splide__slide">РУДН</p>
+					<!-- /wp:paragraph -->
 				</div>
+				<!-- /wp:group -->
 			</div>
+			<!-- /wp:group -->
 		</div>
-		<!-- /wp:html -->
+		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
 </div>

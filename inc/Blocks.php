@@ -29,6 +29,40 @@ add_filter( 'block_categories_all', function ( array $categories ): array {
 	return $categories;
 } );
 
+/**
+ * Фаза 17.3 — диагностика «Этот блок имеет неожидаемое или неверное
+ * содержимое» на каждом кастомном блоке в редакторе.
+ *
+ * Причина такой картины почти всегда одна: тема развёрнута без собранных
+ * `assets/` (каталог в `.gitignore`, его нет ни в git, ни в архиве после
+ * `git archive`). PHP-регистрация блока при этом проходит (см. ниже
+ * `register_block_type()` вызывается всегда), а вот JS-описание блока с
+ * его `save()` в редактор не попадает — редактор видит блок, для которого
+ * у него нет определения, и помечает содержимое как неверное.
+ *
+ * Разметка самих паттернов тут ни при чём — она сверена с выводом `save()`
+ * всех блоков (26 вхождений, расхождений нет). Поэтому вместо молчаливой
+ * поломки показываем администратору прямую подсказку.
+ */
+add_action( 'admin_notices', function (): void {
+	if ( ! current_user_can( 'edit_theme_options' ) ) {
+		return;
+	}
+
+	$blocks   = glob( get_template_directory() . '/src/blocks/*/block.json' );
+	$built_js = glob( get_template_directory() . '/assets/js/blocks/*.min.js' );
+
+	if ( empty( $blocks ) || ! empty( $built_js ) ) {
+		return;
+	}
+
+	printf(
+		'<div class="notice notice-error"><p><strong>%s</strong> %s <code>npm install &amp;&amp; npm run build:prod</code>.</p></div>',
+		esc_html__( 'FS LMS Theme: тема развёрнута без собранных ассетов.', 'fs-lms-theme' ),
+		esc_html__( 'Кастомные блоки будут показываться в редакторе как «неожидаемое или неверное содержимое», а часть стилей не подключится. Соберите тему командой', 'fs-lms-theme' )
+	);
+} );
+
 add_action( 'init', function (): void {
 	$blocks_dir    = get_template_directory() . '/src/blocks';
 	$assets_js_dir = get_template_directory() . '/assets/js/blocks';

@@ -39,13 +39,21 @@
 			<p class="has-text-secondary-color has-text-color has-md-font-size">Заполни форму и мы ответим на все интересующие вопросы. Первое занятие — бесплатно.</p>
 			<!-- /wp:paragraph -->
 
-			<!-- wp:html -->
-			<div class="fs-contact-list">
-				<div class="fs-contact-list__item"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.5 3.5h3l1.2 3-1.7 1.3a10 10 0 0 0 4.2 4.2l1.3-1.7 3 1.2v3a1 1 0 0 1-1.1 1C8.6 15 5 11.4 3.5 4.6a1 1 0 0 1 1-1.1z" stroke="#3b5bdb" stroke-width="1.6" stroke-linejoin="round"/></svg><a href="tel:+79953264486">+7 995 326 44 86</a></div>
-				<div class="fs-contact-list__item"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="11" rx="2" stroke="#3b5bdb" stroke-width="1.6"/><path d="m3 6 7 5 7-5" stroke="#3b5bdb" stroke-width="1.6" stroke-linejoin="round"/></svg><a href="mailto:info@future-step.ru">info@future-step.ru</a></div>
-				<div class="fs-contact-list__item"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 17.5s5.5-4.9 5.5-9a5.5 5.5 0 1 0-11 0c0 4.1 5.5 9 5.5 9z" stroke="#3b5bdb" stroke-width="1.6" stroke-linejoin="round"/><circle cx="10" cy="8.5" r="2" stroke="#3b5bdb" stroke-width="1.6"/></svg><span>Калининград, ул. Черняховского, 6, каб. 316</span></div>
+			<!-- wp:group {"className":"fs-contact-list"} -->
+			<div class="wp-block-group fs-contact-list">
+				<!-- wp:paragraph {"className":"fs-contact-list__item fs-contact-list__item--phone"} -->
+				<p class="fs-contact-list__item fs-contact-list__item--phone"><a href="tel:+79953264486">+7 995 326 44 86</a></p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-contact-list__item fs-contact-list__item--mail"} -->
+				<p class="fs-contact-list__item fs-contact-list__item--mail"><a href="mailto:info@future-step.ru">info@future-step.ru</a></p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-contact-list__item fs-contact-list__item--pin"} -->
+				<p class="fs-contact-list__item fs-contact-list__item--pin">Калининград, ул. Черняховского, 6, каб. 316</p>
+				<!-- /wp:paragraph -->
 			</div>
-			<!-- /wp:html -->
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:column -->
 

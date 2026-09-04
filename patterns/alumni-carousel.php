@@ -19,11 +19,12 @@
 	<h2 class="wp-block-heading has-text-align-center has-xxl-font-size">Наши выпускники</h2>
 	<!-- /wp:heading -->
 
-	<!-- wp:html -->
-	<div class="splide fs-carousel-mask" data-fs-carousel data-per-page="3" data-autoplay="false">
-		<div class="splide__track">
-			<div class="splide__list">
-	<!-- /wp:html -->
+	<!-- wp:group {"className":"splide fs-carousel fs-carousel--per-3 fs-carousel-mask"} -->
+	<div class="wp-block-group splide fs-carousel fs-carousel--per-3 fs-carousel-mask">
+		<!-- wp:group {"className":"splide__track"} -->
+		<div class="wp-block-group splide__track">
+			<!-- wp:group {"className":"splide__list"} -->
+			<div class="wp-block-group splide__list">
 
 	<!-- wp:fs-lms/alumni-card {"scoreText":"98 баллов","authorName":"Петрова Мария","quote":"Пришла с нуля в 10 классе, поступила в ИТМО на бюджет."} -->
 	<div class="wp-block-fs-lms-alumni-card fs-alumni-card splide__slide"><div class="fs-alumni-card__media fs-placeholder-tile"></div><div class="fs-alumni-card__body"><div class="fs-alumni-card__score">98 баллов</div><div class="fs-alumni-card__name">Петрова Мария</div><p class="fs-alumni-card__quote">Пришла с нуля в 10 классе, поступила в ИТМО на бюджет.</p></div></div>
@@ -37,10 +38,11 @@
 	<div class="wp-block-fs-lms-alumni-card fs-alumni-card splide__slide"><div class="fs-alumni-card__media fs-placeholder-tile"></div><div class="fs-alumni-card__body"><div class="fs-alumni-card__score">92 балла</div><div class="fs-alumni-card__name">Соколов Артём</div><p class="fs-alumni-card__quote">Два года робототехники, теперь учусь в МИРЭА.</p></div></div>
 	<!-- /wp:fs-lms/alumni-card -->
 
-	<!-- wp:html -->
 			</div>
+			<!-- /wp:group -->
 		</div>
+		<!-- /wp:group -->
 	</div>
-	<!-- /wp:html -->
+	<!-- /wp:group -->
 </div>
 <!-- /wp:group -->

@@ -1,19 +1,51 @@
 /**
  * Карусели на Splide (Фаза 12.0) — «Наши выпускники» и «Наши выпускники
- * поступают» (Фаза 12.3/12.4) используют один и тот же generic-инициализатор:
- * разметка сама объявляет число слайдов/автопрокрутку через data-атрибуты,
- * а не через отдельный JS-модуль на каждую секцию.
+ * поступают» (Фаза 12.3/12.4) используют один и тот же generic-инициализатор.
  *
- * Разметка: `<div data-fs-carousel data-per-page="3" data-autoplay="true">`,
- * внутри — `.splide__track > .splide__list > .splide__slide` (Splide сам
- * оборачивает содержимое по этой структуре, см. https://splidejs.com/).
+ * Разметка: `<div class="splide fs-carousel ...">`, внутри —
+ * `.splide__track > .splide__list > .splide__slide` (структура Splide,
+ * см. https://splidejs.com/).
+ *
+ * Фаза 17.3: настройки читаются из классов-модификаторов, а не только из
+ * `data-`-атрибутов. Причина — переход секций с сырого `wp:html` на
+ * обычные блоки `wp:group`: у группы в редакторе можно задать
+ * дополнительный CSS-класс (панель «Дополнительно»), а произвольный
+ * `data-`-атрибут — нельзя. Старые `data-`-атрибуты по-прежнему
+ * поддерживаются и имеют приоритет — разметка, написанная руками, не
+ * ломается.
+ *
+ *   fs-carousel--per-<N>   число слайдов на десктопе (по умолчанию 1)
+ *   fs-carousel--autoplay  автопрокрутка
+ *   fs-carousel--no-arrows спрятать стрелки
  */
 
 import Splide from '@splidejs/splide';
 
+function readPerPage( el ) {
+	if ( el.dataset.perPage ) {
+		return parseInt( el.dataset.perPage, 10 );
+	}
+
+	const modifier = [ ...el.classList ].find( ( name ) =>
+		name.startsWith( 'fs-carousel--per-' )
+	);
+
+	return modifier ? parseInt( modifier.replace( 'fs-carousel--per-', '' ), 10 ) : 1;
+}
+
+function readFlag( el, dataKey, className, fallback ) {
+	if ( el.dataset[ dataKey ] ) {
+		return el.dataset[ dataKey ] === 'true';
+	}
+
+	return el.classList.contains( className ) ? ! fallback : fallback;
+}
+
 export function initCarousels() {
-	document.querySelectorAll( '[data-fs-carousel]' ).forEach( ( el ) => {
-		const perPage = parseInt( el.dataset.perPage || '1', 10 );
+	const selector = '[data-fs-carousel], .fs-carousel';
+
+	document.querySelectorAll( selector ).forEach( ( el ) => {
+		const perPage = readPerPage( el ) || 1;
 		const perPageTablet = Math.min( perPage, 2 );
 
 		new Splide( el, {
@@ -21,8 +53,8 @@ export function initCarousels() {
 			perPage,
 			gap: '1.25rem',
 			pagination: false,
-			arrows: el.dataset.arrows !== 'false',
-			autoplay: el.dataset.autoplay === 'true',
+			arrows: readFlag( el, 'arrows', 'fs-carousel--no-arrows', true ),
+			autoplay: readFlag( el, 'autoplay', 'fs-carousel--autoplay', false ),
 			interval: 3000,
 			pauseOnHover: true,
 			breakpoints: {

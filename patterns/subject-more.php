@@ -39,25 +39,33 @@ $subject_key = 'inf_ege';
 	<div class="wp-block-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:html -->
-			<a href="<?php echo esc_url( fs_lms_theme_subject_url( $subject_key, 'articles' ) ); ?>" class="wp-block-group is-style-card fs-subject-more-card">
-				<span class="fs-subject-more-card__icon"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 2.5h6.2L15.5 6.8V17.5H5V2.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M11 3v4.3h4.3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></span>
-				<span class="fs-subject-more-card__title">Открыть учебник</span>
-				<span class="fs-subject-more-card__text">Конспекты, шпаргалки и памятки по каждой теме направления.</span>
-			</a>
-			<!-- /wp:html -->
+			<!-- wp:group {"className":"is-style-card fs-subject-more-card fs-subject-more-card--articles"} -->
+			<div class="wp-block-group is-style-card fs-subject-more-card fs-subject-more-card--articles">
+				<!-- wp:paragraph {"className":"fs-subject-more-card__title"} -->
+				<p class="fs-subject-more-card__title"><a href="<?php echo esc_url( fs_lms_theme_subject_url( $subject_key, 'articles' ) ); ?>">Открыть учебник</a></p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-subject-more-card__text"} -->
+				<p class="fs-subject-more-card__text">Конспекты, шпаргалки и памятки по каждой теме направления.</p>
+				<!-- /wp:paragraph -->
+			</div>
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:column -->
 
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:html -->
-			<a href="<?php echo esc_url( fs_lms_theme_subject_url( $subject_key, 'trainer' ) ); ?>" class="wp-block-group is-style-card fs-subject-more-card">
-				<span class="fs-subject-more-card__icon"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3 12 7l4.5.6-3.3 3.2.8 4.5L10 13.2 6 15.5l.8-4.5L3.5 7.7 8 7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg></span>
-				<span class="fs-subject-more-card__title">Открыть тренажёр</span>
-				<span class="fs-subject-more-card__text">Задания по темам направления с проверкой и разбором ошибок.</span>
-			</a>
-			<!-- /wp:html -->
+			<!-- wp:group {"className":"is-style-card fs-subject-more-card fs-subject-more-card--trainer"} -->
+			<div class="wp-block-group is-style-card fs-subject-more-card fs-subject-more-card--trainer">
+				<!-- wp:paragraph {"className":"fs-subject-more-card__title"} -->
+				<p class="fs-subject-more-card__title"><a href="<?php echo esc_url( fs_lms_theme_subject_url( $subject_key, 'trainer' ) ); ?>">Открыть тренажёр</a></p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-subject-more-card__text"} -->
+				<p class="fs-subject-more-card__text">Задания по темам направления с проверкой и разбором ошибок.</p>
+				<!-- /wp:paragraph -->
+			</div>
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:column -->
 	</div>

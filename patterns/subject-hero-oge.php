@@ -72,13 +72,45 @@
 			</form>
 			<!-- /wp:html -->
 
-			<!-- wp:html -->
-			<div class="fs-hero-stats">
-				<div class="fs-hero-stats__item"><div class="fs-hero-stats__value">84</div><div class="fs-hero-stats__label">средний балл</div></div>
-				<div class="fs-hero-stats__item"><div class="fs-hero-stats__value">800 ₽</div><div class="fs-hero-stats__label">час занятий</div></div>
-				<div class="fs-hero-stats__item"><div class="fs-hero-stats__value">до 8</div><div class="fs-hero-stats__label">человек в группе</div></div>
+			<!-- wp:group {"className":"fs-hero-stats"} -->
+			<div class="wp-block-group fs-hero-stats">
+				<!-- wp:group {"className":"fs-hero-stats__item"} -->
+				<div class="wp-block-group fs-hero-stats__item">
+					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
+					<p class="fs-hero-stats__value">84</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
+					<p class="fs-hero-stats__label">средний балл</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"fs-hero-stats__item"} -->
+				<div class="wp-block-group fs-hero-stats__item">
+					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
+					<p class="fs-hero-stats__value">800 ₽</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
+					<p class="fs-hero-stats__label">час занятий</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"fs-hero-stats__item"} -->
+				<div class="wp-block-group fs-hero-stats__item">
+					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
+					<p class="fs-hero-stats__value">до 8</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
+					<p class="fs-hero-stats__label">человек в группе</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
 			</div>
-			<!-- /wp:html -->
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:column -->
 	</div>

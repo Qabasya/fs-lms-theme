@@ -42,9 +42,7 @@
  * пересчитана под реальное соотношение сторон файла (2800×816), высота
  * не менялась (64px).
  */
-$fs_nav_current_home    = is_front_page() ? 'current-menu-item' : '';
-$fs_nav_current_about   = is_page( 'about' ) ? 'current-menu-item' : '';
-$fs_nav_current_courses = is_page( 'courses' ) ? 'current-menu-item' : '';
+$fs_nav_id = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navigation_id() : 0;
 ?>
 <!-- wp:group {"tagName":"div","backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|xs","bottom":"var:preset|spacing|xs"}},"border":{"bottom":{"color":"var:preset|color|border-light","width":"1px"}}}} -->
 <div class="wp-block-group has-surface-2-background-color has-background" style="border-bottom-color:var(--wp--preset--color--border-light);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--xs);padding-bottom:var(--wp--preset--spacing--xs)">
@@ -80,23 +78,23 @@ $fs_nav_current_courses = is_page( 'courses' ) ? 'current-menu-item' : '';
 		<div class="wp-block-group">
 			<!-- wp:group {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|md"}}} -->
 			<div class="wp-block-group">
-				<!-- wp:html -->
-				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="fs-header-logo" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'img/logo-header.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="220" height="64" style="display:block;width:220px;height:64px;object-fit:contain;" /></a>
-				<!-- /wp:html -->
+				<!-- wp:image {"width":"220px","className":"fs-header-logo","linkDestination":"custom"} -->
+				<figure class="wp-block-image fs-header-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'img/logo-header.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" style="width:220px"/></a></figure>
+				<!-- /wp:image -->
 			</div>
 			<!-- /wp:group -->
 
+			<?php if ( $fs_nav_id > 0 ) : ?>
+			<!-- wp:navigation {"ref":<?php echo (int) $fs_nav_id; ?>,"overlayMenu":"mobile","layout":{"type":"flex","justifyContent":"center"},"style":{"typography":{"fontSize":"sm"}}} /-->
+			<?php else : ?>
 			<!-- wp:navigation {"overlayMenu":"mobile","layout":{"type":"flex","justifyContent":"center"},"style":{"typography":{"fontSize":"sm"}}} -->
-			<!-- wp:navigation-link {"label":"Главная","url":"<?php echo esc_url( home_url( '/' ) ); ?>","className":"<?php echo esc_attr( $fs_nav_current_home ); ?>"} /-->
+			<!-- wp:home-link {"label":"Главная"} /-->
 
-			<!-- wp:navigation-link {"label":"О нас","url":"<?php echo esc_url( home_url( '/about/' ) ); ?>","className":"<?php echo esc_attr( $fs_nav_current_about ); ?>"} /-->
+			<!-- wp:navigation-link {"label":"О нас","url":"<?php echo esc_url( home_url( '/about/' ) ); ?>"} /-->
 
-			<!-- wp:navigation-link {"label":"Курсы","url":"<?php echo esc_url( home_url( '/courses/' ) ); ?>","className":"<?php echo esc_attr( $fs_nav_current_courses ); ?>"} /-->
-
-			<!-- wp:navigation-link {"label":"Учебник","url":"#"} /-->
-
-			<!-- wp:navigation-link {"label":"Тренажёр","url":"#"} /-->
+			<!-- wp:navigation-link {"label":"Курсы","url":"<?php echo esc_url( home_url( '/courses/' ) ); ?>"} /-->
 			<!-- /wp:navigation -->
+			<?php endif; ?>
 
 			<!-- wp:group {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|lg"}}} -->
 			<div class="wp-block-group">
@@ -105,6 +103,10 @@ $fs_nav_current_courses = is_page( 'courses' ) ? 'current-menu-item' : '';
 				<div class="wp-block-buttons">
 					<!-- wp:button {"backgroundColor":"accent-2"} -->
 					<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="#hero-form">Записаться</a></div>
+					<!-- /wp:button -->
+
+					<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
+					<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="<?php echo esc_url( fs_lms_theme_url( 'profile' ) ); ?>">Личный кабинет</a></div>
 					<!-- /wp:button -->
 				</div>
 				<!-- /wp:buttons -->

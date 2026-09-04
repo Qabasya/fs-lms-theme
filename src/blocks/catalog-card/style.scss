@@ -1,0 +1,162 @@
+/**
+ * Карточка направления каталога (`fs-lms/catalog-card`, Фаза 17.3).
+ *
+ * Стили переехали сюда из `src/scss/theme.scss`, где жили с Фазы 16.5,
+ * когда карточка была сырым HTML в `patterns/courses-catalog.php`. Теперь
+ * это полноценный блок (текст/картинка/цвет бейджа правятся в редакторе),
+ * и его CSS живёт рядом с блоком — как у остальных `src/blocks/*`.
+ *
+ * Цвет бейджа больше не зашит в этот файл: пару «текст + мягкая подложка»
+ * даёт выбор в инспекторе (`BADGE_COLORS`, `src/blocks/shared/colors.js`)
+ * классами `has-*-color`/`has-*-background-color` из палитры theme.json —
+ * тот же приём, что у `fs-lms/course-card`.
+ */
+.fs-course-catalog-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--card );
+	box-shadow: var( --wp--custom--shadow--surface );
+
+	&[hidden] {
+		display: none;
+	}
+
+	&__media {
+		aspect-ratio: 4 / 3;
+
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: var( --wp--preset--spacing--md );
+		padding: var( --wp--preset--spacing--xl );
+	}
+
+	&__meta {
+		display: flex;
+		align-items: center;
+		gap: var( --wp--preset--spacing--sm );
+	}
+
+	&__badge {
+		padding: .1875rem .5625rem;
+		border-radius: var( --wp--custom--radius--md );
+		font-size: var( --wp--preset--font-size--xxs );
+		font-weight: 500;
+		letter-spacing: .04em;
+		text-transform: uppercase;
+	}
+
+	&__format {
+		font-size: var( --wp--preset--font-size--xs );
+		color: var( --wp--preset--color--muted );
+	}
+
+	&__title {
+		margin: 0;
+		font-size: var( --wp--preset--font-size--lead );
+		font-weight: 700;
+		letter-spacing: -.01em;
+	}
+
+	&__text {
+		margin: 0;
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 300;
+		line-height: 1.6;
+		color: var( --wp--preset--color--text-secondary );
+	}
+
+	&__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var( --wp--preset--spacing--xs );
+	}
+
+	&__tag {
+		padding: .3125rem .6875rem;
+		border-radius: var( --wp--custom--radius--pill );
+		background: var( --wp--preset--color--surface-2 );
+		font-size: var( --wp--preset--font-size--xs );
+		color: var( --wp--preset--color--text-secondary );
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var( --wp--preset--spacing--md );
+		margin-top: auto;
+		padding-top: var( --wp--preset--spacing--md );
+	}
+
+	&__price {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__price-amount {
+		font-size: 1.25rem;
+		font-weight: 700;
+	}
+
+	&__price-note {
+		font-size: var( --wp--preset--font-size--xxs );
+		font-weight: 300;
+		color: var( --wp--preset--color--muted );
+	}
+
+	&__actions {
+		display: flex;
+		gap: var( --wp--preset--spacing--sm );
+	}
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		height: 2.375rem;
+		padding: 0 var( --wp--preset--spacing--lg );
+		border-radius: var( --wp--custom--radius--control );
+		font-size: var( --wp--preset--font-size--base );
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+
+		/**
+		 * BugFix.8 (2026-09-03): осталась одна кнопка («Подробнее»,
+		 * `--solid` — вариант `--ghost` «Программа» убран из разметки).
+		 * Карточка целиком кликабельна тем же приёмом stretched-link, что
+		 * `fs-course-card` (`src/blocks/course-card/style.scss`) — кнопка
+		 * `position: static`, её `::after` растягивается на
+		 * `.fs-course-catalog-card` (`position: relative` в корне).
+		 */
+		&--solid {
+			background: var( --wp--preset--color--accent );
+			color: var( --wp--preset--color--white );
+
+			&::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+			}
+
+			&:hover {
+				background: var( --wp--preset--color--accent-600 );
+				color: var( --wp--preset--color--white );
+			}
+		}
+	}
+}

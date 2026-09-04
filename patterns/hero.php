@@ -35,31 +35,61 @@
 	<div class="wp-block-columns fs-hero-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:html -->
-			<div class="fs-hero-dirs">
-				<h2 class="fs-hero-dirs__title">Направления<br>подготовки</h2>
-				<a href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_ege', 'overview' ) ); ?>" class="fs-hero-dirs__item">
-					<span class="fs-hero-dirs__arrow">→</span>
-					<span class="fs-hero-dirs__name">ЕГЭ по информатике</span>
-					<span class="fs-hero-dirs__grade">11 класс</span>
-				</a>
-				<a href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_oge', 'overview' ) ); ?>" class="fs-hero-dirs__item">
-					<span class="fs-hero-dirs__arrow">→</span>
-					<span class="fs-hero-dirs__name">ОГЭ по информатике</span>
-					<span class="fs-hero-dirs__grade">9 класс</span>
-				</a>
-				<a href="<?php echo esc_url( fs_lms_theme_subject_url( 'python', 'overview' ) ); ?>" class="fs-hero-dirs__item">
-					<span class="fs-hero-dirs__arrow">→</span>
-					<span class="fs-hero-dirs__name">Разработка на Python</span>
-					<span class="fs-hero-dirs__grade">10 класс</span>
-				</a>
-				<a href="<?php echo esc_url( fs_lms_theme_subject_url( 'robo', 'overview' ) ); ?>" class="fs-hero-dirs__item fs-hero-dirs__item--last">
-					<span class="fs-hero-dirs__arrow">→</span>
-					<span class="fs-hero-dirs__name">Робототехника</span>
-					<span class="fs-hero-dirs__grade">5–8 класс</span>
-				</a>
+			<!-- wp:group {"className":"fs-hero-dirs"} -->
+			<div class="wp-block-group fs-hero-dirs">
+				<!-- wp:heading {"className":"fs-hero-dirs__title"} -->
+				<h2 class="wp-block-heading fs-hero-dirs__title">Направления подготовки</h2>
+				<!-- /wp:heading -->
+
+				<!-- wp:group {"className":"fs-hero-dirs__item"} -->
+				<div class="wp-block-group fs-hero-dirs__item">
+					<!-- wp:paragraph {"className":"fs-hero-dirs__name"} -->
+					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_ege', 'overview' ) ); ?>">ЕГЭ по информатике</a></p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-dirs__grade"} -->
+					<p class="fs-hero-dirs__grade">11 класс</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"fs-hero-dirs__item"} -->
+				<div class="wp-block-group fs-hero-dirs__item">
+					<!-- wp:paragraph {"className":"fs-hero-dirs__name"} -->
+					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_oge', 'overview' ) ); ?>">ОГЭ по информатике</a></p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-dirs__grade"} -->
+					<p class="fs-hero-dirs__grade">9 класс</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"fs-hero-dirs__item"} -->
+				<div class="wp-block-group fs-hero-dirs__item">
+					<!-- wp:paragraph {"className":"fs-hero-dirs__name"} -->
+					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'python', 'overview' ) ); ?>">Разработка на Python</a></p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-dirs__grade"} -->
+					<p class="fs-hero-dirs__grade">10 класс</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"fs-hero-dirs__item fs-hero-dirs__item--last"} -->
+				<div class="wp-block-group fs-hero-dirs__item fs-hero-dirs__item--last">
+					<!-- wp:paragraph {"className":"fs-hero-dirs__name"} -->
+					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'robo', 'overview' ) ); ?>">Робототехника</a></p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-dirs__grade"} -->
+					<p class="fs-hero-dirs__grade">5–8 класс</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
 			</div>
-			<!-- /wp:html -->
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:column -->
 
@@ -90,13 +120,45 @@
 			</form>
 			<!-- /wp:html -->
 
-			<!-- wp:html -->
-			<div class="fs-hero-stats">
-				<div class="fs-hero-stats__item"><div class="fs-hero-stats__value">84</div><div class="fs-hero-stats__label">средний балл</div></div>
-				<div class="fs-hero-stats__item"><div class="fs-hero-stats__value">800 ₽</div><div class="fs-hero-stats__label">час занятий</div></div>
-				<div class="fs-hero-stats__item"><div class="fs-hero-stats__value">до 8</div><div class="fs-hero-stats__label">человек в группе</div></div>
+			<!-- wp:group {"className":"fs-hero-stats"} -->
+			<div class="wp-block-group fs-hero-stats">
+				<!-- wp:group {"className":"fs-hero-stats__item"} -->
+				<div class="wp-block-group fs-hero-stats__item">
+					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
+					<p class="fs-hero-stats__value">84</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
+					<p class="fs-hero-stats__label">средний балл</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"fs-hero-stats__item"} -->
+				<div class="wp-block-group fs-hero-stats__item">
+					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
+					<p class="fs-hero-stats__value">800 ₽</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
+					<p class="fs-hero-stats__label">час занятий</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"fs-hero-stats__item"} -->
+				<div class="wp-block-group fs-hero-stats__item">
+					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
+					<p class="fs-hero-stats__value">до 8</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
+					<p class="fs-hero-stats__label">человек в группе</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
 			</div>
-			<!-- /wp:html -->
+			<!-- /wp:group -->
 		</div>
 		<!-- /wp:column -->
 	</div>
