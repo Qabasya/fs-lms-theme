@@ -69,6 +69,32 @@ html {
 .fs-main {
 	padding-top: 3.5rem;
 	padding-bottom: 3.5rem;
+
+	/**
+	 * 404 (tasks.md, новый список, п.4): контента на странице совсем мало —
+	 * добираем 200px высоты, чтобы страница не выглядела «обрезанной».
+	 */
+	&--404 {
+		padding-bottom: calc( 3.5rem + 200px );
+	}
+}
+
+/**
+ * Прижатый футер (tasks.md, новый список, п.4 — «снизу футера белая
+ * полоса»). На коротких страницах (404, пустая корзина, «заказ принят»)
+ * контента не хватало на высоту окна, и под футером оставалась полоса
+ * фона. Обёртка всех блоков страницы — колонка на всю высоту вьюпорта,
+ * `<main>` растягивается, футер уезжает вниз. Работает на всех шаблонах
+ * сразу, без правок разметки.
+ */
+.wp-site-blocks {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+
+	> main {
+		flex: 1 0 auto;
+	}
 }
 
 img {
@@ -124,6 +150,47 @@ a {
 	&:hover {
 		box-shadow: var( --wp--custom--shadow--hover );
 		transform: translateY( -2px );
+	}
+}
+
+/**
+ * Отступы ядра между блоками внутри наших контейнеров с `gap`.
+ *
+ * WordPress вешает на всех не-первых детей flow-группы
+ * `margin-block-start: var(--wp--style--block-gap)` (у нас 1.25rem —
+ * `theme.json`, `spacing.blockGap`). Контейнеры ниже расстояния задают
+ * сами (`gap`), поэтому этот отступ прибавлялся к `gap` и сдвигал
+ * карточки — раньше это лечили `margin: 0 !important` в каждом
+ * компоненте по отдельности.
+ *
+ * Правило ядра нулевой специфичности (`:where(.is-layout-flow) > *`),
+ * поэтому обычного класса достаточно — ни `!important`, ни правок
+ * разметки. Новый контейнер с `gap` — просто добавь класс в список.
+ *
+ * Сетки на нативном layout-типе ядра (`wp:group{"layout":{"type":"grid"}}`
+ * — `.fs-features-grid`, `.fs-courses-grid`) сюда НЕ нужны: ядро для них
+ * рисует `gap`, а не отступы детям.
+ */
+$fs-gap-containers:
+	'.fs-course-catalog',
+	'.fs-course-filter',
+	'.fs-subject-more-card',
+	'.fs-checklist',
+	'.fs-price-plaque',
+	'.fs-contact-list',
+	'.fs-about-requisites',
+	'.fs-footer-grid',
+	'.fs-hero-facts',
+	'.fs-hero-dirs',
+	'.fs-hero-columns',
+	'.fs-hero-form',
+	'.fs-cart-layout',
+	'.fs-checkout-steps';
+
+@each $fs-gap-container in $fs-gap-containers {
+	#{$fs-gap-container} > * {
+		margin-block-start: 0;
+		margin-block-end: 0;
 	}
 }
 
@@ -276,7 +343,7 @@ a {
 		align-items: baseline;
 		flex-wrap: wrap;
 		gap: .375rem .75rem;
-		padding: .75rem 0;
+		padding: 1.4rem 0;
 		border-bottom: 1px solid #ece3d6;
 		color: var( --wp--preset--color--text );
 
@@ -472,6 +539,19 @@ a {
 	border: 1px solid var( --wp--preset--color--border );
 	border-radius: var( --wp--custom--radius--card );
 
+	/**
+	 * Подъём по hover — раньше приезжал вместе с `is-style-card` на
+	 * автособранных страницах направлений (`inc/SubjectPages.php`). Тот
+	 * класс убран (он рисовал вторую, белую подложку поверх карточки), а
+	 * эффект пользователю нравится — оставляем его на самой карточке.
+	 */
+	transition: box-shadow .2s ease, transform .2s ease;
+
+	&:hover {
+		box-shadow: var( --wp--custom--shadow--hover );
+		transform: translateY( -2px );
+	}
+
 	&__icon {
 		display: inline-flex;
 		align-items: center;
@@ -529,6 +609,58 @@ a {
 }
 
 /**
+ * Задача 10 (tasks.md, 2026-09-04): те же карточки `.fs-subject-more-card`,
+ * но по 4 (одна на направление) на страницах-хабах «Учебник» (`/articles/`)
+ * и «Тренажёр» (`/tasks/», `inc/ResourcePages.php`). Сверено с мокапами
+ * («Учебник - мокап.dc.html»/«Тренажёр - мокап.dc.html», DesignSync) —
+ * там карточки красятся НЕ по направлению (как бейджи каталога курсов),
+ * а чередованием тех же двух фирменных акцентов, что и в секции «Хочешь
+ * больше?» (ЕГЭ — `accent-2` оранжевый, ОГЭ — `accent` синий); Python и
+ * Робототехника в мокапе не показаны — тот же чередующийся паттерн
+ * продолжен на них (Python оранжевый, Робототехника синий).
+ */
+.fs-subject-more-card {
+	&--ege &__icon {
+		color: var( --wp--preset--color--accent-2 );
+		background: var( --wp--preset--color--accent-2-soft );
+	}
+
+	&--oge &__icon {
+		color: var( --wp--preset--color--accent );
+		background: var( --wp--preset--color--accent-soft );
+	}
+
+	&--ege &__button {
+		background: var( --wp--preset--color--accent-2 );
+
+		&:hover {
+			background: var( --wp--preset--color--accent-2-600 );
+		}
+	}
+
+	&--oge &__button {
+		background: var( --wp--preset--color--accent );
+
+		&:hover {
+			background: var( --wp--preset--color--accent-600 );
+		}
+	}
+}
+
+/**
+ * Короткий разделитель под заголовком страницы (страницы «Учебник»/
+ * «Тренажёр», `inc/ResourcePages.php`) — 56px по мокапу, по центру.
+ * Ядро по умолчанию рисует линию в 100px, поэтому свой класс.
+ */
+.wp-block-separator.fs-title-divider {
+	width: 3.5rem;
+	margin: var( --wp--preset--spacing--md ) auto var( --wp--preset--spacing--xl );
+	border: 0;
+	border-top: 1px solid var( --wp--preset--color--border );
+	opacity: 1;
+}
+
+/**
  * Hero-инфобокс страницы направления (Фаза 13, `patterns/subject-hero.php`)
  * — тот же визуальный язык, что у `.fs-hero-dirs` на главной (кремовая
  * панель + акцентный левый бордер), но текст внутри — настоящие
@@ -559,19 +691,21 @@ a {
 	}
 
 	/**
-	 * BugFix.7 (2026-09-03): цвет инфобокса по направлению — то же
-	 * сопоставление, что бейджи карточек курсов (BugFix.6): Робототехника
-	 * фиолетовый, Python зелёный, ЕГЭ синий, ОГЭ жёлтый. Модификатор
-	 * добавляется вручную на странице направления (см.
+	 * BugFix.7 (2026-09-03), перепроверено и исправлено tasks.md п.2
+	 * (2026-09-04): цвет инфобокса по направлению — то же сопоставление,
+	 * что бейджи карточек курсов (`patterns/courses-catalog.php`): ОГЭ
+	 * фиолетовый, Робототехника жёлтый, Python зелёный, ЕГЭ синий. Раньше
+	 * ОГЭ/Робототехника были перепутаны местами (расходились с каталогом).
+	 * Модификатор добавляется вручную на странице направления (см.
 	 * `patterns/subject-hero.php`) — без модификатора остаётся дефолтный
 	 * `accent-2` (как было, для не-предметных вставок этого паттерна).
 	 */
 	&--robo {
-		background: var( --wp--preset--color--violet-soft );
-		border-left-color: var( --wp--preset--color--violet );
+		background: var( --wp--preset--color--subject-yellow );
+		border-left-color: var( --wp--preset--color--subject-yellow-text );
 
 		.fs-subject-hero-box__badge {
-			color: var( --wp--preset--color--violet );
+			color: var( --wp--preset--color--subject-yellow-text );
 		}
 	}
 
@@ -594,11 +728,11 @@ a {
 	}
 
 	&--oge {
-		background: var( --wp--preset--color--subject-yellow );
-		border-left-color: var( --wp--preset--color--subject-yellow-text );
+		background: var( --wp--preset--color--violet-soft );
+		border-left-color: var( --wp--preset--color--violet );
 
 		.fs-subject-hero-box__badge {
-			color: var( --wp--preset--color--subject-yellow-text );
+			color: var( --wp--preset--color--violet );
 		}
 	}
 }
@@ -1034,6 +1168,21 @@ a {
 }
 
 /**
+ * Телефон и почта в инфо-полосе шапки (tasks.md, новый список, п.5) —
+ * ссылки `tel:`/`mailto:`, но выглядят как обычный приглушённый текст
+ * (в мокапе они того же цвета, что и слоган рядом); акцент — только на
+ * hover.
+ */
+.fs-topbar a {
+	color: inherit;
+	text-decoration: none;
+
+	&:hover {
+		color: var( --wp--preset--color--accent );
+	}
+}
+
+/**
  * Иконка личного кабинета в шапке (`patterns/header-nav.php`) — ссылка на
  * `/profile/` (`fs_lms_theme_url('profile')`). Раньше здесь была иконка
  * корзины WooCommerce (Фаза 10); по прямому указанию пользователя
@@ -1177,17 +1326,21 @@ a {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 3.25rem;
+
+	/**
+	 * По прямому указанию пользователя (2026-09-04): высота фиксированная
+	 * 160px, ширина — по пропорциям самого логотипа (было 3.25rem с
+	 * ограничением по ширине плитки, из-за чего лого выглядели мелкими).
+	 */
+	height: 120px;
 	margin: 0;
 	padding: 0 var( --wp--preset--spacing--md );
-	background: var( --wp--preset--color--border-light );
 	border-radius: var( --wp--custom--radius--md );
 
 	img {
-		max-width: 100%;
-		max-height: 100%;
 		width: auto;
-		height: auto;
+		max-width: none;
+		height: 100%;
 		object-fit: contain;
 	}
 }
@@ -1351,6 +1504,24 @@ a {
 }
 
 /**
+ * Задача 8 (tasks.md, 2026-09-04): липкая шапка — прилипает к верху
+ * (`position:sticky`) и скрывается/появляется по направлению скролла
+ * (класс `.is-hidden` переключает `src/js/header-scroll.js`). Обе секции
+ * шапки (`.fs-topbar`+основной ряд, `patterns/header-nav.php`) уже имеют
+ * непрозрачный фон, так что при `sticky` контент под ними не просвечивает.
+ */
+.fs-site-header {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	transition: transform .25s ease;
+
+	&.is-hidden {
+		transform: translateY( -100% );
+	}
+}
+
+/**
  * Задача 4 (tasks.md, 2026-09-04): тонкая инфо-полоса шапки (слоган +
  * телефон/почта, `patterns/header-nav.php`) — на мобильном слоган и
  * телефон/почта не помещались в одну строку и вылезали за пределы
@@ -1371,6 +1542,7 @@ a {
 
 		> .wp-block-group {
 			margin-left: 0 !important;
+            margin-top: 0 !important;
 		}
 	}
 }

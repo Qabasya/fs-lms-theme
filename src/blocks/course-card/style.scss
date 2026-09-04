@@ -8,6 +8,19 @@
 	border-radius: var( --wp--custom--radius--card );
 	box-shadow: var( --wp--custom--shadow--surface );
 
+	/**
+	 * Подъём по hover — тот же эффект, что у общего стиля карточки
+	 * (`.wp-block-group.is-style-card`, `theme.scss`): по указанию
+	 * пользователя (2026-09-04) распространён на карточки направлений,
+	 * которые своей рамкой/тенью этот стиль не используют.
+	 */
+	transition: box-shadow .2s ease, transform .2s ease;
+
+	&:hover {
+		box-shadow: var( --wp--custom--shadow--hover );
+		transform: translateY( -2px );
+	}
+
 	&__media {
 		aspect-ratio: 4 / 3;
 		border-bottom: 1px solid var( --wp--preset--color--border-light );
@@ -88,19 +101,13 @@
 		text-decoration: none;
 
 		/**
-		 * BugFix.8: карточка целиком кликабельна («stretched link») —
-		 * кнопка сама остаётся `position: static`, поэтому её `::after`
-		 * (без визуального содержимого) ищет ближайшего позиционированного
-		 * предка и растягивается на весь `.fs-course-card`
-		 * (`position: relative` в корне блока), а не только на свои
-		 * границы — без вложенных `<a>` внутри `<a>`.
+		 * tasks.md (новый список, п.3): раньше здесь был stretched-link —
+		 * `::after` кнопки растягивался на всю карточку, чтобы она была
+		 * кликабельна целиком. Побочный эффект: наведение на ЛЮБУЮ точку
+		 * карточки считалось наведением на кнопку, и она темнела. Теперь
+		 * карточка кликабельна через `src/js/card-links.js`, а `:hover`
+		 * кнопки срабатывает только на самой кнопке.
 		 */
-		&::after {
-			content: "";
-			position: absolute;
-			inset: 0;
-		}
-
 		&:hover {
 			background: var( --wp--preset--color--accent-2-600 );
 			color: var( --wp--preset--color--white );

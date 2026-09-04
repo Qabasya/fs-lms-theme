@@ -190,13 +190,13 @@ add_action( 'woocommerce_after_shop_loop_item_title', function (): void {
  * на него, чтобы не зависеть от того, настроена ли опция
  * `woocommerce_placeholder_image` на конкретном сайте.
  */
-add_filter( 'woocommerce_placeholder_img', function ( string $html, string $size, array $dimensions ) {
-	global $product;
-
-	if ( ! $product instanceof WC_Product ) {
-		return $html;
-	}
-
+/**
+ * URL фолбэк-картинки товара по его категории направления, либо '' —
+ * если категория не из списка. Общая точка для витрины (плейсхолдер
+ * WooCommerce) и корзины (`woocommerce_cart_item_thumbnail`), чтобы
+ * сопоставление «категория → файл» жило в одном месте.
+ */
+function fs_lms_theme_product_fallback_image( WC_Product $product ): string {
 	$image_by_category_slug = array(
 		'kege'      => 'shop-ege.png',
 		'koge'      => 'shop-oge.png',
@@ -205,26 +205,88 @@ add_filter( 'woocommerce_placeholder_img', function ( string $html, string $size
 	);
 
 	$terms = get_the_terms( $product->get_id(), 'product_cat' );
+
 	if ( empty( $terms ) || is_wp_error( $terms ) ) {
-		return $html;
+		return '';
 	}
 
 	foreach ( $terms as $term ) {
-		if ( ! isset( $image_by_category_slug[ $term->slug ] ) ) {
-			continue;
+		if ( isset( $image_by_category_slug[ $term->slug ] ) ) {
+			return get_theme_file_uri( 'img/' . $image_by_category_slug[ $term->slug ] );
 		}
-
-		return sprintf(
-			'<img src="%1$s" width="%2$d" height="%3$d" alt="%4$s" class="woocommerce-placeholder wp-post-image" />',
-			esc_url( get_theme_file_uri( 'img/' . $image_by_category_slug[ $term->slug ] ) ),
-			(int) $dimensions['width'],
-			(int) $dimensions['height'],
-			esc_attr( $product->get_name() )
-		);
 	}
 
-	return $html;
+	return '';
+}
+
+add_filter( 'woocommerce_placeholder_img', function ( string $html, string $size, array $dimensions ) {
+	global $product;
+
+	if ( ! $product instanceof WC_Product ) {
+		return $html;
+	}
+
+	$url = fs_lms_theme_product_fallback_image( $product );
+
+	if ( '' === $url ) {
+		return $html;
+	}
+
+	return sprintf(
+		'<img src="%1$s" width="%2$d" height="%3$d" alt="%4$s" class="woocommerce-placeholder wp-post-image" />',
+		esc_url( $url ),
+		(int) $dimensions['width'],
+		(int) $dimensions['height'],
+		esc_attr( $product->get_name() )
+	);
 }, 10, 3 );
+
+/**
+ * Миниатюра товара в корзине. Фильтр плейсхолдера выше здесь не работает:
+ * он читает `global $product`, а `cart/cart.php` вызывает
+ * `$_product->get_image()` без установки этой глобальной — в корзине
+ * поэтому показывалась серая заглушка WooCommerce вместо картинки
+ * направления. У этого фильтра сам товар приходит в `$cart_item`.
+ */
+add_filter( 'woocommerce_cart_item_thumbnail', function ( $html, $cart_item ) {
+	$product = is_array( $cart_item ) && isset( $cart_item['data'] ) ? $cart_item['data'] : null;
+
+	if ( ! $product instanceof WC_Product || $product->get_image_id() ) {
+		return $html;
+	}
+
+	$url = fs_lms_theme_product_fallback_image( $product );
+
+	if ( '' === $url ) {
+		return $html;
+	}
+
+	return sprintf(
+		'<img src="%1$s" alt="%2$s" class="woocommerce-placeholder wp-post-image" />',
+		esc_url( $url ),
+		esc_attr( $product->get_name() )
+	);
+}, 10, 2 );
+
+/**
+ * Текст ссылки, которую WooCommerce дописывает после добавления товара в
+ * корзину (`a.added_to_cart`, `assets/js/frontend/add-to-cart.js` →
+ * `wc_add_to_cart_params.i18n_view_cart`). По умолчанию это «Просмотр
+ * корзины»/«View cart» — длинная надпись ломала футер карточки каталога
+ * (tasks.md, новый список, п.2). Кнопка «В корзину» после добавления
+ * прячется (`_woocommerce.scss`), и на её месте остаётся эта ссылка —
+ * поэтому текст короткий.
+ *
+ * `woocommerce_get_script_data` — штатный фильтр локализованных данных
+ * скриптов плагина (`class-wc-frontend-scripts.php`).
+ */
+add_filter( 'woocommerce_get_script_data', function ( $params, string $handle ) {
+	if ( 'wc-add-to-cart' === $handle && is_array( $params ) ) {
+		$params['i18n_view_cart'] = __( 'Перейти', 'fs-lms-theme' );
+	}
+
+	return $params;
+}, 10, 2 );
 
 /**
  * URL страницы магазина (Фаза 10, использовалась в `patterns/header-nav.php`

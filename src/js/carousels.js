@@ -14,9 +14,10 @@
  * поддерживаются и имеют приоритет — разметка, написанная руками, не
  * ломается.
  *
- *   fs-carousel--per-<N>   число слайдов на десктопе (по умолчанию 1)
- *   fs-carousel--autoplay  автопрокрутка
- *   fs-carousel--no-arrows спрятать стрелки
+ *   fs-carousel--per-<N>     число слайдов на десктопе (по умолчанию 1)
+ *   fs-carousel--auto-width  ширина слайда — по его содержимому
+ *   fs-carousel--autoplay    автопрокрутка
+ *   fs-carousel--no-arrows   спрятать стрелки
  */
 
 import Splide from '@splidejs/splide';
@@ -48,19 +49,37 @@ export function initCarousels() {
 		const perPage = readPerPage( el ) || 1;
 		const perPageTablet = Math.min( perPage, 2 );
 
-		new Splide( el, {
+		/**
+		 * `fs-carousel--auto-width` — ширину слайда задаёт его содержимое,
+		 * а не число слайдов на экран. Нужен полосе логотипов вузов
+		 * (`patterns/alumni-strip.php`): у логотипов фиксированная высота и
+		 * своя пропорция, поэтому и слайды должны быть разной ширины —
+		 * при фиксированном `perPage` широкий логотип упирался в границу
+		 * слайда и уменьшался по высоте.
+		 */
+		const autoWidth = el.classList.contains( 'fs-carousel--auto-width' );
+
+		const options = {
 			type: 'loop',
-			perPage,
 			gap: '1.25rem',
 			pagination: false,
 			arrows: readFlag( el, 'arrows', 'fs-carousel--no-arrows', true ),
 			autoplay: readFlag( el, 'autoplay', 'fs-carousel--autoplay', false ),
 			interval: 3000,
 			pauseOnHover: true,
-			breakpoints: {
+		};
+
+		if ( autoWidth ) {
+			options.autoWidth = true;
+			options.breakpoints = { 767: { gap: '0.75rem' } };
+		} else {
+			options.perPage = perPage;
+			options.breakpoints = {
 				991: { perPage: perPageTablet, gap: '1rem' },
 				767: { perPage: 1, gap: '0.75rem' },
-			},
-		} ).mount();
+			};
+		}
+
+		new Splide( el, options ).mount();
 	} );
 }

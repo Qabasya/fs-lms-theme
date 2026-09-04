@@ -12,7 +12,13 @@
 import { initCarousels } from './carousels.js';
 import { initForms } from './forms.js';
 import { initCourseFilter } from './course-filter.js';
+import { initHeaderScroll } from './header-scroll.js';
+import { initCardLinks } from './card-links.js';
+import { initCouponAccordion } from './coupon-accordion.js';
 
 initCarousels();
 initForms();
 initCourseFilter();
+initHeaderScroll();
+initCardLinks();
+initCouponAccordion();

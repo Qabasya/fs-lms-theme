@@ -52,8 +52,14 @@
  * — по прямому указанию пользователя. `wc_get_cart_url()`/проверка
  * `function_exists('wc_get_cart_url')` больше не нужны — ссылка на профиль
  * не зависит от активности WooCommerce.
+ *
+ * Задача 9 (tasks.md, 2026-09-04): «Записаться» больше не жёстко
+ * `#hero-form` — `fs_lms_theme_signup_button_url()` (`inc/Forms.php`)
+ * отдаёт якорь формы на текущей странице либо, если её нет, якорь формы
+ * главной страницы.
  */
-$fs_nav_id = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navigation_id() : 0;
+$fs_nav_id  = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navigation_id() : 0;
+$fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme_signup_button_url() : '#hero-form';
 ?>
 <!-- wp:group {"tagName":"div","backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|xs","bottom":"var:preset|spacing|xs"}},"border":{"bottom":{"color":"var:preset|color|border-light","width":"1px"}}}} -->
 <div class="wp-block-group has-surface-2-background-color has-background" style="border-bottom-color:var(--wp--preset--color--border-light);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--xs);padding-bottom:var(--wp--preset--spacing--xs)">
@@ -66,11 +72,11 @@ $fs_nav_id = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navi
 			<!-- wp:group {"layout":{"type":"flex"},"style":{"spacing":{"blockGap":"var:preset|spacing|xl","margin":{"left":"auto"}}}} -->
 			<div class="wp-block-group" style="margin-left:auto">
 				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
-				<p class="has-muted-color has-text-color has-xxs-font-size">+7 995 326 44 86</p>
+				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="tel:+79953264486">+7 995 326 44 86</a></p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
-				<p class="has-muted-color has-text-color has-xxs-font-size">info@future-step.ru</p>
+				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="mailto:info@future-step.ru">info@future-step.ru</a></p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
@@ -113,7 +119,7 @@ $fs_nav_id = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navi
 				<!-- wp:buttons -->
 				<div class="wp-block-buttons">
 					<!-- wp:button {"backgroundColor":"accent-2"} -->
-					<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="#hero-form">Записаться</a></div>
+					<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="<?php echo esc_url( $fs_cta_url ); ?>">Записаться</a></div>
 					<!-- /wp:button -->
 				</div>
 				<!-- /wp:buttons -->

@@ -53,51 +53,26 @@ function fs_lms_theme_nav_page_link( string $slug, string $label ): string {
 }
 
 /**
- * Выпадающее подменю по 4 направлениям («Учебник»/«Тренажёр»).
- *
- * @param string $page  'articles' (учебник) или 'trainer' (тренажёр).
- * @param string $label Подпись верхнего пункта.
- */
-function fs_lms_theme_nav_subject_submenu( string $page, string $label ): string {
-	$subjects = array(
-		'inf_ege' => 'ЕГЭ по информатике',
-		'inf_oge' => 'ОГЭ по информатике',
-		'python'  => 'Разработка на Python',
-		'robo'    => 'Робототехника',
-	);
-
-	$items = '';
-
-	foreach ( $subjects as $key => $title ) {
-		$items .= sprintf(
-			"\n\t<!-- wp:navigation-link {\"label\":\"%s\",\"url\":\"%s\",\"kind\":\"custom\"} /-->",
-			esc_attr( $title ),
-			esc_url( fs_lms_theme_subject_url( $key, $page ) )
-		);
-	}
-
-	return sprintf(
-		'<!-- wp:navigation-submenu {"label":"%s","url":"#","kind":"custom"} -->%s' . "\n" . '<!-- /wp:navigation-submenu -->',
-		esc_attr( $label ),
-		$items
-	);
-}
-
-/**
  * Стартовое содержимое меню — то же, что раньше было зашито в паттерне,
- * плюс выпадающие «Учебник»/«Тренажёр» по направлениям.
+ * плюс «Учебник»/«Тренажёр».
  *
  * BugFix (2026-09-04): пункт «Личный кабинет» убран из меню по прямому
  * указанию пользователя (дублировал одноимённую кнопку в шапке, которая
  * тоже убрана — см. `patterns/header-nav.php`).
+ *
+ * Задача 10 (tasks.md, 2026-09-04): «Учебник»/«Тренажёр» были выпадающими
+ * подменю по 4 направлениям (`fs_lms_theme_nav_subject_submenu()`,
+ * убрана) — по прямому указанию пользователя стали обычными ссылками на
+ * новые страницы-хабы `/articles/`/`/tasks/` (`inc/ResourcePages.php`),
+ * которые сами ведут дальше на страницы конкретных направлений.
  */
 function fs_lms_theme_nav_default_content(): string {
 	$items = array(
 		'<!-- wp:home-link {"label":"Главная"} /-->',
 		fs_lms_theme_nav_page_link( 'about', 'О нас' ),
 		fs_lms_theme_nav_page_link( 'courses', 'Курсы' ),
-		fs_lms_theme_nav_subject_submenu( 'articles', 'Учебник' ),
-		fs_lms_theme_nav_subject_submenu( 'trainer', 'Тренажёр' ),
+		fs_lms_theme_nav_page_link( 'articles', 'Учебник' ),
+		fs_lms_theme_nav_page_link( 'tasks', 'Тренажёр' ),
 	);
 
 	return implode( "\n\n", $items );

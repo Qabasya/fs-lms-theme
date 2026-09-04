@@ -52,36 +52,75 @@ function fs_lms_theme_subject_hero_patterns(): array {
  * ключ сразу. Дублирование осознанное — тот же принцип, что у 4 копий
  * `subject-hero-*.php`.
  *
+ * 2026-09-04 (по указанию пользователя): здесь оставалась ДОредизайновая
+ * версия карточек (`is-style-card`, заголовок-ссылка «Открыть учебник»,
+ * без иконки и кнопки) — редизайн задачи 1 обновил только сам паттерн, а
+ * страницы направлений собираются этой функцией, поэтому на них по-прежнему
+ * жил старый вид. Теперь разметка и тексты — из мокапа «ЕГЭ информатика -
+ * мокап.dc.html» (DesignSync), название экзамена/курса подставляется по
+ * направлению.
+ *
  * @param string $subject_key Ключ предмета (`inf_ege`, `inf_oge`, `python`, `robo`).
  */
 function fs_lms_theme_subject_more_blocks( string $subject_key ): string {
 	$articles_url = esc_url( fs_lms_theme_subject_url( $subject_key, 'articles' ) );
 	$trainer_url  = esc_url( fs_lms_theme_subject_url( $subject_key, 'trainer' ) );
 
+	$texts = array(
+		'inf_ege' => array(
+			'articles' => 'Собрали для тебя статьи по каждой теме в ЕГЭ: теория, разбор формата задания и приёмы, которые экономят время на экзамене.',
+			'trainer'  => 'Сборник заданий по каждой теме ЕГЭ с подробным решением: тренируйся по одному номеру или собирай вариант целиком.',
+		),
+		'inf_oge' => array(
+			'articles' => 'Собрали для тебя статьи по каждой теме в ОГЭ: теория, разбор формата задания и приёмы, которые экономят время на экзамене.',
+			'trainer'  => 'Сборник заданий по каждой теме ОГЭ с подробным решением: тренируйся по одному номеру или собирай вариант целиком.',
+		),
+		'python'  => array(
+			'articles' => 'Собрали для тебя статьи по каждой теме курса: теория, разбор синтаксиса и приёмы, которые ускоряют написание кода.',
+			'trainer'  => 'Сборник задач по каждой теме курса с подробным решением: тренируйся по одной теме или собирай проект целиком.',
+		),
+		'robo'    => array(
+			'articles' => 'Собрали для тебя статьи по каждой теме курса: теория, разбор схем и приёмы, которые помогают быстрее собрать робота.',
+			'trainer'  => 'Сборник заданий по каждой теме курса с подробным решением: тренируйся по одной теме или собирай проект целиком.',
+		),
+	);
+
+	$articles_text = $texts[ $subject_key ]['articles'] ?? $texts['inf_ege']['articles'];
+	$trainer_text  = $texts[ $subject_key ]['trainer'] ?? $texts['inf_ege']['trainer'];
+
+	// Иконки — общие с страницами-хабами «Учебник»/«Тренажёр»
+	// (`inc/ResourcePages.php`), чтобы не держать третью копию SVG.
+	$icon_articles = FS_LMS_THEME_RESOURCE_ICON_ARTICLES;
+	$icon_trainer  = FS_LMS_THEME_RESOURCE_ICON_TRAINER;
+
 	return <<<HTML
-<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"5.5rem"}}}} -->
-<div class="wp-block-group" style="padding-top:0;padding-bottom:5.5rem">
-	<!-- wp:heading {"textAlign":"center","fontSize":"xxl"} -->
-	<h2 class="wp-block-heading has-text-align-center has-xxl-font-size">Хочешь больше?</h2>
+<!-- wp:group {"className":"fs-section"} -->
+<div class="wp-block-group fs-section">
+	<!-- wp:heading {"fontSize":"xxl"} -->
+	<h2 class="wp-block-heading has-xxl-font-size">Хочешь больше?</h2>
 	<!-- /wp:heading -->
 
-	<!-- wp:paragraph {"textAlign":"center","textColor":"text-secondary","fontSize":"md"} -->
-	<p class="has-text-align-center has-text-secondary-color has-text-color has-md-font-size">Учебник с теорией и тренажёр с заданиями доступны каждому ученику направления.</p>
-	<!-- /wp:paragraph -->
-
-	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"1.75rem"}}}} -->
+	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"1.25rem"}}}} -->
 	<div class="wp-block-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:group {"className":"is-style-card fs-subject-more-card fs-subject-more-card--articles"} -->
-			<div class="wp-block-group is-style-card fs-subject-more-card fs-subject-more-card--articles">
+			<!-- wp:group {"className":"fs-subject-more-card fs-subject-more-card--articles"} -->
+			<div class="wp-block-group fs-subject-more-card fs-subject-more-card--articles">
+				<!-- wp:html -->
+				<span class="fs-subject-more-card__icon has-accent-color has-accent-soft-background-color has-text-color has-background">{$icon_articles}</span>
+				<!-- /wp:html -->
+
 				<!-- wp:paragraph {"className":"fs-subject-more-card__title"} -->
-				<p class="fs-subject-more-card__title"><a href="{$articles_url}">Открыть учебник</a></p>
+				<p class="fs-subject-more-card__title">Учебник</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-subject-more-card__text"} -->
-				<p class="fs-subject-more-card__text">Конспекты, шпаргалки и памятки по каждой теме направления.</p>
+				<p class="fs-subject-more-card__text">{$articles_text}</p>
 				<!-- /wp:paragraph -->
+
+				<!-- wp:html -->
+				<a class="fs-subject-more-card__button" href="{$articles_url}">Открыть учебник</a>
+				<!-- /wp:html -->
 			</div>
 			<!-- /wp:group -->
 		</div>
@@ -89,17 +128,155 @@ function fs_lms_theme_subject_more_blocks( string $subject_key ): string {
 
 		<!-- wp:column -->
 		<div class="wp-block-column">
-			<!-- wp:group {"className":"is-style-card fs-subject-more-card fs-subject-more-card--trainer"} -->
-			<div class="wp-block-group is-style-card fs-subject-more-card fs-subject-more-card--trainer">
+			<!-- wp:group {"className":"fs-subject-more-card fs-subject-more-card--trainer"} -->
+			<div class="wp-block-group fs-subject-more-card fs-subject-more-card--trainer">
+				<!-- wp:html -->
+				<span class="fs-subject-more-card__icon has-accent-2-color has-accent-2-soft-background-color has-text-color has-background">{$icon_trainer}</span>
+				<!-- /wp:html -->
+
 				<!-- wp:paragraph {"className":"fs-subject-more-card__title"} -->
-				<p class="fs-subject-more-card__title"><a href="{$trainer_url}">Открыть тренажёр</a></p>
+				<p class="fs-subject-more-card__title">Тренажёр</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-subject-more-card__text"} -->
-				<p class="fs-subject-more-card__text">Задания по темам направления с проверкой и разбором ошибок.</p>
+				<p class="fs-subject-more-card__text">{$trainer_text}</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:html -->
+				<a class="fs-subject-more-card__button" href="{$trainer_url}">Открыть тренажёр</a>
+				<!-- /wp:html -->
+			</div>
+			<!-- /wp:group -->
+		</div>
+		<!-- /wp:column -->
+	</div>
+	<!-- /wp:columns -->
+</div>
+<!-- /wp:group -->
+HTML;
+}
+
+/**
+ * Секция «Как устроены занятия» — та же разметка, что у паттерна
+ * `intensive-split.php`, но вставляется НЕ как `wp:pattern`-ссылка, а как
+ * обычные блоки (задача 6, tasks.md, 2026-09-04).
+ *
+ * `wp:pattern` — это живая ссылка на зарегистрированный PHP-паттерн: на
+ * главной (`templates/front-page.html`) она и нужна такой, тот же контент
+ * для всех. На странице направления это раньше означало, что текст/фото
+ * секции нельзя было поменять по-предметно — редактор всегда видел (и
+ * правил бы вникуда) содержимое общего паттерна. Раз секция вставляется
+ * как обычные блоки, WordPress сохраняет их в `post_content` конкретной
+ * страницы направления — дальше редактор меняет текст/фото именно на ней,
+ * не трогая остальные три (тот же приём, что уже применён к
+ * `fs_lms_theme_subject_more_blocks()` выше).
+ *
+ * Стартовый контент — копия `patterns/intensive-split.php` (общий текст,
+ * "Формат одинаковый на всех направлениях"); после первой вставки его
+ * можно свободно переписать под конкретный предмет.
+ */
+function fs_lms_theme_subject_intensive_blocks(): string {
+	$photo_url   = esc_url( get_theme_file_uri( 'img/photo.png' ) );
+	$courses_url = esc_url( home_url( '/courses/' ) );
+
+	return <<<HTML
+<!-- wp:group {"className":"fs-section"} -->
+<div id="lessons" class="wp-block-group fs-section">
+	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
+	<div class="wp-block-columns">
+		<!-- wp:column -->
+		<div class="wp-block-column">
+			<!-- wp:image {"className":"fs-aspect-4-3","style":{"border":{"radius":"var:preset|spacing|md"}}} -->
+			<figure class="wp-block-image fs-aspect-4-3" style="border-radius:var(--wp--preset--spacing--md)"><img src="{$photo_url}" alt="Фото занятия" /></figure>
+			<!-- /wp:image -->
+		</div>
+		<!-- /wp:column -->
+
+		<!-- wp:column {"width":"480px"} -->
+		<div class="wp-block-column" style="flex-basis:480px">
+			<!-- wp:heading {"fontSize":"xxl"} -->
+			<h2 class="wp-block-heading has-xxl-font-size">Как устроены занятия</h2>
+			<!-- /wp:heading -->
+
+			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
+			<p class="has-text-secondary-color has-text-color has-md-font-size">Формат одинаковый на всех направлениях — меняется только программа.</p>
+			<!-- /wp:paragraph -->
+
+			<!-- wp:group {"className":"fs-checklist"} -->
+			<div class="wp-block-group fs-checklist">
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Занятия 2 раза в неделю</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Параллельная онлайн-трансляция каждого занятия</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Видеозаписи занятий в личном кабинете</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Домашнее задание после каждого занятия</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Регулярные контрольные и пробные экзамены</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Индивидуальные консультации с преподавателем</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Вся теория и шпаргалки в личном кабинете</p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
+				<p class="fs-checklist__item">Дополнительные материалы по каждой теме</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
+
+			<!-- wp:group {"className":"fs-price-plaque"} -->
+			<div class="wp-block-group fs-price-plaque">
+				<!-- wp:group {"className":"fs-price-plaque__part"} -->
+				<div class="wp-block-group fs-price-plaque__part">
+					<!-- wp:paragraph {"className":"fs-price-plaque__value"} -->
+					<p class="fs-price-plaque__value">2 часа</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-price-plaque__label"} -->
+					<p class="fs-price-plaque__label">одно занятие</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+
+				<!-- wp:group {"className":"fs-price-plaque__part"} -->
+				<div class="wp-block-group fs-price-plaque__part">
+					<!-- wp:paragraph {"className":"fs-price-plaque__value fs-price-plaque__value--accent"} -->
+					<p class="fs-price-plaque__value fs-price-plaque__value--accent">800 ₽</p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph {"className":"fs-price-plaque__label"} -->
+					<p class="fs-price-plaque__label">за час</p>
+					<!-- /wp:paragraph -->
+				</div>
+				<!-- /wp:group -->
+			</div>
+			<!-- /wp:group -->
+
+			<!-- wp:buttons -->
+			<div class="wp-block-buttons">
+				<!-- wp:button {"backgroundColor":"accent-2"} -->
+				<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="#signup">Записаться</a></div>
+				<!-- /wp:button -->
+
+				<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
+				<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="{$courses_url}">Все направления</a></div>
+				<!-- /wp:button -->
+			</div>
+			<!-- /wp:buttons -->
 		</div>
 		<!-- /wp:column -->
 	</div>
@@ -124,7 +301,7 @@ function fs_lms_theme_subject_page_blocks( string $subject_key ): string {
 	$sections = array(
 		sprintf( '<!-- wp:pattern {"slug":"%s"} /-->', $hero_pattern ),
 		'<!-- wp:pattern {"slug":"fs-lms-theme/features-grid"} /-->',
-		'<!-- wp:pattern {"slug":"fs-lms-theme/intensive-split"} /-->',
+		fs_lms_theme_subject_intensive_blocks(),
 		'<!-- wp:pattern {"slug":"fs-lms-theme/subject-contact"} /-->',
 		fs_lms_theme_subject_more_blocks( $subject_key ),
 	);
@@ -159,8 +336,10 @@ function fs_lms_theme_seed_subject_page(): void {
 		)
 	);
 
-	// Ширина 1200px, как у остальных страниц темы (Фаза 16, общее правило).
-	update_post_meta( $page->ID, '_wp_page_template', 'page-wide' );
+	// Ширина 1200px, как у остальных страниц темы (Фаза 16, общее правило);
+	// без h1 wp-block-post-title (tasks.md, п. после разделителя — заголовок
+	// предмета дублировал h1 внутри hero-паттерна).
+	update_post_meta( $page->ID, '_wp_page_template', 'page-subject' );
 
 	wp_safe_redirect( get_permalink( $page->ID ) );
 	exit;

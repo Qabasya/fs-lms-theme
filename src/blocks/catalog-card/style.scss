@@ -12,7 +12,6 @@
  * тот же приём, что у `fs-lms/course-card`.
  */
 .fs-course-catalog-card {
-	margin: 0 !important;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -22,13 +21,23 @@
 	border-radius: var( --wp--custom--radius--card );
 	box-shadow: var( --wp--custom--shadow--surface );
 
+	/**
+	 * Подъём по hover — тот же эффект, что у общего стиля карточки
+	 * (`.wp-block-group.is-style-card`, `theme.scss`), по указанию
+	 * пользователя (2026-09-04) распространён и на карточки каталога.
+	 */
+	transition: box-shadow .2s ease, transform .2s ease;
+
+	&:hover {
+		box-shadow: var( --wp--custom--shadow--hover );
+		transform: translateY( -2px );
+	}
+
 	&[hidden] {
 		display: none;
 	}
 
 	&__media {
-
-
 		img {
 			display: block;
 			width: 100%;
@@ -137,22 +146,15 @@
 		white-space: nowrap;
 
 		/**
-		 * BugFix.8 (2026-09-03): осталась одна кнопка («Подробнее»,
-		 * `--solid` — вариант `--ghost` «Программа» убран из разметки).
-		 * Карточка целиком кликабельна тем же приёмом stretched-link, что
-		 * `fs-course-card` (`src/blocks/course-card/style.scss`) — кнопка
-		 * `position: static`, её `::after` растягивается на
-		 * `.fs-course-catalog-card` (`position: relative` в корне).
+		 * tasks.md (новый список, п.3): stretched-link убран — из-за него
+		 * кнопка темнела при наведении на любую точку карточки. Клик по
+		 * карточке целиком теперь делает `src/js/card-links.js`, hover
+		 * кнопки остаётся только на самой кнопке (у карточки — свой
+		 * эффект подъёма).
 		 */
 		&--solid {
 			background: var( --wp--preset--color--accent );
 			color: var( --wp--preset--color--white );
-
-			&::after {
-				content: "";
-				position: absolute;
-				inset: 0;
-			}
 
 			&:hover {
 				background: var( --wp--preset--color--accent-600 );

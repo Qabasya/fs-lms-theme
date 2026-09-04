@@ -19,6 +19,13 @@
 /node_modules/
 /assets/css/maps/
 *.map
+
+# Отладочный мусор: логи и сохранённые HTML-дампы страниц в корне темы
+# (шаблоны в /templates/ и /parts/ этими масками не задеваются — они с
+# ведущим слешем, то есть только корень).
+*.log
+/*.html
+/*.txt
 .gitignore
 .gitattributes
 .distignore

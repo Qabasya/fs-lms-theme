@@ -164,16 +164,36 @@
 			padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
 			border-top: 1px solid var( --wp--preset--color--border-light );
 
+			/**
+			 * Обнуляем отступы, которыми плагин разносит цену и кнопку по
+			 * вертикали в своей (колоночной) карточке:
+			 * `li.product .price { margin-bottom: .5em }` и
+			 * `li.product .button { margin-top: 1em }`. У нас это одна
+			 * флекс-строка, и `align-items: center` центрирует margin-box —
+			 * то есть из-за этих отступов цена и кнопка расходились.
+			 */
 			.price {
+				margin: 0;
 				font-size: var( --wp--preset--font-size--lead );
 				font-weight: 700;
 				color: var( --wp--preset--color--text );
 			}
 
-			.button.add_to_cart_button {
+			/**
+			 * tasks.md (новый список, п.2): после AJAX-добавления
+			 * WooCommerce дописывает рядом с кнопкой вторую ссылку
+			 * «Перейти» (`a.added_to_cart`, см.
+			 * `assets/js/frontend/add-to-cart.js`) — в футере карточки
+			 * оказывались две кнопки, и он разъезжался. Отработавшую
+			 * кнопку (`.added`) прячем, а ссылку красим так же: визуально
+			 * «В корзину» просто заменяется на «Перейти».
+			 */
+			.button.add_to_cart_button,
+			.added_to_cart {
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
+				margin: 0; // `li.product .button { margin-top: 1em }` плагина
 				height: 2.125rem;
 				padding: 0 var( --wp--preset--spacing--md );
 				border-radius: var( --wp--custom--radius--control );
@@ -195,6 +215,25 @@
 
 				&.added::after {
 					content: none; // дефолтная WC-иконка «добавлено» — не по макету
+				}
+			}
+
+			.button.add_to_cart_button.added {
+				display: none;
+			}
+
+			/**
+			 * «Перейти» — вторичное действие (товар уже в корзине): та же
+			 * геометрия, что у «В корзину», но белая с рамкой, а не синяя.
+			 */
+			.added_to_cart {
+				background: var( --wp--preset--color--white );
+				border: 1px solid var( --wp--preset--color--border );
+				color: var( --wp--preset--color--text-secondary );
+
+				&:hover {
+					background: var( --wp--preset--color--surface-2 );
+					color: var( --wp--preset--color--text );
 				}
 			}
 		}
@@ -270,6 +309,352 @@
 	}
 }
 
+/**
+ * Заголовок страниц корзины/оформления/благодарности — печатает
+ * `fs_lms_theme_checkout_heading()` (`inc/Checkout.php`) сразу под
+ * степпером, как в макетах (34px/700, а не `xxxl` штатного
+ * `wp:post-title`, который к тому же рисовался НАД шагами).
+ */
+.fs-page-title {
+	margin: 0 0 var( --wp--preset--spacing--xl );
+	font-size: 2.125rem;
+	font-weight: 700;
+	line-height: 1.15;
+	letter-spacing: -.015em;
+}
+
+/**
+ * «Заказ принят» — заголовок и уведомление печатает сам WooCommerce
+ * (шаблон подтверждения заказа), без своих классов. Приводим к тому же
+ * кеглю, что `.fs-page-title` на корзине/оформлении: по умолчанию h1
+ * страницы благодарности выводился огромным (стиль h1 из `theme.json`),
+ * а «Ваш заказ принят. Благодарим вас.» — почти таким же крупным.
+ */
+.woocommerce-order-received {
+	main h1 {
+		margin: 0 0 var( --wp--preset--spacing--md );
+		font-size: 2.125rem;
+		font-weight: 700;
+		line-height: 1.15;
+		letter-spacing: -.015em;
+	}
+
+	// Подпись под заголовком — у WooCommerce это просто `<p>` без класса.
+	main h1 + p {
+		margin: 0 0 var( --wp--preset--spacing--xl );
+		font-size: var( --wp--preset--font-size--md );
+		font-weight: 300;
+		color: var( --wp--preset--color--text-secondary );
+	}
+}
+
+/**
+ * Уведомления WooCommerce («товар добавлен», ошибки купона и т.п.) — в
+ * макетах их нет, а дефолтный вид (толстая цветная полоса сверху, серый
+ * фон) выбивается из карточного языка страниц. Приводим к тому же виду,
+ * что остальные панели: светлая карточка с тонкой рамкой и акцентной
+ * полосой слева по типу сообщения.
+ */
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error,
+.wc-block-components-notice-banner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var( --wp--preset--spacing--sm );
+	margin: 0 0 var( --wp--preset--spacing--lg );
+	padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+	background: var( --wp--preset--color--surface-2 );
+	border: 1px solid var( --wp--preset--color--border );
+	border-left: 3px solid var( --wp--preset--color--accent );
+	border-radius: var( --wp--custom--radius--lg );
+	font-size: var( --wp--preset--font-size--base );
+	color: var( --wp--preset--color--text );
+	list-style: none;
+
+	&::before {
+		content: none; // дефолтные иконки-галочки плагина — не по макету
+	}
+
+	.button {
+		margin-left: auto;
+		background: none;
+		border: 0;
+		padding: 0;
+		color: var( --wp--preset--color--accent );
+		font-size: var( --wp--preset--font-size--base );
+		font-weight: 500;
+		text-decoration: none;
+	}
+}
+
+/**
+ * У блочных уведомлений цвет фона и рамки задан в правилах с модификатором
+ * (`.wc-block-components-notice-banner.is-success` и т.п.) — перебиваем их
+ * такой же специфичностью, иначе оставалась зелёная/красная плашка плагина.
+ */
+.wc-block-components-notice-banner.is-success,
+.wc-block-components-notice-banner.is-info,
+.wc-block-components-notice-banner.is-error {
+	background: var( --wp--preset--color--surface-2 );
+	border: 1px solid var( --wp--preset--color--border );
+	border-left-width: 3px;
+	color: var( --wp--preset--color--text );
+}
+
+.woocommerce-message,
+.wc-block-components-notice-banner.is-success {
+	border-left-color: var( --wp--preset--color--ok );
+}
+
+.woocommerce-info,
+.wc-block-components-notice-banner.is-info {
+	border-left-color: var( --wp--preset--color--accent );
+}
+
+.woocommerce-error,
+.wc-block-components-notice-banner.is-error {
+	border-left-color: var( --wp--preset--color--err );
+}
+
+/**
+ * Блочные уведомления рисуют свою иконку в кружке и обёртку контента —
+ * иконку оставляем (она осмысленная), но убираем её собственный крупный
+ * фон, чтобы уведомление читалось как строка текста, а не как баннер.
+ */
+.wc-block-components-notice-banner {
+	> svg {
+		flex: 0 0 auto;
+		width: 1.25rem;
+		height: 1.25rem;
+		margin: 0;
+		padding: 0;
+		background: none;
+		fill: currentcolor;
+	}
+
+	.wc-block-components-notice-banner__content {
+		flex: 1;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var( --wp--preset--spacing--sm );
+	}
+}
+
+/**
+ * Купон-аккордеон (по указанию пользователя, 2026-09-05, по макетам).
+ *
+ * На оформлении заказа переключатель и форму рисует сам WooCommerce
+ * (`.woocommerce-form-coupon-toggle` + `form.checkout_coupon`, скрытая до
+ * клика) — мы только переносим блок под поля покупателя (`inc/Checkout.php`)
+ * и приводим к виду карточки из макета. В корзине такого переключателя нет
+ * вовсе — его собирает `src/js/coupon-accordion.js` вокруг штатного поля
+ * (`.fs-coupon`), не трогая саму форму.
+ */
+.fs-coupon {
+	flex: 1 1 auto;
+	min-width: 0;
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--lg );
+	overflow: hidden;
+
+	&__toggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var( --wp--preset--spacing--md );
+		width: 100%;
+		padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+		background: var( --wp--preset--color--surface-2 );
+		border: 0;
+		font-family: inherit;
+		font-size: var( --wp--preset--font-size--md );
+		font-weight: 700;
+		color: var( --wp--preset--color--text );
+		text-align: left;
+		cursor: pointer;
+
+		// Шеврон, как в макете; разворачивается вместе с панелью.
+		&::after {
+			content: "";
+			flex: 0 0 auto;
+			width: .5rem;
+			height: .5rem;
+			margin-bottom: .2rem;
+			border-right: 2px solid var( --wp--preset--color--muted );
+			border-bottom: 2px solid var( --wp--preset--color--muted );
+			transform: rotate( 45deg );
+			transition: transform .18s ease;
+		}
+
+		&[aria-expanded="true"]::after {
+			margin-bottom: -.2rem;
+			transform: rotate( 225deg );
+		}
+
+		&:hover {
+			background: var( --wp--preset--color--border-light );
+		}
+	}
+
+	&__panel {
+		padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+		border-top: 1px solid var( --wp--preset--color--border );
+	}
+}
+
+/**
+ * Раскладка страницы оформления заказа.
+ *
+ * Купон по макету стоит под полями покупателя, но в разметке он ОБЯЗАН
+ * оставаться вне `form.checkout` (вложенные формы браузер выбрасывает —
+ * см. комментарий в `inc/Checkout.php`), то есть он сосед формы, а не её
+ * потомок. Поэтому колонки строит не сама форма, а её родитель: форма
+ * получает `display: contents`, её дети (`#customer_details` и карточка
+ * заказа) становятся элементами этой же сетки — и купон встаёт ровно под
+ * полями, в левую колонку, а не под всей формой.
+ */
+@media ( min-width: 992px ) {
+	.woocommerce-checkout .woocommerce {
+		display: grid;
+		grid-template-columns: minmax( 0, 1fr ) 500px;
+		gap: var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--xl );
+		align-items: start;
+
+		// Шапка страницы — на всю ширину: уведомления, шаги, заголовок.
+		> .woocommerce-notices-wrapper,
+		> .woocommerce-error,
+		> .woocommerce-message,
+		> .woocommerce-info,
+		> .fs-checkout-steps,
+		> .fs-page-title {
+			grid-column: 1 / -1;
+		}
+
+		> form.checkout {
+			display: contents;
+		}
+
+		// Левая колонка: поля → купон. Правая: карточка заказа на всю высоту.
+		> form.checkout > #customer_details {
+			grid-column: 1;
+			grid-row: 4;
+		}
+
+		> .woocommerce-form-coupon-toggle {
+			grid-column: 1;
+			grid-row: 5;
+		}
+
+		> form.checkout_coupon {
+			grid-column: 1;
+			grid-row: 6;
+		}
+
+		> form.checkout > .fs-checkout-order-review {
+			grid-column: 2;
+			grid-row: 4 / span 3;
+		}
+	}
+}
+
+/**
+ * Тот же вид для штатного переключателя купона на оформлении заказа:
+ * строка-заголовок и панель с полем — как две части одной карточки.
+ */
+.woocommerce-form-coupon-toggle .woocommerce-info {
+	justify-content: space-between;
+	margin: 0;
+	border-left-width: 1px;
+	font-weight: 700;
+
+	.showcoupon {
+		display: inline-flex;
+		align-items: center;
+		gap: var( --wp--preset--spacing--sm );
+		font-weight: 500;
+		color: var( --wp--preset--color--accent );
+
+		// Шеврон — как у аккордеона купона в корзине и в макете.
+		&::after {
+			content: "";
+			width: .5rem;
+			height: .5rem;
+			margin-bottom: .2rem;
+			border-right: 2px solid currentcolor;
+			border-bottom: 2px solid currentcolor;
+			transform: rotate( 45deg );
+		}
+	}
+}
+
+form.checkout_coupon {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var( --wp--preset--spacing--sm );
+	margin: calc( -1 * var( --wp--preset--spacing--md ) ) 0 var( --wp--preset--spacing--lg );
+	padding: var( --wp--preset--spacing--lg );
+	background: var( --wp--preset--color--white );
+	border: 1px solid var( --wp--preset--color--border );
+	border-top: 0;
+	border-radius: 0 0 var( --wp--custom--radius--lg ) var( --wp--custom--radius--lg );
+
+	p {
+		margin: 0;
+	}
+
+	.form-row {
+		margin: 0;
+	}
+
+	input.input-text {
+		width: 12.5rem;
+		height: 2.375rem;
+		padding: 0 var( --wp--preset--spacing--md );
+		border: 1px solid var( --wp--preset--color--border );
+		border-radius: var( --wp--custom--radius--control );
+		font-family: inherit;
+		font-size: var( --wp--preset--font-size--base );
+	}
+
+	button {
+		height: 2.375rem;
+		padding: 0 var( --wp--preset--spacing--lg );
+		background: var( --wp--preset--color--white );
+		border: 1px solid var( --wp--preset--color--border );
+		border-radius: var( --wp--custom--radius--control );
+		font-family: inherit;
+		font-size: var( --wp--preset--font-size--sm );
+		font-weight: 500;
+		color: var( --wp--preset--color--text-secondary );
+		cursor: pointer;
+
+		&:hover {
+			background: var( --wp--preset--color--surface-2 );
+		}
+	}
+}
+
+/**
+ * Текст согласия на обработку данных под кнопкой оформления — по указанию
+ * пользователя того же кегля и цвета, что подпись цены в карточке каталога
+ * (`.fs-course-catalog-card__price-note`).
+ */
+.woocommerce-privacy-policy-text {
+	p {
+		margin: 0;
+		font-size: var( --wp--preset--font-size--xxs );
+		font-weight: 300;
+		line-height: 1.5;
+		color: var( --wp--preset--color--muted );
+	}
+}
+
 // Сетка «форма + сводка заказа» (Фаза 16.3) — `.fs-cart-layout` открыт/
 // закрыт хуками `woocommerce_before_cart`/`woocommerce_after_cart`
 // (`inc/Checkout.php`), оборачивает и таблицу товаров, и
@@ -281,14 +666,42 @@
 	gap: var( --wp--preset--spacing--lg );
 	align-items: start;
 
+	/**
+	 * BugFix (2026-09-04): WooCommerce печатает контейнер уведомлений
+	 * ВНУТРИ этой обёртки (хук `woocommerce_before_cart`, приоритет 10 —
+	 * позже нашего, который открывает `.fs-cart-layout`), и пустой
+	 * `<div class="woocommerce-notices-wrapper">` занимал первую ячейку
+	 * грида: таблица уезжала во вторую строку, а сводка вставала вровень
+	 * с уведомлением. Раскладываем строки явно.
+	 */
+	.woocommerce-notices-wrapper {
+		grid-column: 1 / -1;
+		grid-row: 1;
+	}
+
 	.woocommerce-cart-form,
 	.fs-cart-continue {
 		grid-column: 1;
 	}
 
+	.woocommerce-cart-form {
+		grid-row: 2;
+	}
+
 	.cart-collaterals {
 		grid-column: 2;
-		grid-row: 1 / span 2;
+		grid-row: 2;
+	}
+
+	/**
+	 * Ширину правой колонки задаёт грид (380px), но собственный CSS плагина
+	 * (`.woocommerce .cart-collaterals .cart_totals { width: 48%; float:
+	 * right }`) ужимал сводку до ~180px — крупная сумма «Итого» вылезала
+	 * за границу карточки. Специфичность та же, наш файл подключается позже.
+	 */
+	.cart-collaterals .cart_totals {
+		width: 100%;
+		float: none;
 	}
 }
 
@@ -321,12 +734,37 @@
 			display: block;
 		}
 
+		/**
+		 * BugFix (2026-09-04): границы и паддинги ячеек рисует собственный
+		 * CSS плагина (`.woocommerce table.shop_table td { border-top: …;
+		 * padding: 9px 12px }`). В гриде это давало обрывки серых линий над
+		 * строкой товара и лишние отступы поверх паддинга самой строки.
+		 * Специфичность та же, наш файл подключается позже.
+		 */
+		td,
+		th {
+			padding: 0;
+			border: 0;
+		}
+
 		tr {
 			display: grid;
 			grid-template-columns: 64px minmax( 0, 1fr ) 120px 130px 120px 26px;
 			align-items: center;
 			gap: var( --wp--preset--spacing--md );
 			padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
+
+			/**
+			 * BugFix (2026-09-04): ячейка `product-remove` идёт в разметке
+			 * WooCommerce ПЕРВОЙ, а по макету она последняя
+			 * (`grid-column: 6`). При обычной («sparse») раскладке курсор
+			 * грида после неё оказывается за концом строки, и все
+			 * следующие ячейки (миниатюра, название, цена, количество,
+			 * подытог) переносились на вторую строку — именно из-за этого
+			 * таблица выглядела развалившейся. `dense` укладывает их в
+			 * пропущенные колонки первой строки.
+			 */
+			grid-auto-flow: dense;
 		}
 
 		thead tr {
@@ -338,11 +776,35 @@
 				font-weight: 500;
 				letter-spacing: .05em;
 				text-transform: uppercase;
+				text-align: left;
 				color: var( --wp--preset--color--muted );
+			}
+
+			/**
+			 * В шапке `product-remove`/`product-thumbnail` — пустые ячейки
+			 * (внутри только текст для скринридеров). Раньше они занимали
+			 * первые колонки, и настоящие заголовки уезжали строкой ниже —
+			 * над таблицей висела пустая полоса.
+			 */
+			.product-remove,
+			.product-thumbnail {
+				display: none;
 			}
 
 			.product-name {
 				grid-column: 1 / span 2;
+			}
+
+			.product-price {
+				grid-column: 3;
+			}
+
+			.product-quantity {
+				grid-column: 4;
+			}
+
+			.product-subtotal {
+				grid-column: 5 / span 2;
 			}
 		}
 
@@ -353,10 +815,12 @@
 		.product-thumbnail {
 			grid-column: 1;
 
+			// Квадрат 64×64 с обрезкой по центру — как плитка товара в макете.
 			img {
 				display: block;
 				width: 64px;
-				aspect-ratio: 4 / 3;
+				height: 64px;
+				max-width: none;
 				border-radius: var( --wp--custom--radius--md );
 				object-fit: cover;
 			}
@@ -420,36 +884,46 @@
 				height: 26px;
 				margin: 0 auto;
 				border-radius: var( --wp--custom--radius--sm );
-				color: var( --wp--preset--color--muted-2 );
+
+				// Плагин красит крестик в красный с `!important`
+				// (`.woocommerce a.remove { color: #f00 !important }`) —
+				// в макете он нейтрально-серый, перебить можно только тем же.
+				color: var( --wp--preset--color--muted-2 ) !important;
 				font-size: var( --wp--preset--font-size--lg );
 				line-height: 1;
 				text-decoration: none;
 
 				&:hover {
 					background: var( --wp--preset--color--surface-2 );
-					color: var( --wp--preset--color--text-secondary );
+					color: var( --wp--preset--color--text-secondary ) !important;
 				}
 			}
 		}
 
-		tr.actions {
+		/**
+		 * BugFix (2026-09-04): класс `actions` в разметке WooCommerce висит
+		 * на ЯЧЕЙКЕ (`<tr><td colspan="6" class="actions">`), а стили ниже
+		 * были написаны на `tr.actions` — то есть не применялись вообще:
+		 * поле купона и кнопки раскладывались по колонкам грида строки
+		 * товара и наезжали друг на друга. Теперь ячейка растягивается на
+		 * все колонки и сама раскладывает содержимое.
+		 */
+		// Строку с этой ячейкой не раскладываем гридом — она одна на всю
+		// ширину таблицы (`colspan="6"`), отступы задаёт сама ячейка.
+		tr:has( > td.actions ) {
+			display: block;
+			padding: 0;
+		}
+
+		td.actions {
 			display: flex;
 			flex-wrap: wrap;
 			align-items: center;
 			justify-content: space-between;
 			gap: var( --wp--preset--spacing--md );
-			padding: var( --wp--preset--spacing--lg );
+			padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--lg );
 			background: var( --wp--preset--color--surface-2 );
 			border-top: 1px solid var( --wp--preset--color--border );
-
-			td.actions {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				justify-content: space-between;
-				gap: var( --wp--preset--spacing--md );
-				width: 100%;
-			}
 
 			.coupon {
 				display: flex;
@@ -501,11 +975,42 @@
 			font-weight: 700;
 		}
 
+		/**
+		 * BugFix (2026-09-04): строки сводки — флекс, а не ячейки таблицы.
+		 * У «Итого» крупная сумма (1.625rem) не помещалась в узкую правую
+		 * ячейку 380px-колонки, переносилась по словам и вылезала за
+		 * границу карточки. Флекс + `nowrap` держат подпись слева, сумму
+		 * справа в одну строку — как в макете.
+		 */
 		table {
+			display: block;
 			width: 100%;
 			border-collapse: collapse;
 
+			tbody {
+				display: block;
+			}
+
+			/**
+			 * Границы ячеек рисует плагин, причём самым специфичным
+			 * правилом (`.woocommerce table.shop_table tbody th`,
+			 * 0-2-3) — во флекс-строках они превращались в короткие
+			 * обрывки линий под подписью. Разделители у нас на строках,
+			 * поэтому границы ячеек снимаем заведомо сильнее.
+			 */
+			&.shop_table tbody th,
+			&.shop_table tbody td,
+			&.shop_table tfoot th,
+			&.shop_table tfoot td {
+				border: 0;
+			}
+
 			tr {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: var( --wp--preset--spacing--md );
+
 				th,
 				td {
 					padding: var( --wp--preset--spacing--xs ) 0;
@@ -517,15 +1022,26 @@
 
 				td {
 					text-align: right;
+					white-space: nowrap;
 					color: var( --wp--preset--color--text );
 				}
 			}
 
+			/**
+			 * Разделитель — на строке, а не на ячейках: у плагина граница
+			 * висит на `th`/`td` (`.woocommerce table.shop_table td {
+			 * border-top }`), и во флекс-раскладке вместо одной линии
+			 * получались две короткие — под подписью и под суммой.
+			 */
 			tr.order-total {
+				align-items: center;
+				min-height: 50px; // высота строки «Итого» — по указанию пользователя
+				margin-top: var( --wp--preset--spacing--xs );
+				padding-top: var( --wp--preset--spacing--md );
+				border-top: 1px solid var( --wp--preset--color--border );
+
 				th,
 				td {
-					padding-top: var( --wp--preset--spacing--md );
-					border-top: 1px solid var( --wp--preset--color--border );
 					font-size: var( --wp--preset--font-size--base );
 					font-weight: 500;
 					color: var( --wp--preset--color--text );
@@ -564,31 +1080,31 @@
 	/**
 	 * Оформление заказа (Фаза 16.4, `form-checkout.php` — классический
 	 * шорткод `[woocommerce_checkout]`, см. заголовок файла и
-	 * `inc/Checkout.php`). Сетка — прямо на `form.checkout`: у него ровно
-	 * три содержательных прямых потомка (`#customer_details`,
-	 * `#order_review_heading`, `#order_review`), явный `grid-column`/
-	 * `grid-row` раскладывает их без обёрток. Товары в этом каталоге —
-	 * без доставки (виртуальные абонементы), поэтому `.col-2` (блок
+	 * `inc/Checkout.php`). Товары в этом каталоге — без доставки
+	 * (виртуальные абонементы), поэтому `.col-2` (блок
 	 * `woocommerce_checkout_shipping`) обычно пуст — снят float, чтобы
 	 * пустой `.col-2` не резервировал место в раскладке.
+	 *
+	 * Колонки строит НЕ эта форма, а её родитель
+	 * (`.woocommerce-checkout .woocommerce` выше, форма там —
+	 * `display: contents`): только так купон, который обязан быть соседом
+	 * формы, а не её потомком, попадает в левую колонку под поля. Здесь
+	 * остаётся внутренняя раскладка блоков.
 	 */
 	&-checkout form.checkout {
-		display: grid;
-		grid-template-columns: minmax( 0, 1fr ) 380px;
-		gap: var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--xl );
-		align-items: start;
-
 		#customer_details {
-			grid-column: 1;
-			grid-row: 1 / -1;
 			display: flex;
 			flex-direction: column;
 			gap: var( --wp--preset--spacing--xl );
 		}
 
-		.col2-set {
-			display: contents;
-		}
+		/**
+		 * `#customer_details` (он же `.col2-set`) — обычный grid-элемент
+		 * левой колонки. Раньше здесь стоял `display: contents`, из-за
+		 * чего его собственное размещение (`grid-row`) игнорировалось, а
+		 * `.col-1`/`.col-2` уходили в авто-ячейки — после появления
+		 * купона в строках 3–4 поля уезжали под карточку заказа.
+		 */
 
 		.col-1,
 		.col-2 {
@@ -600,21 +1116,48 @@
 			display: none;
 		}
 
-		#order_review_heading {
+		/**
+		 * Правая колонка — ОДНА карточка, как в макете «Оформление заказа -
+		 * мокап.dc.html»: заголовок «Ваш заказ», товары, суммы, оплата,
+		 * согласие и кнопка внутри общей подложки. Обёртку
+		 * (`.fs-checkout-order-review`) ставит `inc/Checkout.php`; раньше
+		 * карточкой был только `#order_review`, поэтому заголовок висел
+		 * снаружи, а таблица товаров выглядела отдельной белой плашкой.
+		 */
+		.fs-checkout-order-review {
+			display: flex;
+			flex-direction: column;
+			gap: var( --wp--preset--spacing--md );
 			grid-column: 2;
-			grid-row: 1;
+			grid-row: 1 / -1;
+			padding: var( --wp--preset--spacing--xl );
+			background: var( --wp--preset--color--surface-2 );
+			border: 1px solid var( --wp--preset--color--border );
+			border-radius: var( --wp--custom--radius--lg );
+		}
+
+		#order_review_heading {
 			margin: 0;
 			font-size: var( --wp--preset--font-size--lead );
 			font-weight: 700;
 		}
 
+		// Подложку рисует обёртка выше — сам блок прозрачный.
 		#order_review {
-			grid-column: 2;
-			grid-row: 2;
-			padding: var( --wp--preset--spacing--xl );
-			background: var( --wp--preset--color--surface-2 );
-			border: 1px solid var( --wp--preset--color--border );
-			border-radius: var( --wp--custom--radius--lg );
+			padding: 0;
+			background: none;
+			border: 0;
+		}
+
+		// То же для блока оплаты: серый фон плагина внутри карточки лишний.
+		#payment {
+			background: none;
+			border-radius: 0;
+
+			.payment_box {
+				background: var( --wp--preset--color--white );
+				border-radius: var( --wp--custom--radius--md );
+			}
 		}
 	}
 
@@ -636,10 +1179,52 @@
 		margin-top: var( --wp--preset--spacing--xl );
 	}
 
+	/**
+	 * Вертикальные отступы полей (по указанию пользователя, 2026-09-05).
+	 * Их набегало сразу из двух источников: промежуток грида и
+	 * `margin-bottom: 1em` из `woocommerce-blocktheme.css` (плюс
+	 * `padding: 3px` из `woocommerce.css`) — в сумме ~32px между строками.
+	 * Отступы плагина снимаем (селектор тот же, наш файл позже), между
+	 * строками оставляем маленький промежуток, чтобы подпись следующего
+	 * поля не липла к предыдущему полю.
+	 */
 	&-billing-fields__field-wrapper {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: var( --wp--preset--spacing--md );
+		gap: var( --wp--preset--spacing--sm ) var( --wp--preset--spacing--md );
+	}
+
+	form .form-row {
+		margin: 0;
+		padding: 0;
+	}
+
+	/**
+	 * BugFix (2026-09-04): границы ячеек рисует собственный CSS плагина
+	 * (`.woocommerce table.shop_table td { border-top: … }`, специфичность
+	 * 0-2-2) — в нашей флекс-раскладке они превращались в короткие обрывки
+	 * линий внутри карточки «Ваш заказ». Свои разделители рисуем на
+	 * строках (`tbody tr`/`.order-total`), поэтому границы ячеек снимаем
+	 * селектором заведомо более специфичным.
+	 */
+	.woocommerce-checkout-review-order-table.shop_table,
+	.woocommerce-checkout-review-order-table.shop_table td,
+	.woocommerce-checkout-review-order-table.shop_table th {
+		background: none;
+		border: 0;
+	}
+
+	/**
+	 * BugFix (2026-09-04): ширину колонок задаёт грид `__field-wrapper`,
+	 * но собственный CSS плагина (`.woocommerce form .form-row-first {
+	 * width: 47%; float: left }`) сжимал каждое поле до половины СВОЕЙ
+	 * колонки — поля выходили вдвое уже подписей. Селектор тот же, наш
+	 * файл подключается позже.
+	 */
+	form .form-row-first,
+	form .form-row-last {
+		width: 100%;
+		float: none;
 	}
 
 	.form-row {
@@ -770,12 +1355,25 @@
 	// Таблица «Ваш заказ» + оплата + согласие + кнопка — всё внутри
 	// `#order_review` (карточка стилизована выше).
 	&-checkout-review-order-table {
+		/**
+		 * BugFix (2026-09-04): без `display:block` на самой таблице и
+		 * группах строк браузер оставлял табличный layout, `tr {display:
+		 * flex}` не работал — у «Ваш заказ» были видны границы ячеек, а
+		 * крупная сумма «Итого» переносилась по словам.
+		 */
+		display: block;
 		width: 100%;
 		margin-bottom: var( --wp--preset--spacing--md );
+		background: none; // подложка — на карточке-обёртке
 		border-collapse: collapse;
 
 		thead {
 			display: none; // заголовки таблицы избыточны в компактной сводке
+		}
+
+		tbody,
+		tfoot {
+			display: block;
 		}
 
 		tr {
@@ -821,10 +1419,11 @@
 			}
 
 			&.order-total {
+				align-items: center;
+				min-height: 50px; // высота строки «Итого» — по указанию пользователя
 				padding-top: var( --wp--preset--spacing--sm );
 				margin-top: var( --wp--preset--spacing--xs );
 				border-top: 1px solid var( --wp--preset--color--border );
-				align-items: baseline;
 
 				th {
 					font-size: var( --wp--preset--font-size--base );
@@ -835,6 +1434,7 @@
 				td {
 					font-size: 1.625rem;
 					font-weight: 700;
+					white-space: nowrap;
 				}
 			}
 		}

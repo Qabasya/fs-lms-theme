@@ -28,11 +28,21 @@ const FS_LMS_THEME_FORM_MIN_FILL_SECONDS = 3;
 /** Срок годности токена формы, сек (защита от reuse старых меток). */
 const FS_LMS_THEME_FORM_MAX_TOKEN_AGE = HOUR_IN_SECONDS;
 
-/** Лимит сабмитов на IP в окне rate-limit. */
-const FS_LMS_THEME_FORM_RATE_LIMIT = 5;
+/** Лимит сабмитов с одного IP в окне rate-limit. */
+const FS_LMS_THEME_FORM_RATE_LIMIT = 2;
 
-/** Окно rate-limit, сек. */
-const FS_LMS_THEME_FORM_RATE_WINDOW = 10 * MINUTE_IN_SECONDS;
+/** Окно rate-limit по IP, сек. */
+const FS_LMS_THEME_FORM_RATE_WINDOW = 15 * MINUTE_IN_SECONDS;
+
+/**
+ * Отдельный лимит по номеру телефона: спамер меняет IP (прокси, мобильная
+ * сеть), но номер в форме обычно оставляет один и тот же. Считаем только
+ * цифры номера, чтобы «+7 (999)…» и «8999…» попадали в один счётчик.
+ */
+const FS_LMS_THEME_FORM_PHONE_LIMIT = 2;
+
+/** Окно лимита по номеру телефона, сек. */
+const FS_LMS_THEME_FORM_PHONE_WINDOW = HOUR_IN_SECONDS;
 
 /** Получатель писем с лид-форм (решение 2, обсуждение 2026-09-02). */
 const FS_LMS_THEME_FORM_RECIPIENT = 'info@future-step.ru';
@@ -95,6 +105,51 @@ function fs_lms_theme_render_forms_settings_page(): void {
 
 function fs_lms_theme_captcha_configured(): bool {
 	return '' !== get_option( 'fs_lms_theme_captcha_site_key', '' ) && '' !== get_option( 'fs_lms_theme_captcha_server_key', '' );
+}
+
+/**
+ * Задача 9 (tasks.md, 2026-09-04): URL кнопки «Записаться» в шапке
+ * (`patterns/header-nav.php`). Если на текущей странице есть форма
+ * записи — просто якорь на неё (`#hero-form` у hero/subject-hero,
+ * `#signup` у contact-section/subject-contact/courses-contact — берём тот,
+ * что встречается раньше по разметке паттернов страницы). Если формы нет
+ * (страницы WooCommerce, `/about/`, личный кабинет и т.д.) — якорь на
+ * форму главной страницы.
+ *
+ * Определение «есть ли форма» — по наличию слага паттерна в
+ * `post_content` текущей страницы: сами паттерны рендерятся как
+ * `<!-- wp:pattern {"slug":"..."} /-->`, поэтому подстроки узнаваемы без
+ * разбора блоков. Главная — особый случай: её hero/contact-section зашиты
+ * прямо в `templates/front-page.html`, а не в `post_content` страницы.
+ */
+function fs_lms_theme_signup_button_url(): string {
+	$home_anchor = home_url( '/#hero-form' );
+
+	if ( is_front_page() ) {
+		return '#hero-form';
+	}
+
+	$page = get_queried_object();
+
+	if ( ! ( $page instanceof WP_Post ) ) {
+		return $home_anchor;
+	}
+
+	$content = $page->post_content;
+
+	if ( false !== strpos( $content, 'fs-lms-theme/hero' ) || false !== strpos( $content, 'fs-lms-theme/subject-hero' ) ) {
+		return '#hero-form';
+	}
+
+	if (
+		false !== strpos( $content, 'fs-lms-theme/contact-section' )
+		|| false !== strpos( $content, 'fs-lms-theme/subject-contact' )
+		|| false !== strpos( $content, 'fs-lms-theme/courses-contact' )
+	) {
+		return '#signup';
+	}
+
+	return $home_anchor;
 }
 
 /**
@@ -207,17 +262,42 @@ function fs_lms_theme_client_ip(): string {
 	return isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 }
 
-function fs_lms_theme_form_rate_limited( string $ip ): bool {
-	$key   = 'fs_theme_form_' . sha1( $ip );
+/**
+ * Счётчик отправок по произвольному ключу (IP, номер телефона).
+ *
+ * @param string $bucket Что считаем: 'ip:1.2.3.4', 'phone:79995551122'.
+ * @param int    $limit  Сколько отправок допускаем в окне.
+ * @param int    $window Длина окна, сек.
+ *
+ * @return bool true — лимит исчерпан, отправку принимать нельзя.
+ */
+function fs_lms_theme_form_rate_limited( string $bucket, int $limit, int $window ): bool {
+	$key   = 'fs_theme_form_' . sha1( $bucket );
 	$count = (int) get_transient( $key );
 
-	if ( $count >= FS_LMS_THEME_FORM_RATE_LIMIT ) {
+	if ( $count >= $limit ) {
 		return true;
 	}
 
-	set_transient( $key, $count + 1, FS_LMS_THEME_FORM_RATE_WINDOW );
+	set_transient( $key, $count + 1, $window );
 
 	return false;
+}
+
+/** Только цифры номера — чтобы «+7 (999) 555-11-22» и «8999…» считались одним. */
+function fs_lms_theme_phone_digits( string $phone ): string {
+	$digits = preg_replace( '/\D+/', '', $phone );
+
+	if ( null === $digits || '' === $digits ) {
+		return '';
+	}
+
+	// 8XXXXXXXXXX и 7XXXXXXXXXX — один и тот же номер.
+	if ( 11 === strlen( $digits ) && '8' === $digits[0] ) {
+		$digits = '7' . substr( $digits, 1 );
+	}
+
+	return $digits;
 }
 
 /* --------------------------------------------------------------------
@@ -242,7 +322,7 @@ function fs_lms_theme_handle_form_submit(): void {
 
 	$ip = fs_lms_theme_client_ip();
 
-	if ( fs_lms_theme_form_rate_limited( $ip ) ) {
+	if ( fs_lms_theme_form_rate_limited( 'ip:' . $ip, FS_LMS_THEME_FORM_RATE_LIMIT, FS_LMS_THEME_FORM_RATE_WINDOW ) ) {
 		wp_send_json_error( array( 'message' => __( 'Слишком много попыток. Попробуйте немного позже.', 'fs-lms-theme' ) ), 429 );
 	}
 
@@ -264,6 +344,14 @@ function fs_lms_theme_handle_form_submit(): void {
 
 	if ( ! preg_match( '/^[\d\s()+\-]{5,20}$/u', $phone ) ) {
 		wp_send_json_error( array( 'message' => __( 'Проверьте номер телефона.', 'fs-lms-theme' ) ), 400 );
+	}
+
+	// Второй рубеж после лимита по IP: один и тот же номер, даже с разных
+	// адресов, принимаем не чаще, чем задано окном.
+	$phone_digits = fs_lms_theme_phone_digits( $phone );
+
+	if ( '' !== $phone_digits && fs_lms_theme_form_rate_limited( 'phone:' . $phone_digits, FS_LMS_THEME_FORM_PHONE_LIMIT, FS_LMS_THEME_FORM_PHONE_WINDOW ) ) {
+		wp_send_json_error( array( 'message' => __( 'Слишком много попыток. Попробуйте немного позже.', 'fs-lms-theme' ) ), 429 );
 	}
 
 	$lines = array(

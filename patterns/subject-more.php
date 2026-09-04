@@ -55,7 +55,7 @@ $subject_key = 'inf_ege';
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-subject-more-card__text"} -->
-				<p class="fs-subject-more-card__text">Конспекты, шпаргалки и памятки по каждой теме направления — приёмы, которые экономят время на экзамене.</p>
+				<p class="fs-subject-more-card__text">Собрали для тебя статьи по каждой теме в ЕГЭ: теория, разбор формата задания и приёмы, которые экономят время на экзамене.</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:html -->
@@ -79,7 +79,7 @@ $subject_key = 'inf_ege';
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-subject-more-card__text"} -->
-				<p class="fs-subject-more-card__text">Задания по темам направления с проверкой и разбором ошибок — тренируйся по одной теме или собери вариант целиком.</p>
+				<p class="fs-subject-more-card__text">Сборник заданий по каждой теме ЕГЭ с подробным решением: тренируйся по одному номеру или собирай вариант целиком.</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:html -->

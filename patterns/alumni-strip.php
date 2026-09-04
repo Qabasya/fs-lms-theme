@@ -36,8 +36,8 @@
         <h2 class="wp-block-heading has-text-align-center has-xxl-font-size">Наши выпускники поступают</h2>
         <!-- /wp:heading -->
 
-		<!-- wp:group {"className":"splide fs-carousel fs-carousel--per-5 fs-carousel--autoplay fs-carousel--no-arrows fs-carousel-mask fs-carousel-mask--strip"} -->
-		<div class="wp-block-group splide fs-carousel fs-carousel--per-5 fs-carousel--autoplay fs-carousel--no-arrows fs-carousel-mask fs-carousel-mask--strip">
+		<!-- wp:group {"className":"splide fs-carousel fs-carousel--auto-width fs-carousel--autoplay fs-carousel--no-arrows fs-carousel-mask fs-carousel-mask--strip"} -->
+		<div class="wp-block-group splide fs-carousel fs-carousel--auto-width fs-carousel--autoplay fs-carousel--no-arrows fs-carousel-mask fs-carousel-mask--strip">
 			<!-- wp:group {"className":"splide__track"} -->
 			<div class="wp-block-group splide__track">
 				<!-- wp:group {"className":"splide__list"} -->

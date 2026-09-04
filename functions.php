@@ -9,8 +9,11 @@
  *   - Patterns.php — категории паттернов
  *   - Assets.php   — шрифты и собранные CSS/JS (assets/, см. gulpfile.js)
  *   - Blocks.php   — регистрация кастомных блоков (src/blocks/*, Фаза 4)
+ *   - Seo.php      — description/Open Graph, микроразметка организации,
+ *                     preconnect к CDN шрифтов (молчит, если стоит SEO-плагин)
  *   - PluginRoutes.php — резолвер URL служебных страниц плагина (Фаза 7)
  *   - SubjectPages.php — автосборка пустых страниц направлений (Фаза 13)
+ *   - ResourcePages.php — страницы-хабы «Учебник»/«Тренажёр» (задача 10, tasks.md)
  *   - Navigation.php — меню шапки как объект `wp_navigation` (Фаза 17.4)
  *   - WooCommerce.php — каталог товаров (Фаза 10.3+)
  *   - Checkout.php — корзина/оформление заказа, степпер шагов (Фаза 16.3+)
@@ -24,6 +27,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'PluginRoutes', 'SubjectPages', 'Navigation', 'WooCommerce', 'Checkout', 'Forms' ) as $module ) {
+foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'Seo', 'PluginRoutes', 'SubjectPages', 'ResourcePages', 'Navigation', 'WooCommerce', 'Checkout', 'Forms' ) as $module ) {
 	require_once get_template_directory() . "/inc/{$module}.php";
 }
