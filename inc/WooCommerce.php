@@ -42,6 +42,18 @@ add_action( 'after_setup_theme', function (): void {
 } );
 
 /**
+ * `woocommerce-smallscreen.css` — «адаптивная таблица» плагина: ниже 768px
+ * он с `!important` превращает ячейки в блоки и подставляет подписи через
+ * `td::before { content: attr(data-title) }`. У темы своя мобильная
+ * раскладка таблиц (`_woocommerce.scss`, `@media max-width: 960px`), и
+ * вместе они дают кашу: подписи «Цена:6 400,00 ₽» и вылет за экран.
+ * Отключаем стиль плагина целиком, а не боремся с ним `!important`.
+ */
+add_action( 'wp_enqueue_scripts', function (): void {
+	wp_dequeue_style( 'woocommerce-smallscreen' );
+}, 20 );
+
+/**
  * 4 карточки товара в ряд (Фаза 16.2, по макету) — было 3 (Фаза 10, под
  * прежний двухколоночный layout с сайдбаром, которого больше нет).
  */

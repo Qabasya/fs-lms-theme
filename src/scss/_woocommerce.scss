@@ -1455,8 +1455,18 @@ form.checkout_coupon {
 		}
 	}
 
+	// Элементы грида по умолчанию не сжимаются меньше своего содержимого
+	// (`min-width: auto`) — на узком экране из-за этого вся раскладка
+	// вылезала за пределы вьюпорта.
+	.fs-cart-layout > *,
+	.woocommerce table.cart tr > *,
+	.cart_totals,
+	.cart_totals table {
+		min-width: 0;
+	}
+
 	.woocommerce table.cart tr {
-		grid-template-columns: 48px minmax( 0, 1fr ) auto;
+		grid-template-columns: 64px minmax( 0, 1fr ) auto;
 		grid-template-areas:
 			"thumb name remove"
 			"price price price"
@@ -1467,28 +1477,29 @@ form.checkout_coupon {
 		.product-thumbnail { grid-area: thumb; }
 		.product-name { grid-area: name; }
 		.product-remove { grid-area: remove; }
-		.product-price { grid-area: price; grid-column: auto; }
-		.product-quantity { grid-area: qty; grid-column: auto; }
-		.product-subtotal { grid-area: subtotal; grid-column: auto; text-align: left; }
+
+		// `grid-column` не переопределяем: он сбрасывал `grid-area`, и
+		// цена/количество/подытог возвращались в первую (узкую) колонку —
+		// суммы ломались на две строки.
+		.product-price { grid-area: price; }
+		.product-quantity { grid-area: qty; }
+		.product-subtotal { grid-area: subtotal; text-align: left; }
 	}
 
 	.woocommerce table.cart thead {
 		display: none; // мобильный стек не нуждается в отдельной шапке-гриде
 	}
 
-	.woocommerce-checkout form.checkout {
-		grid-template-columns: 1fr;
-
-		#customer_details,
-		#order_review_heading,
-		#order_review {
-			grid-column: 1;
-			grid-row: auto;
-		}
-	}
-
+	// Ниже 992px колонок нет вовсе (сетку включает `@media min-width: 992px`),
+	// блоки идут потоком — правим только внутренние сетки.
 	.woocommerce-billing-fields__field-wrapper {
 		grid-template-columns: 1fr;
+	}
+
+	// Шаги переносятся, иначе строка не влезает в узкий экран.
+	.fs-checkout-steps {
+		flex-wrap: wrap;
+		row-gap: var( --wp--preset--spacing--sm );
 	}
 }
 
