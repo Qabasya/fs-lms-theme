@@ -101,7 +101,7 @@
 				<div class="fs-hero-form__row">
 					<div class="fs-form-field">
 						<label for="fs-hero-name">ФИО родителя</label>
-						<input type="text" id="fs-hero-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" required>
+						<input type="text" id="fs-hero-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" pattern="[А-Яа-яЁё\s\-]{2,80}" minlength="2" maxlength="80" title="Только буквы кириллицы, пробелы и дефис" required>
 					</div>
 					<div class="fs-form-field">
 						<label for="fs-hero-phone">Телефон</label>
@@ -137,7 +137,7 @@
 				<!-- wp:group {"className":"fs-hero-stats__item"} -->
 				<div class="wp-block-group fs-hero-stats__item">
 					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
-					<p class="fs-hero-stats__value">до 800 ₽</p>
+					<p class="fs-hero-stats__value">до 875 ₽</p>
 					<!-- /wp:paragraph -->
 
 					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->

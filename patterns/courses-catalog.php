@@ -49,7 +49,7 @@
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">
 			<!-- wp:button {"className":"fs-course-filter__chip-button"} -->
-			<div class="wp-block-button fs-course-filter__chip-button"><a class="wp-block-button__link wp-element-button is-active" href="#grade-all">Все классы</a></div>
+			<div class="wp-block-button fs-course-filter__chip-button"><a class="wp-block-button__link wp-element-button" href="#grade-all">Все классы</a></div>
 			<!-- /wp:button -->
 
 			<!-- wp:button {"className":"fs-course-filter__chip-button"} -->

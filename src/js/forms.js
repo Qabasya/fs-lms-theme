@@ -133,14 +133,37 @@ function initPhoneMask() {
 	} );
 }
 
+/**
+ * BugFix.4 (2026-09-05): имя — только кириллица, пробелы и дефис. То же
+ * правило, что у плагина fs-lms
+ * (`src/js/common/validators/CyrillicNameValidator.js`) и у серверной
+ * проверки в `inc/Forms.php` — здесь оно только для того, чтобы ошибка
+ * показывалась сразу, без обращения к серверу.
+ */
+const NAME_PATTERN = /^[А-Яа-яЁё\s-]{2,80}$/u;
+const NAME_ERROR = 'В имени разрешены только буквы кириллицы, пробелы и дефис.';
+
+export function validateNameField( value ) {
+	return NAME_PATTERN.test( value.trim() );
+}
+
 function submitForm( form ) {
 	const message = form.querySelector( '.fs-form-message' );
 	const submitButton = form.querySelector( 'button[type="submit"]' );
+	const nameField = form.querySelector( 'input[name="parent_name"]' );
 
 	if ( message ) {
 		message.textContent = '';
 		message.classList.remove( 'is-success', 'is-error' );
 	}
+
+	if ( nameField && ! validateNameField( nameField.value ) ) {
+		showMessage( message, NAME_ERROR, false );
+		nameField.focus();
+
+		return;
+	}
+
 	if ( submitButton ) {
 		submitButton.disabled = true;
 	}

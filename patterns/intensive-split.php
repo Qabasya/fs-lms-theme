@@ -108,7 +108,7 @@
 				<!-- wp:group {"className":"fs-price-plaque__part"} -->
 				<div class="wp-block-group fs-price-plaque__part">
 					<!-- wp:paragraph {"className":"fs-price-plaque__value fs-price-plaque__value--accent"} -->
-					<p class="fs-price-plaque__value fs-price-plaque__value--accent">800 ₽</p>
+					<p class="fs-price-plaque__value fs-price-plaque__value">800 ₽</p>
 					<!-- /wp:paragraph -->
 
 					<!-- wp:paragraph {"className":"fs-price-plaque__label"} -->

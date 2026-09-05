@@ -53,7 +53,7 @@
 				<div class="fs-hero-form__row">
 					<div class="fs-form-field">
 						<label for="fs-subject-hero-name">ФИО родителя</label>
-						<input type="text" id="fs-subject-hero-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" required>
+						<input type="text" id="fs-subject-hero-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" pattern="[А-Яа-яЁё\s\-]{2,80}" minlength="2" maxlength="80" title="Только буквы кириллицы, пробелы и дефис" required>
 					</div>
 					<div class="fs-form-field">
 						<label for="fs-subject-hero-phone">Телефон</label>

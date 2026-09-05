@@ -342,6 +342,25 @@ function fs_lms_theme_handle_form_submit(): void {
 		wp_send_json_error( array( 'message' => __( 'Заполните имя и телефон.', 'fs-lms-theme' ) ), 400 );
 	}
 
+	/**
+	 * BugFix.4 (2026-09-05): имя — только кириллица, по тому же правилу, что
+	 * в плагине fs-lms (`src/js/common/validators/CyrillicNameValidator.js`:
+	 * `/^[А-Яа-яЁё\s-]+$/u` — буквы, пробелы и дефис для двойных имён).
+	 * Ограничение длины плагин задаёт разметкой поля, своего значения там
+	 * нет — берём 2–80 символов: короче осмысленного имени не бывает, а
+	 * длиннее в заявке не нужно.
+	 *
+	 * Проверка на сервере, а не только в разметке и в `src/js/forms.js`:
+	 * `pattern`/`minlength` и клиентский JS обходятся прямым запросом к
+	 * `admin-ajax.php`.
+	 */
+	if ( ! preg_match( '/^[А-Яа-яЁё\s\-]{2,80}$/u', $name ) ) {
+		wp_send_json_error(
+			array( 'message' => __( 'В имени разрешены только буквы кириллицы, пробелы и дефис.', 'fs-lms-theme' ) ),
+			400
+		);
+	}
+
 	if ( ! preg_match( '/^[\d\s()+\-]{5,20}$/u', $phone ) ) {
 		wp_send_json_error( array( 'message' => __( 'Проверьте номер телефона.', 'fs-lms-theme' ) ), 400 );
 	}
@@ -377,7 +396,7 @@ function fs_lms_theme_handle_form_submit(): void {
 	);
 
 	if ( ! $sent ) {
-		wp_send_json_error( array( 'message' => __( 'Не получилось отправить заявку, попробуйте позже или позвоните нам.', 'fs-lms-theme' ) ), 500 );
+		wp_send_json_error( array( 'message' => __( 'Не получилось отправить заявку, попробуйте позже или позвоните нам: +7(995)326-44-86', 'fs-lms-theme' ) ), 500 );
 	}
 
 	wp_send_json_success( array( 'message' => __( 'Спасибо! Мы перезвоним в течение рабочего дня.', 'fs-lms-theme' ) ) );

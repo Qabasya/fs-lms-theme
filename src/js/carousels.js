@@ -61,6 +61,14 @@ export function initCarousels() {
 
 		const options = {
 			type: 'loop',
+
+			/**
+			 * BugFix.2 (2026-09-05): без явного `perMove` Splide берёт шаг
+			 * равным `perPage` — карусель выпускников листала сразу по три
+			 * карточки, и это читалось как «прыжок через несколько».
+			 * Прокрутка везде по одной карточке.
+			 */
+			perMove: 1,
 			gap: '1.25rem',
 			pagination: false,
 			arrows: readFlag( el, 'arrows', 'fs-carousel--no-arrows', true ),
@@ -78,6 +86,21 @@ export function initCarousels() {
 				991: { perPage: perPageTablet, gap: '1rem' },
 				767: { perPage: 1, gap: '0.75rem' },
 			};
+
+			/**
+			 * BugFix.2 (2026-09-05): в `type: 'loop'` Splide сам считает,
+			 * сколько слайдов клонировать по краям, и этого хватает, только
+			 * пока слайдов не меньше `perPage * 2`. У «Наших выпускников»
+			 * их 5 при `perPage: 3` — клонов не хватало на полный оборот,
+			 * и вместо шага на одну карточку лента перескакивала через
+			 * несколько, чтобы вернуться к началу. Задаём число клонов
+			 * явно: `perPage` с каждой стороны хватает на любой набор.
+			 */
+			const slides = el.querySelectorAll( '.splide__slide' ).length;
+
+			if ( slides > 0 && slides < perPage * 2 ) {
+				options.clones = perPage;
+			}
 		}
 
 		new Splide( el, options ).mount();

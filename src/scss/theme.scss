@@ -1701,6 +1701,106 @@ $fs-gap-containers:
 }
 
 /**
+ * BugFix.6 (2026-09-05): «связанный» вид списка вопросов — единая рамка со
+ * скруглением на всю группу, пункты разделены только внутренней чертой
+ * (последний блок макета `Главная v4 - сборка.dc.html`, и тот же вид, что у
+ * аккордеона на `/about/`). Модификатор на обёртке, а не новый вид блока:
+ * сам `fs-lms/faq-item` остаётся «отдельными карточками»
+ * (`src/blocks/faq-item/style.scss`) там, где его вставляют без обёртки.
+ */
+.fs-faq-list {
+	border: 1px solid var( --wp--preset--color--border );
+	border-radius: var( --wp--custom--radius--md );
+	overflow: hidden;
+	background: var( --wp--preset--color--white );
+
+	.fs-faq-item {
+		border: 0;
+		border-radius: 0;
+
+		& + .fs-faq-item {
+			margin-top: 0;
+			border-top: 1px solid var( --wp--preset--color--border );
+		}
+
+		// В макете открытый пункт не меняет цвет заголовка и рамку —
+		// крутится только шеврон.
+		&[open] {
+			border-color: var( --wp--preset--color--border );
+		}
+	}
+
+	.fs-faq-item__question {
+		background: var( --wp--preset--color--surface-2 );
+		font-size: var( --wp--preset--font-size--lead );
+		font-weight: 400;
+		transition: background-color .15s ease;
+
+		&:hover {
+			background: var( --wp--preset--color--border-light );
+			color: var( --wp--preset--color--text );
+		}
+	}
+
+	.fs-faq-item[open] .fs-faq-item__question {
+		color: var( --wp--preset--color--text );
+		font-weight: 400;
+	}
+
+	.fs-faq-item__answer {
+		padding: var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--xl );
+		border-top: 1px solid var( --wp--preset--color--border );
+		font-size: var( --wp--preset--font-size--base );
+		font-weight: 400;
+		color: var( --wp--preset--color--text-secondary );
+	}
+}
+
+/**
+ * BugFix.7 (2026-09-05): плавное раскрытие всех аккордеонов темы. Все они
+ * построены на `<details>` — блок `fs-lms/faq-item` (`save.js`) и статичный
+ * юридический аккордеон `/about/` (`patterns/about-accordion.php`), — а
+ * `<details>` по умолчанию показывает и прячет содержимое мгновенно.
+ *
+ * Анимируем штатным для этого псевдоэлементом `::details-content`: высота
+ * `0 → auto` (ключевое слово `auto` интерполируется только при
+ * `interpolate-size: allow-keywords`, свойство наследуется — ставим на сам
+ * аккордеон) плюс дискретный переход `content-visibility`, иначе браузер
+ * скрывает содержимое сразу и анимации закрытия не видно.
+ *
+ * Прогрессивное улучшение: там, где `::details-content` не поддержан,
+ * аккордеон просто открывается мгновенно, как раньше.
+ *
+ * `prefers-reduced-motion` — уважаем: пользователю, который просил убрать
+ * анимации в системе, раскрытие остаётся мгновенным.
+ */
+.fs-faq-item,
+.fs-legal-accordion__item {
+	interpolate-size: allow-keywords;
+
+	&::details-content {
+		block-size: 0;
+		overflow: hidden;
+		transition:
+			block-size .25s ease,
+			content-visibility .25s allow-discrete;
+	}
+
+	&[open]::details-content {
+		block-size: auto;
+	}
+}
+
+@media ( prefers-reduced-motion: reduce ) {
+	.fs-faq-item,
+	.fs-legal-accordion__item {
+		&::details-content {
+			transition: none;
+		}
+	}
+}
+
+/**
  * Фильтр по классу на странице «Курсы» (Фаза 16.5,
  * `patterns/courses-catalog.php`, `src/js/course-filter.js`) — чипсы,
  * активная — акцентный `soft`-фон, как в макете (`#edf2ff`/`#3b5bdb` →

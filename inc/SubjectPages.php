@@ -345,3 +345,69 @@ function fs_lms_theme_seed_subject_page(): void {
 	exit;
 }
 add_action( 'template_redirect', 'fs_lms_theme_seed_subject_page' );
+
+/**
+ * Версия «раскладки» страниц направлений. Меняется, когда очередная секция
+ * переезжает со ссылки на паттерн в собственные блоки страницы и уже
+ * созданные страницы нужно перевести на новый вид.
+ */
+const FS_LMS_THEME_SUBJECT_PAGES_LAYOUT = 2;
+
+/**
+ * BugFix.5 (2026-09-05): разворачивает ссылки на общие паттерны в блоки
+ * самой страницы направления.
+ *
+ * Заполнение страницы (`fs_lms_theme_seed_subject_page()`) срабатывает
+ * только на ПУСТОМ `post_content`, поэтому страницы, созданные до задачи 6
+ * (2026-09-04), так и остались со ссылкой `<!-- wp:pattern
+ * {"slug":"fs-lms-theme/intensive-split"} /-->`. А `wp:pattern` — это живая
+ * ссылка на общий PHP-паттерн: редактор показывает её содержимое, но правки
+ * идти некуда, текст один на все четыре направления. Отсюда и вопрос «как
+ * поменять текст у других направлений» — никак, пока ссылка не развёрнута.
+ *
+ * Замена — ровно то же содержимое, что печатал паттерн, поэтому страница
+ * выглядит как раньше; меняется только то, что блоки теперь лежат в
+ * `post_content` конкретной страницы и правятся по-предметно. Разовая:
+ * отметка о выполнении хранится в опции, да и повторный проход ничего не
+ * найдёт — ссылок уже нет.
+ */
+function fs_lms_theme_upgrade_subject_pages(): void {
+	if ( (int) get_option( 'fs_lms_theme_subject_pages_layout', 0 ) >= FS_LMS_THEME_SUBJECT_PAGES_LAYOUT ) {
+		return;
+	}
+
+	foreach ( array_keys( fs_lms_theme_subject_hero_patterns() ) as $subject_key ) {
+		$page = get_page_by_path( $subject_key );
+
+		if ( ! $page instanceof WP_Post ) {
+			continue;
+		}
+
+		$content = $page->post_content;
+		$updated = str_replace(
+			array(
+				'<!-- wp:pattern {"slug":"fs-lms-theme/intensive-split"} /-->',
+				'<!-- wp:pattern {"slug":"fs-lms-theme/subject-more"} /-->',
+			),
+			array(
+				fs_lms_theme_subject_intensive_blocks(),
+				fs_lms_theme_subject_more_blocks( $subject_key ),
+			),
+			$content
+		);
+
+		if ( $updated === $content ) {
+			continue;
+		}
+
+		wp_update_post(
+			array(
+				'ID'           => $page->ID,
+				'post_content' => $updated,
+			)
+		);
+	}
+
+	update_option( 'fs_lms_theme_subject_pages_layout', FS_LMS_THEME_SUBJECT_PAGES_LAYOUT );
+}
+add_action( 'wp_loaded', 'fs_lms_theme_upgrade_subject_pages' );

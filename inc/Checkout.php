@@ -280,14 +280,27 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $or
 } );
 
 /**
- * Страница «Заказ получен» (thank-you, `order-received.php`) — третий шаг
- * степпера, для единообразия с «Корзиной»/«Оформлением заказа» (сама
- * страница и её контент — целиком штатный вывод WooCommerce, тема ничего
- * в нём не меняет и не подменяет, только достраивает степпер сверху).
+ * Страница «Заказ получен» (thank-you) — по указанию пользователя
+ * (2026-09-05) и макету `Спасибо за заказ - мокап.dc.html` на ней остаётся
+ * только благодарность: галочка, заголовок, две строки текста и кнопка на
+ * главную. Степпера в макете нет — здесь его больше не рисуем (на «Корзине»
+ * и «Оформлении заказа» он остаётся).
+ *
+ * Разметку даёт переопределённый шаблон `woocommerce/checkout/thankyou.php`.
+ * Чтобы он вообще попал в вывод, у темы есть свой `templates/
+ * order-confirmation.html`: тема блочная, и для эндпоинта `order-received`
+ * WooCommerce иначе отдаёт СВОЙ блочный шаблон того же слага
+ * (`woocommerce/templates/templates/order-confirmation.html`, набор блоков
+ * `order-confirmation-*`), где PHP-шаблон не участвует вовсе. Наш шаблон
+ * зовёт штатный шорткод `[woocommerce_checkout]` — он роутит эндпоинт сам
+ * (`WC_Shortcode_Checkout::output()`), вместе со всеми проверками ключа
+ * заказа и подтверждения почты для гостевых заказов.
+ *
+ * Сводку заказа, реквизиты и адрес печатает сам плагин — колбэком
+ * `woocommerce_order_details_table` на хуке `woocommerce_thankyou`
+ * (`wc-template-hooks.php`). Снимаем именно колбэк, а не хук: на том же
+ * хуке платёжные шлюзы выводят свои инструкции после оплаты.
  */
-add_action( 'woocommerce_before_thankyou', function (): void {
-	// Только степпер: заголовок («Заказ принят») на этой странице рисует
-	// сам WooCommerce, свой добавлять нельзя — получался дубль. Кегль его
-	// заголовка приведён к макету в `_woocommerce.scss`.
-	fs_lms_theme_checkout_steps( 3 );
+add_action( 'wp_loaded', function (): void {
+	remove_action( 'woocommerce_thankyou', 'woocommerce_order_details_table', 10 );
 } );

@@ -205,7 +205,20 @@ function fs_lms_theme_product_fallback_image( WC_Product $product ): string {
 	return '';
 }
 
-add_filter( 'woocommerce_placeholder_img', function ( string $html, string $size, array $dimensions ) {
+/**
+ * BugFix (2026-09-05): у `$size` не было типа `string`. `wc_placeholder_img()`
+ * (`wc-product-functions.php`) принимает размер и строкой-именем
+ * (`woocommerce_thumbnail`), и парой `array( ширина, высота )` — и передаёт
+ * его в фильтр как есть. Шаблоны писем зовут функцию со вторым вариантом,
+ * поэтому колбэк падал с TypeError, а вместе с ним — вся отправка письма о
+ * заказе (`WC_Email_New_Order::trigger()`), уже на смене статуса.
+ * `$dimensions` типизировать можно: это всегда результат `wc_get_image_size()`.
+ *
+ * @param string       $html       Разметка плейсхолдера от WooCommerce.
+ * @param string|array $size       Имя размера либо пара «ширина, высота».
+ * @param array        $dimensions Разрешённые размеры изображения.
+ */
+add_filter( 'woocommerce_placeholder_img', function ( string $html, $size, array $dimensions ) {
 	global $product;
 
 	if ( ! $product instanceof WC_Product ) {
