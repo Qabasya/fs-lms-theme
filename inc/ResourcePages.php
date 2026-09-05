@@ -91,7 +91,7 @@ HTML;
 	return <<<HTML
 <!-- wp:group {"className":"fs-section"} -->
 <div class="wp-block-group fs-section">
-	<!-- wp:heading {"textAlign":"center","fontSize":"xxl"} -->
+	<!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xxl"} -->
 	<h1 class="wp-block-heading has-text-align-center has-xxl-font-size">{$title}</h1>
 	<!-- /wp:heading -->
 

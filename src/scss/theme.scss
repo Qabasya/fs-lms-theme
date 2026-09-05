@@ -1768,8 +1768,17 @@ $fs-gap-containers:
  * аккордеон) плюс дискретный переход `content-visibility`, иначе браузер
  * скрывает содержимое сразу и анимации закрытия не видно.
  *
- * Прогрессивное улучшение: там, где `::details-content` не поддержан,
- * аккордеон просто открывается мгновенно, как раньше.
+ * `max-block-size` — не дубль, а запасной путь для браузеров с
+ * `::details-content`, но без `interpolate-size` (Firefox, Safari): там
+ * `block-size` переключается скачком, а вот кадрирование по максимальной
+ * высоте анимируется и даёт то же плавное раскрытие. Значение заведомо
+ * больше самого длинного ответа, поэтому содержимое не обрезается; там, где
+ * `interpolate-size` есть, рамка всё время опережает реальную высоту и на
+ * анимацию не влияет.
+ *
+ * Прогрессивное улучшение: там, где `::details-content` не поддержан вовсе
+ * (Firefox ESR из нашего browserslist), аккордеон открывается мгновенно,
+ * как раньше.
  *
  * `prefers-reduced-motion` — уважаем: пользователю, который просил убрать
  * анимации в системе, раскрытие остаётся мгновенным.
@@ -1780,14 +1789,17 @@ $fs-gap-containers:
 
 	&::details-content {
 		block-size: 0;
+		max-block-size: 0;
 		overflow: hidden;
 		transition:
 			block-size .25s ease,
+			max-block-size .25s ease,
 			content-visibility .25s allow-discrete;
 	}
 
 	&[open]::details-content {
 		block-size: auto;
+		max-block-size: 60rem;
 	}
 }
 

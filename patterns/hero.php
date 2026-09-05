@@ -101,7 +101,7 @@
 				<div class="fs-hero-form__row">
 					<div class="fs-form-field">
 						<label for="fs-hero-name">ФИО родителя</label>
-						<input type="text" id="fs-hero-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" pattern="[А-Яа-яЁё\s\-]{2,80}" minlength="2" maxlength="80" title="Только буквы кириллицы, пробелы и дефис" required>
+						<input type="text" id="fs-hero-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" <?php echo fs_lms_theme_name_field_attrs_html(); ?> required>
 					</div>
 					<div class="fs-form-field">
 						<label for="fs-hero-phone">Телефон</label>

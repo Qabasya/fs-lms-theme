@@ -117,13 +117,15 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( value ) => setAttributes( { text: value } ) }
 						placeholder={ __( 'Описание программы', 'fs-lms-theme' ) }
 					/>
-					<div className="fs-course-catalog-card__tags">
-						{ splitTags( tags ).map( ( tag ) => (
-							<span key={ tag } className="fs-course-catalog-card__tag">
-								{ tag }
-							</span>
-						) ) }
-					</div>
+					{ splitTags( tags ).length > 0 && (
+						<div className="fs-course-catalog-card__tags">
+							{ splitTags( tags ).map( ( tag ) => (
+								<span key={ tag } className="fs-course-catalog-card__tag">
+									{ tag }
+								</span>
+							) ) }
+						</div>
+					) }
 					<div className="fs-course-catalog-card__footer">
 						<div className="fs-course-catalog-card__price">
 							<RichText

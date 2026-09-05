@@ -192,18 +192,26 @@ add_filter( 'woocommerce_checkout_fields', function ( array $fields ): array {
 
 	// По указанию пользователя (2026-09-05): ФИО родителя и ФИО ребёнка —
 	// каждое на свою строку (длинные значения), телефон и почта — в одну.
-	$fields['billing']['billing_first_name']['label']       = __( 'ФИО родителя', 'fs-lms-theme' );
-	$fields['billing']['billing_first_name']['placeholder'] = __( 'Иванова Анна Ивановна', 'fs-lms-theme' );
-	$fields['billing']['billing_first_name']['class']       = array( 'form-row-wide' );
-	$fields['billing']['billing_first_name']['priority']    = 10;
+	//
+	// BugFix.4 (2026-09-05): оба ФИО — только кириллица, тем же правилом,
+	// что лид-формы темы и поля имени в плагине fs-lms (см.
+	// `fs_lms_theme_name_field_attributes()` в `inc/Forms.php`).
+	$name_attributes = fs_lms_theme_name_field_attributes();
+
+	$fields['billing']['billing_first_name']['label']             = __( 'ФИО родителя', 'fs-lms-theme' );
+	$fields['billing']['billing_first_name']['placeholder']       = __( 'Иванова Анна Ивановна', 'fs-lms-theme' );
+	$fields['billing']['billing_first_name']['class']             = array( 'form-row-wide' );
+	$fields['billing']['billing_first_name']['priority']          = 10;
+	$fields['billing']['billing_first_name']['custom_attributes'] = $name_attributes;
 	unset( $fields['billing']['billing_last_name'] );
 
 	$fields['billing']['billing_child_name'] = array(
-		'label'       => __( 'ФИО ребёнка', 'fs-lms-theme' ),
-		'placeholder' => __( 'Иванов Пётр Игоревич', 'fs-lms-theme' ),
-		'required'    => true,
-		'class'       => array( 'form-row-wide' ),
-		'priority'    => 20,
+		'label'             => __( 'ФИО ребёнка', 'fs-lms-theme' ),
+		'placeholder'       => __( 'Иванов Пётр Игоревич', 'fs-lms-theme' ),
+		'required'          => true,
+		'class'             => array( 'form-row-wide' ),
+		'priority'          => 20,
+		'custom_attributes' => $name_attributes,
 	);
 
 	$fields['billing']['billing_phone']['class']    = array( 'form-row-first' );
@@ -237,6 +245,40 @@ add_filter( 'woocommerce_checkout_fields', function ( array $fields ): array {
  * пустой заголовок. Это штатный выключатель WooCommerce для всей секции.
  */
 add_filter( 'woocommerce_enable_order_notes_field', '__return_false' );
+
+/**
+ * BugFix.4 (2026-09-05): серверная проверка обоих ФИО. `pattern` в разметке
+ * снимается инструментами разработчика, а заказ можно оформить и минуя
+ * страницу, поэтому правило дублируется здесь — как и у лид-форм
+ * (`inc/Forms.php`).
+ *
+ * Хук `woocommerce_after_checkout_validation` — штатное место для таких
+ * проверок: ошибки уходят в `WP_Error`, WooCommerce сам покажет их над
+ * формой и не создаст заказ.
+ */
+add_action( 'woocommerce_after_checkout_validation', function ( array $data, WP_Error $errors ): void {
+	$name_fields = array(
+		'billing_first_name' => __( 'ФИО родителя', 'fs-lms-theme' ),
+		'billing_child_name' => __( 'ФИО ребёнка', 'fs-lms-theme' ),
+	);
+
+	foreach ( $name_fields as $key => $label ) {
+		$value = isset( $data[ $key ] ) ? (string) $data[ $key ] : '';
+
+		if ( '' === $value || fs_lms_theme_is_valid_name( $value ) ) {
+			continue;
+		}
+
+		$errors->add(
+			'validation',
+			sprintf(
+				/* translators: %s — название поля формы. */
+				__( 'В поле «%s» разрешены только буквы кириллицы, пробелы и дефис.', 'fs-lms-theme' ),
+				$label
+			)
+		);
+	}
+}, 10, 2 );
 
 /**
  * Сохраняем «ФИО ребёнка» в мету заказа — своего сеттера у WooCommerce

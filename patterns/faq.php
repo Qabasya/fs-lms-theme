@@ -31,23 +31,23 @@
 
 	<!-- wp:group {"className":"fs-faq-list"} -->
 	<div class="wp-block-group fs-faq-list">
-		<!-- wp:fs-lms/faq-item {"question":"Как проходят пробные занятия?","answer":"Бесплатное пробное занятие проходит в мини-группе или индивидуально — записаться можно через форму на сайте, мы перезвоним и подберём удобное время."} -->
+		<!-- wp:fs-lms/faq-item {} -->
 		<details class="wp-block-fs-lms-faq-item fs-faq-item"><summary class="fs-faq-item__question"><span class="fs-faq-item__question-text">Как проходят пробные занятия?</span></summary><p class="fs-faq-item__answer">Бесплатное пробное занятие проходит в мини-группе или индивидуально — записаться можно через форму на сайте, мы перезвоним и подберём удобное время.</p></details>
 		<!-- /wp:fs-lms/faq-item -->
 
-		<!-- wp:fs-lms/faq-item {"question":"Что если ребёнок пропустит занятие?","answer":"Каждое занятие записывается, запись доступна в личном кабинете — можно посмотреть материал и получить консультацию преподавателя по пропущенной теме."} -->
+		<!-- wp:fs-lms/faq-item {} -->
 		<details class="wp-block-fs-lms-faq-item fs-faq-item"><summary class="fs-faq-item__question"><span class="fs-faq-item__question-text">Что если ребёнок пропустит занятие?</span></summary><p class="fs-faq-item__answer">Каждое занятие записывается, запись доступна в личном кабинете — можно посмотреть материал и получить консультацию преподавателя по пропущенной теме.</p></details>
 		<!-- /wp:fs-lms/faq-item -->
 
-		<!-- wp:fs-lms/faq-item {"question":"Нужна ли начальная подготовка?","answer":"Нет, набор идёт с любого уровня — программу подбираем по итогам пробного занятия и результатам входного тестирования."} -->
+		<!-- wp:fs-lms/faq-item {} -->
 		<details class="wp-block-fs-lms-faq-item fs-faq-item"><summary class="fs-faq-item__question"><span class="fs-faq-item__question-text">Нужна ли начальная подготовка?</span></summary><p class="fs-faq-item__answer">Нет, набор идёт с любого уровня — программу подбираем по итогам пробного занятия и результатам входного тестирования.</p></details>
 		<!-- /wp:fs-lms/faq-item -->
 
-		<!-- wp:fs-lms/faq-item {"question":"Как оплачивать занятия?","answer":"Оплата помесячная, картой онлайн или в личном кабинете. Стоимость и способы оплаты указаны на странице курса."} -->
+		<!-- wp:fs-lms/faq-item {} -->
 		<details class="wp-block-fs-lms-faq-item fs-faq-item"><summary class="fs-faq-item__question"><span class="fs-faq-item__question-text">Как оплачивать занятия?</span></summary><p class="fs-faq-item__answer">Оплата помесячная, картой онлайн или в личном кабинете. Стоимость и способы оплаты указаны на странице курса.</p></details>
 		<!-- /wp:fs-lms/faq-item -->
 
-		<!-- wp:fs-lms/faq-item {"question":"Можно ли перейти на другое направление?","answer":"Да, перевод между направлениями и группами возможен в любой момент — обсудите это с преподавателем или администратором школы."} -->
+		<!-- wp:fs-lms/faq-item {} -->
 		<details class="wp-block-fs-lms-faq-item fs-faq-item"><summary class="fs-faq-item__question"><span class="fs-faq-item__question-text">Можно ли перейти на другое направление?</span></summary><p class="fs-faq-item__answer">Да, перевод между направлениями и группами возможен в любой момент — обсудите это с преподавателем или администратором школы.</p></details>
 		<!-- /wp:fs-lms/faq-item -->
 	</div>

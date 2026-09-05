@@ -1,9 +1,21 @@
+/**
+ * BugFix.3 (2026-09-05): страницы, вставленные из `patterns/courses-catalog.php`
+ * до этой правки, лежат в БД без строки тегов (`.fs-course-catalog-card__tags`),
+ * хотя в комментарии блока атрибут `tags` заполнен. Прежний `save()` рисовал
+ * контейнер тегов всегда — разметка расходилась, и редактор показывал «Этот
+ * блок имеет неожидаемое или неверное содержимое».
+ *
+ * Теперь `save()` рисует теги только когда они есть, а эта устаревшая версия
+ * (теги не выводятся никогда) подхватывает уже сохранённое содержимое и
+ * `migrate()` чистит осиротевший атрибут — вместо ошибки страница открывается
+ * как раньше.
+ */
 import { createElement } from '@wordpress/element';
 import { useBlockProps, RichText } from '@wordpress/block-editor';
+import metadata from './block.json';
 import { softSlug, textSlug } from '../shared/colors';
-import { splitTags } from './tags';
 
-export default function save( { attributes } ) {
+function saveWithoutTags( { attributes } ) {
 	const {
 		imageUrl,
 		imageAlt,
@@ -12,7 +24,6 @@ export default function save( { attributes } ) {
 		formatText,
 		title,
 		text,
-		tags,
 		priceAmount,
 		priceNote,
 		buttonText,
@@ -59,15 +70,6 @@ export default function save( { attributes } ) {
 					className="fs-course-catalog-card__text"
 					value={ text }
 				/>
-				{ splitTags( tags ).length > 0 && (
-					<div className="fs-course-catalog-card__tags">
-						{ splitTags( tags ).map( ( tag ) => (
-							<span key={ tag } className="fs-course-catalog-card__tag">
-								{ tag }
-							</span>
-						) ) }
-					</div>
-				) }
 				<div className="fs-course-catalog-card__footer">
 					<div className="fs-course-catalog-card__price">
 						<RichText.Content
@@ -94,3 +96,12 @@ export default function save( { attributes } ) {
 		</div>
 	);
 }
+
+export default [
+	{
+		attributes: metadata.attributes,
+		supports: metadata.supports,
+		save: saveWithoutTags,
+		migrate: ( attributes ) => ( { ...attributes, tags: '' } ),
+	},
+];

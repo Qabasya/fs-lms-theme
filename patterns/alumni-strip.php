@@ -10,8 +10,7 @@
  * в Фазе 11 её убрали, посчитав добавленной сверх мокапа v1 — не считать
  * это повторной ошибкой). Ряд логотипов — Splide-карусель (5 в ряд, `loop`,
  * без стрелок — автопрокрутка, как в мокапе), `data-fs-carousel` разбирает
- * `src/js/carousels.js` (Фаза 12.0). Логотипы — заглушки `.fs-placeholder-tile`,
- * реальные вставляет редактор через `wp:image`.
+ * `src/js/carousels.js` (Фаза 12.0).
  *
  * BugFix (tasks.md): контейнер карусели вузов фиксирован на 160px по
  * высоте (`.fs-carousel-mask--strip` в `theme.scss`) — модификатор
@@ -30,7 +29,7 @@
 <!-- wp:group {"className":"fs-section"} -->
 <div class="wp-block-group fs-section">
 	<!-- wp:group {"backgroundColor":"surface-2","style":{"border":{"color":"var:preset|color|border","width":"1px","radius":"var:preset|spacing|md"},"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xxl"}}}} -->
-	<div class="wp-block-group has-surface-2-background-color has-background" style="border-color:var(--wp--preset--color--border);border-width:1px;border-radius:var(--wp--preset--spacing--md);padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xxl)">
+	<div class="wp-block-group has-border-color has-surface-2-background-color has-background" style="border-color:var(--wp--preset--color--border);border-width:1px;border-radius:var(--wp--preset--spacing--md);padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xxl)">
 
         <!-- wp:heading {"textAlign":"center","fontSize":"xxl"} -->
         <h2 class="wp-block-heading has-text-align-center has-xxl-font-size">Наши выпускники поступают</h2>

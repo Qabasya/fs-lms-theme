@@ -22,8 +22,8 @@
  * сторон файла (2800×816), не растянуты произвольно.
  */
 ?>
-<!-- wp:group {"tagName":"div","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xxxl","bottom":"0"}}},"textColor":"white"} -->
-<div class="wp-block-group has-white-color has-text-color" style="margin-top:0;padding-top:var(--wp--preset--spacing--xxxl);padding-bottom:0;background:#2b2f36">
+<!-- wp:group {"tagName":"div","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xxxl","bottom":"0"}},"color":{"background":"#2b2f36"}},"textColor":"white"} -->
+<div class="wp-block-group has-white-color has-text-color has-background" style="margin-top:0;padding-top:var(--wp--preset--spacing--xxxl);padding-bottom:0;background-color:#2b2f36">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
 		<!-- wp:group {"className":"fs-footer-grid"} -->
@@ -31,7 +31,7 @@
 			<!-- wp:group {"className":"fs-footer-grid__col"} -->
 			<div class="wp-block-group fs-footer-grid__col">
 				<!-- wp:image {"width":"172px","className":"fs-footer-logo","linkDestination":"custom"} -->
-				<figure class="wp-block-image fs-footer-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'img/logo-footer.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" style="width:172px"/></a></figure>
+				<figure class="wp-block-image is-resized fs-footer-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'img/logo-footer.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" style="width:172px"/></a></figure>
 				<!-- /wp:image -->
 
 				<!-- wp:paragraph {"className":"fs-footer-grid__lead"} -->

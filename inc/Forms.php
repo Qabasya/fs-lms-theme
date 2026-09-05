@@ -47,6 +47,67 @@ const FS_LMS_THEME_FORM_PHONE_WINDOW = HOUR_IN_SECONDS;
 /** Получатель писем с лид-форм (решение 2, обсуждение 2026-09-02). */
 const FS_LMS_THEME_FORM_RECIPIENT = 'info@future-step.ru';
 
+/**
+ * BugFix.4 (2026-09-05): правило для полей с именем — то же, что у плагина
+ * fs-lms (`cyrillicName`: `/^[А-Яа-яЁё\s-]+$/u` — буквы кириллицы, пробелы
+ * и дефис для двойных имён). Длину плагин задаёт разметкой поля, своего
+ * значения там нет: берём 2–80 символов — короче осмысленного имени не
+ * бывает, длиннее в заявке не нужно.
+ *
+ * Тело без якорей и квантификатора — из него собираются и `pattern` в
+ * разметке (там якоря подставляет сам браузер), и серверные `preg_match`
+ * лид-формы и оформления заказа, чтобы правило жило в одном месте.
+ */
+const FS_LMS_THEME_NAME_CHARS = 'А-Яа-яЁё\s\-';
+
+/** Минимальная длина имени. */
+const FS_LMS_THEME_NAME_MIN = 2;
+
+/** Максимальная длина имени. */
+const FS_LMS_THEME_NAME_MAX = 80;
+
+/**
+ * Проверка значения поля с именем по правилу выше.
+ */
+function fs_lms_theme_is_valid_name( string $value ): bool {
+	return 1 === preg_match(
+		'/^[' . FS_LMS_THEME_NAME_CHARS . ']{' . FS_LMS_THEME_NAME_MIN . ',' . FS_LMS_THEME_NAME_MAX . '}$/u',
+		trim( $value )
+	);
+}
+
+/**
+ * Атрибуты нативной валидации для поля с именем — чтобы браузер показывал
+ * ошибку до отправки. Не замена серверной проверки: `pattern` снимается
+ * инструментами разработчика, а форму можно отправить и мимо страницы.
+ *
+ * @return array<string, string>
+ */
+function fs_lms_theme_name_field_attributes(): array {
+	return array(
+		'pattern'   => '[' . FS_LMS_THEME_NAME_CHARS . ']{' . FS_LMS_THEME_NAME_MIN . ',' . FS_LMS_THEME_NAME_MAX . '}',
+		'minlength' => (string) FS_LMS_THEME_NAME_MIN,
+		'maxlength' => (string) FS_LMS_THEME_NAME_MAX,
+		'title'     => __( 'Только буквы кириллицы, пробелы и дефис', 'fs-lms-theme' ),
+	);
+}
+
+/**
+ * Те же атрибуты строкой — для разметки лид-форм в паттернах
+ * (`hero.php`, `contact-section.php`, `subject-hero*.php`,
+ * `subject-contact.php`, `courses-contact.php`). Раньше правило было
+ * скопировано в каждый из восьми файлов руками и разъезжалось при правках.
+ */
+function fs_lms_theme_name_field_attrs_html(): string {
+	$attributes = array();
+
+	foreach ( fs_lms_theme_name_field_attributes() as $name => $value ) {
+		$attributes[] = sprintf( '%s="%s"', $name, esc_attr( $value ) );
+	}
+
+	return implode( ' ', $attributes );
+}
+
 /* --------------------------------------------------------------------
  * Настройки: Настройки → Формы (Yandex SmartCaptcha, независимо от
  * настроек плагина — `SmartCaptchaSettingsController` не переиспользуем,
@@ -343,18 +404,12 @@ function fs_lms_theme_handle_form_submit(): void {
 	}
 
 	/**
-	 * BugFix.4 (2026-09-05): имя — только кириллица, по тому же правилу, что
-	 * в плагине fs-lms (`src/js/common/validators/CyrillicNameValidator.js`:
-	 * `/^[А-Яа-яЁё\s-]+$/u` — буквы, пробелы и дефис для двойных имён).
-	 * Ограничение длины плагин задаёт разметкой поля, своего значения там
-	 * нет — берём 2–80 символов: короче осмысленного имени не бывает, а
-	 * длиннее в заявке не нужно.
-	 *
-	 * Проверка на сервере, а не только в разметке и в `src/js/forms.js`:
-	 * `pattern`/`minlength` и клиентский JS обходятся прямым запросом к
-	 * `admin-ajax.php`.
+	 * BugFix.4 (2026-09-05): имя — только кириллица (правило и его причины —
+	 * у `FS_LMS_THEME_NAME_CHARS` выше). Проверка на сервере, а не только в
+	 * разметке и в `src/js/forms.js`: `pattern`/`minlength` и клиентский JS
+	 * обходятся прямым запросом к `admin-ajax.php`.
 	 */
-	if ( ! preg_match( '/^[А-Яа-яЁё\s\-]{2,80}$/u', $name ) ) {
+	if ( ! fs_lms_theme_is_valid_name( $name ) ) {
 		wp_send_json_error(
 			array( 'message' => __( 'В имени разрешены только буквы кириллицы, пробелы и дефис.', 'fs-lms-theme' ) ),
 			400
