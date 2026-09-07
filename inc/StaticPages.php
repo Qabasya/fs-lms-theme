@@ -1,6 +1,7 @@
 <?php
 /**
- * Страницы «О нас» (`/about/`) и «Курсы» (`/courses/`) — автосоздание.
+ * Страницы «О нас» (`/about/`), «Курсы» (`/courses/`) и «Контакты»
+ * (`/contacts/`) — автосоздание.
  *
  * BugFix (2026-09-07): на проде этих двух страниц не было, потому что их
  * никто не создавал — на локалке они были заведены руками. Меню шапки
@@ -17,7 +18,7 @@
  * направлений. Здесь содержимое — только ссылки на паттерны, которые
  * редактор дальше правит мышкой; общего кода между модулями нет.
  *
- * Шаблон обеих страниц — `page-wide`, `<h1>` рисует `wp:post-title` из
+ * Шаблон всех трёх страниц — `page-wide`, `<h1>` рисует `wp:post-title` из
  * `templates/page-wide.html`, поэтому заголовок страницы — часть дизайна
  * (у «О нас» это реквизиты ИП в две строки), а паттерны свой `<h1>` не
  * дублируют (см. шапку `patterns/courses-catalog.php`). Размер этого
@@ -48,17 +49,22 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function fs_lms_theme_static_pages(): array {
 	return array(
-		'about'   => array(
+		'about'    => array(
 			'title'    => 'Индивидуальный предприниматель<br>Иванов Борис Олегович',
 			'template' => 'page-wide',
 			'content'  => "<!-- wp:pattern {\"slug\":\"fs-lms-theme/about-header\"} /-->\n\n"
 				. "<!-- wp:pattern {\"slug\":\"fs-lms-theme/about-accordion\"} /-->\n",
 		),
-		'courses' => array(
+		'courses'  => array(
 			'title'    => 'Курсы',
 			'template' => 'page-wide',
 			'content'  => "<!-- wp:pattern {\"slug\":\"fs-lms-theme/courses-catalog\"} /-->\n\n"
 				. "<!-- wp:pattern {\"slug\":\"fs-lms-theme/courses-contact\"} /-->\n",
+		),
+		'contacts' => array(
+			'title'    => 'Контакты',
+			'template' => 'page-wide',
+			'content'  => "<!-- wp:pattern {\"slug\":\"fs-lms-theme/contacts-info\"} /-->\n",
 		),
 	);
 }
