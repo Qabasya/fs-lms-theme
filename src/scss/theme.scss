@@ -1050,30 +1050,6 @@ $fs-gap-containers:
 }
 
 /**
- * Короткая центрированная черта над строкой ИНН/ОГРНИП (Фаза 16.1,
- * `patterns/about-header.php`) — под заголовком страницы (`wp:post-title`
- * = юридическое название ИП, решение 1 Фазы 15), сверено с макетом.
- */
-.fs-about-divider {
-	width: 56px;
-	height: 1px;
-	margin: 0 auto;
-	background: var( --wp--preset--color--border );
-}
-
-/**
- * BugFix.10 (2026-09-03): заголовок страницы «О нас» — меньше и по
- * центру. Scope через `.page-about` (WP сам добавляет этот класс на
- * `<body>` по слагу страницы, Фаза 10.2 — `post_name=about`), не
- * глобально: `templates/page-wide.html` используется и на `/courses/`,
- * его `wp:post-title` там должен остаться как есть.
- */
-.page-about .wp-block-post-title {
-	font-size: var( --wp--preset--font-size--xl );
-	text-align: center;
-}
-
-/**
  * Honeypot-поле (Фаза 14, `fs_lms_theme_honeypot_field()`) — визуально
  * скрыт off-screen, не `display:none`/`visibility:hidden`: часть ботов
  * пропускает поля, скрытые этими двумя способами, `position:absolute`

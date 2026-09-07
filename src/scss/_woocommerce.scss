@@ -30,6 +30,24 @@
 	color: var( --wp--preset--color--accent );
 }
 
+/**
+ * Заголовок каталога «Магазин» (`woocommerce_page_title()`, шаблон плагина
+ * `archive-product.php`) — приводим к тому же виду, что заголовки
+ * остальных внутренних страниц (2026-09-07): размер `xxl` (2.125rem, как
+ * `/articles/`, `/tasks/`, `/about/`), слева, без своего нижнего отступа —
+ * зазор до вводного абзаца задаёт `margin-top` у `.fs-shop-intro` ниже.
+ * Своё правило, а не общий селектор `h1`: разметку печатает плагин, у неё
+ * свои классы, а глобального размера `h1` в `theme.json` тема не задаёт.
+ */
+.woocommerce-products-header__title.page-title {
+	margin: 0;
+	font-size: var( --wp--preset--font-size--xxl );
+	font-weight: 700;
+	line-height: 1.15;
+	letter-spacing: -.015em;
+	text-align: left;
+}
+
 .fs-shop-intro {
 	max-width: 35rem;
 	margin: var( --wp--preset--spacing--sm ) 0 0;
