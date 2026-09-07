@@ -28,6 +28,36 @@ if ( ! defined( 'ABSPATH' ) ) {
  * запросом только то, чего у плагина нет (вес 300 + JetBrains Mono). Без
  * плагина (или если хендл не найден) — тема заказывает полный набор сама.
  */
+const FS_LMS_THEME_FONT_URL = 'https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap';
+
+/**
+ * CSS-бандл темы в порядке подключения — один список на фронт и на редактор.
+ *
+ * BugFix (2026-09-07): раньше список жил только внутри `wp_enqueue_scripts`,
+ * а редактору через `add_editor_style()` отдавался отдельный крошечный
+ * `editor.min.css` — он «зеркалил» лишь несколько правил. В итоге холст
+ * Редактора сайта рисовал страницы без `.fs-*`-стилей: шапка выглядела
+ * прилично (её держат theme.json и стили блоков ядра, которые редактор
+ * грузит сам), а секции — голым HTML. Теперь редактор получает ровно тот же
+ * бандл, что и фронт, и разъехаться они больше не могут.
+ *
+ * @return string[] Пути относительно каталога темы; отсутствующие файлы
+ *                  отсеиваются (сборки может не быть до `npm run build`).
+ */
+function fs_lms_theme_style_bundle(): array {
+	$files = array(
+		'assets/css/vendor/splide-core.min.css',
+		'assets/css/theme.min.css',
+	);
+
+	return array_values(
+		array_filter(
+			$files,
+			static fn( string $file ): bool => file_exists( get_template_directory() . '/' . $file )
+		)
+	);
+}
+
 add_action( 'wp_enqueue_scripts', function (): void {
 	if ( wp_style_is( 'fs-lms-ubuntu', 'registered' ) || wp_style_is( 'fs-lms-ubuntu', 'enqueued' ) ) {
 		wp_enqueue_style(
@@ -39,12 +69,7 @@ add_action( 'wp_enqueue_scripts', function (): void {
 		return;
 	}
 
-	wp_enqueue_style(
-		'fs-lms-theme-ubuntu',
-		'https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap',
-		array(),
-		null
-	);
+	wp_enqueue_style( 'fs-lms-theme-ubuntu', FS_LMS_THEME_FONT_URL, array(), null );
 }, 20 );
 
 /**
@@ -58,14 +83,24 @@ add_action( 'wp_enqueue_scripts', function (): void {
 	 * .fs-* классы каруселей в theme.min.css могли переопределять его при
 	 * необходимости.
 	 */
-	$splide_css_path = get_template_directory() . '/assets/css/vendor/splide-core.min.css';
-	if ( file_exists( $splide_css_path ) ) {
-		wp_enqueue_style( 'fs-lms-theme-splide', get_template_directory_uri() . '/assets/css/vendor/splide-core.min.css', array(), filemtime( $splide_css_path ) );
-	}
+	$handles = array(
+		'assets/css/vendor/splide-core.min.css' => 'fs-lms-theme-splide',
+		'assets/css/theme.min.css'              => 'fs-lms-theme',
+	);
 
-	$css_path = get_template_directory() . '/assets/css/theme.min.css';
-	if ( file_exists( $css_path ) ) {
-		wp_enqueue_style( 'fs-lms-theme', get_template_directory_uri() . '/assets/css/theme.min.css', array_filter( array( file_exists( $splide_css_path ) ? 'fs-lms-theme-splide' : null ) ), filemtime( $css_path ) );
+	$deps = array();
+
+	foreach ( fs_lms_theme_style_bundle() as $file ) {
+		$handle = $handles[ $file ] ?? 'fs-lms-theme-' . sanitize_key( basename( $file, '.css' ) );
+
+		wp_enqueue_style(
+			$handle,
+			get_template_directory_uri() . '/' . $file,
+			$deps,
+			filemtime( get_template_directory() . '/' . $file )
+		);
+
+		$deps[] = $handle;
 	}
 
 	$js_path = get_template_directory() . '/assets/js/theme.min.js';
@@ -96,12 +131,23 @@ add_action( 'wp_enqueue_scripts', function (): void {
 } );
 
 /**
- * Стили внутри редактора — src/scss/editor.scss → assets/css/editor.min.css.
- * add_editor_style() сам скоупит правила под .editor-styles-wrapper.
+ * Стили внутри редактора: тот же бандл, что на фронте, плюс шрифты и
+ * `editor.min.css` последним — только правки, осмысленные лишь в холсте
+ * (`src/scss/editor.scss`), они должны перебивать общий бандл.
+ *
+ * `add_editor_style()` сам скоупит правила под `.editor-styles-wrapper` и
+ * умеет внешние URL (`get_editor_stylesheets()`, `wp-includes/theme.php`,
+ * ветка `preg_match( '~^(https?:)?//~' )`) — шрифт нужен здесь отдельно:
+ * `wp_enqueue_scripts` внутри iframe редактора не отрабатывает, поэтому ни
+ * подключение темы, ни `BundleLoader` плагина в холст не попадают, и текст
+ * рисовался бы запасной гарнитурой.
  */
 add_action( 'after_setup_theme', function (): void {
-	$css_path = get_template_directory() . '/assets/css/editor.min.css';
-	if ( file_exists( $css_path ) ) {
-		add_editor_style( 'assets/css/editor.min.css' );
+	$styles = array_merge( array( FS_LMS_THEME_FONT_URL ), fs_lms_theme_style_bundle() );
+
+	if ( file_exists( get_template_directory() . '/assets/css/editor.min.css' ) ) {
+		$styles[] = 'assets/css/editor.min.css';
 	}
+
+	add_editor_style( $styles );
 } );
