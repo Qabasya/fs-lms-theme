@@ -23,6 +23,11 @@
  *    (`contacts-signup` — чтобы письмо называло источник заявки, как
  *    `courses-signup` у `patterns/courses-contact.php`).
  *
+ * `id="signup"` — тот же якорь формы, что у `contact-section.php` и
+ * `courses-contact.php`: на него наводится кнопка «Записаться» в шапке
+ * (`fs_lms_theme_signup_button_url()`, `inc/Forms.php` — паттерн добавлен
+ * в её список, иначе кнопка уводила бы с этой страницы на главную).
+ *
  * `<h1>` («Контакты») не дублируется — его рисует `wp:post-title` из
  * `templates/page-wide.html`, как на `/about/` и `/courses/`.
  *
@@ -37,8 +42,8 @@
  * это внешние сайты, в отличие от всех остальных ссылок темы.
  */
 ?>
-<!-- wp:group {"className":"fs-section"} -->
-<div class="wp-block-group fs-section">
+<!-- wp:group {"anchor":"signup","className":"fs-section"} -->
+<div id="signup" class="wp-block-group fs-section">
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
 	<div class="wp-block-columns">
 		<!-- wp:column -->
@@ -80,7 +85,7 @@
 			<!-- /wp:group -->
 
 			<!-- wp:heading {"level":2,"fontSize":"lg"} -->
-			<h2 class="wp-block-heading has-lg-font-size">Мы в мессенджерах и картах</h2>
+			<h2 class="wp-block-heading has-lg-font-size">Мы в мессенджерах и на картах</h2>
 			<!-- /wp:heading -->
 
 			<!-- wp:group {"className":"fs-contact-apps","layout":{"type":"grid","columnCount":4}} -->

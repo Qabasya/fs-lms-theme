@@ -58,6 +58,14 @@
  * отдаёт якорь формы на текущей странице либо, если её нет, якорь формы
  * главной страницы.
  *
+ * 2026-09-07 (мобильная шапка): группам логотипа и CTA добавлены классы
+ * `fs-header-brand`/`fs-header-cta` — до этого обе были безымянными
+ * `wp:group`, и на мобильном их нельзя было ни уменьшить, ни переставить,
+ * не цепляясь за `:first-child`/`:last-child` внутри `.fs-header-row`.
+ * Раскладку см. в `theme.scss` (`.fs-header-row`, media-query 600px).
+ * Там же `fs-header-container` на обеих внутренних группах-обёртках —
+ * их горизонтальный паддинг на узких телефонах ужимается с `xxl` до `lg`.
+ *
  * Слоган в инфо-полосе — абзац, а не `<h1>`: заголовок первого уровня на
  * странице должен быть один (и это заголовок самой страницы), иначе
  * поисковик видит на каждой странице сайта один и тот же h1.
@@ -67,8 +75,8 @@ $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme
 ?>
 <!-- wp:group {"tagName":"div","backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|xs","bottom":"var:preset|spacing|xs"}},"border":{"bottom":{"color":"var:preset|color|border-light","width":"1px"}}}} -->
 <div class="wp-block-group has-surface-2-background-color has-background" style="border-bottom-color:var(--wp--preset--color--border-light);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--xs);padding-bottom:var(--wp--preset--spacing--xs)">
-	<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
-	<div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
+	<!-- wp:group {"className":"fs-header-container","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
+	<div class="wp-block-group fs-header-container" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 		<!-- wp:group {"className":"fs-topbar","layout":{"type":"flex","justifyContent":"space-between"}} -->
 		<div class="wp-block-group fs-topbar">
 			<!-- wp:paragraph {"className":"fs-topbar__slogan","textColor":"muted-2","fontSize":"xxs"} -->
@@ -94,12 +102,12 @@ $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme
 
 <!-- wp:group {"tagName":"div","backgroundColor":"white","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|lg","bottom":"var:preset|spacing|lg"}},"border":{"bottom":{"color":"var:preset|color|border","width":"1px"}}}} -->
 <div class="wp-block-group has-white-background-color has-background" style="margin-top:0;border-bottom-color:var(--wp--preset--color--border);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--lg);padding-bottom:var(--wp--preset--spacing--lg)">
-	<!-- wp:group {"layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
-	<div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
+	<!-- wp:group {"className":"fs-header-container","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
+	<div class="wp-block-group fs-header-container" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 		<!-- wp:group {"className":"fs-header-row","layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"center"}} -->
 		<div class="wp-block-group fs-header-row">
-			<!-- wp:group {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|md"}}} -->
-			<div class="wp-block-group">
+			<!-- wp:group {"className":"fs-header-brand","layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|md"}}} -->
+			<div class="wp-block-group fs-header-brand">
 				<!-- wp:image {"width":"220px","className":"fs-header-logo","linkDestination":"custom"} -->
 				<figure class="wp-block-image is-resized fs-header-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'img/logo-header.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" style="width:220px"/></a></figure>
 				<!-- /wp:image -->
@@ -118,8 +126,8 @@ $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme
 			<!-- /wp:navigation -->
 			<?php endif; ?>
 
-			<!-- wp:group {"layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|lg"}}} -->
-			<div class="wp-block-group">
+			<!-- wp:group {"className":"fs-header-cta","layout":{"type":"flex","verticalAlignment":"center"},"style":{"spacing":{"blockGap":"var:preset|spacing|lg"}}} -->
+			<div class="wp-block-group fs-header-cta">
 
 				<!-- wp:buttons -->
 				<div class="wp-block-buttons">

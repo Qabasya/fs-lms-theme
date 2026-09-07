@@ -1629,10 +1629,89 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 	flex-wrap: nowrap;
 }
 
+/**
+ * Мобильная шапка (2026-09-07). Раньше ниже 600px ряд просто переносился
+ * (`flex-wrap: wrap`): бургер оставался в первой строке рядом с логотипом,
+ * а «Записаться» и иконка кабинета уезжали во вторую — во всю ширину, в
+ * десктопном размере и прижатые влево. Теперь ряд не переносится вообще:
+ * логотип слева, справа компактная кнопка, иконка кабинета и бургер.
+ *
+ * Кнопки НЕ переезжают внутрь бургер-меню: оверлей рисует сам
+ * `core/navigation`, и попадают в него только его же внутренние блоки, а
+ * меню шапки — отдельная запись `wp_navigation` (`inc/Navigation.php`).
+ * Адрес «Записаться» к тому же считается на каждой странице заново
+ * (`fs_lms_theme_signup_button_url()`, `inc/Forms.php`) и в статичный
+ * пункт меню не укладывается. Подробнее — в ответе пользователю
+ * 2026-09-07; при желании перенести это делается только JS-переносом
+ * узла в оверлей, от которого сознательно отказались.
+ *
+ * Порядок в разметке — логотип, навигация, кнопки; на мобильном бургер
+ * уезжает в конец через `order`, кнопки прижимаются к нему `margin-left`.
+ * Селекторы из двух классов — `gap` группы ядро печатает отдельным
+ * правилом `.wp-container-core-group-is-layout-*` (тоже один класс), и
+ * оно может оказаться в `<head>` после стилей темы.
+ */
 @media ( max-width: 600px ) {
 	.fs-header-row {
-		flex-wrap: wrap;
-		row-gap: var( --wp--preset--spacing--sm );
+		flex-wrap: nowrap;
+		column-gap: var( --wp--preset--spacing--sm );
+	}
+
+	.fs-header-row > .wp-block-navigation {
+		order: 3;
+		flex: 0 0 auto;
+	}
+
+	.fs-header-row .fs-header-cta {
+		order: 2;
+		margin-left: auto;
+		gap: var( --wp--preset--spacing--md );
+		flex: 0 0 auto;
+	}
+
+	.fs-header-row .fs-header-brand,
+	.fs-header-row .fs-header-logo {
+		min-width: 0;
+	}
+
+	/**
+	 * Ширина логотипа (220px) записана инлайном в атрибутах `wp:image`
+	 * (`patterns/header-nav.php`) — перебить можно только `!important`.
+	 * Без этого картинка держала ряд шире вьюпорта, `max-height` её
+	 * только сплющивал: горизонтальный скролл всей страницы на любом
+	 * телефоне. `width: auto` отдаёт ширину высоте, пропорции сохраняет
+	 * `height: auto` из общего правила `img` в начале файла.
+	 */
+	.fs-header-row .fs-header-logo img {
+		width: auto !important;
+		max-height: 40px;
+	}
+
+	.fs-header-row .fs-header-cta .wp-block-button__link {
+		height: 2.25rem;
+		padding-right: var( --wp--preset--spacing--md );
+		padding-left: var( --wp--preset--spacing--md );
+		font-size: var( --wp--preset--font-size--xs );
+	}
+}
+
+/**
+ * Узкие телефоны (320–400px): логотип ужимается ещё, иначе строка
+ * шапки шире вьюпорта и вся страница получает горизонтальный скролл.
+ */
+@media ( max-width: 400px ) {
+	.fs-header-row .fs-header-logo img {
+		max-height: 32px;
+	}
+
+	.fs-header-row .fs-header-cta {
+		gap: var( --wp--preset--spacing--sm );
+	}
+
+	// Паддинг обёрток шапки тоже задан инлайном — отсюда `!important`.
+	.fs-site-header .fs-header-container {
+		padding-right: var( --wp--preset--spacing--lg ) !important;
+		padding-left: var( --wp--preset--spacing--lg ) !important;
 	}
 }
 
