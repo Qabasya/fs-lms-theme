@@ -303,10 +303,70 @@ function fs_lms_theme_subject_page_blocks( string $subject_key ): string {
 		'<!-- wp:pattern {"slug":"fs-lms-theme/features-grid"} /-->',
 		fs_lms_theme_subject_intensive_blocks(),
 		'<!-- wp:pattern {"slug":"fs-lms-theme/subject-contact"} /-->',
-		fs_lms_theme_subject_more_blocks( $subject_key ),
 	);
 
+	if ( fs_lms_theme_subject_has_resources( $subject_key ) ) {
+		$sections[] = fs_lms_theme_subject_more_blocks( $subject_key );
+	}
+
 	return implode( "\n\n", $sections ) . "\n";
+}
+
+/**
+ * Есть ли у направления учебник и тренажёр.
+ *
+ * Плагин заводит эти два раздела только предмету с собственным банком
+ * заданий/статей (`SubjectPageType::forSubject()`: `requiresBank()`), поэтому
+ * у Python и Робототехники их нет — есть только корневая страница и курсы.
+ * Секция «Хочешь больше?» ведёт ровно туда, и без этих страниц её ссылки
+ * упираются в 404, который `redirect_guess_404_permalink()` уводит на
+ * учебник/тренажёр ЧУЖОГО предмета (`/python/articles/` → `/inf_ege/articles/`
+ * — тот же угадыватель, что ломал «Курсы» в меню, см. `inc/StaticPages.php`).
+ *
+ * Проверка — по факту существования страниц, а не по списку предметов:
+ * банк предмету можно завести и позже, и тогда секция появится на вновь
+ * собираемых страницах сама.
+ *
+ * @param string $subject_key Ключ предмета.
+ */
+function fs_lms_theme_subject_has_resources( string $subject_key ): bool {
+	foreach ( array( 'articles', 'trainer' ) as $section ) {
+		if ( ! get_page_by_path( $subject_key . '/' . $section ) instanceof WP_Post ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Вырезает секцию «Хочешь больше?» из готового содержимого страницы.
+ *
+ * Ищет по классу компонента (`fs-subject-more-card`), а не точным
+ * совпадением сгенерированной разметки: секцию могли поправить в редакторе,
+ * и точное сравнение бы её тогда не нашло. Разбор блоками, а не регуляркой,
+ * — чтобы удалить секцию целиком вместе с обёрткой `wp:group`, не оставив
+ * висящих открывающих/закрывающих комментариев.
+ *
+ * @param string $content Содержимое страницы направления.
+ *
+ * @return string Содержимое без секции (или исходное, если её там нет).
+ */
+function fs_lms_theme_strip_subject_more( string $content ): string {
+	$blocks  = parse_blocks( $content );
+	$kept    = array();
+	$changed = false;
+
+	foreach ( $blocks as $block ) {
+		if ( null !== $block['blockName'] && str_contains( serialize_block( $block ), 'fs-subject-more-card' ) ) {
+			$changed = true;
+			continue;
+		}
+
+		$kept[] = $block;
+	}
+
+	return $changed ? serialize_blocks( $kept ) : $content;
 }
 
 /**
@@ -351,7 +411,7 @@ add_action( 'template_redirect', 'fs_lms_theme_seed_subject_page' );
  * переезжает со ссылки на паттерн в собственные блоки страницы и уже
  * созданные страницы нужно перевести на новый вид.
  */
-const FS_LMS_THEME_SUBJECT_PAGES_LAYOUT = 2;
+const FS_LMS_THEME_SUBJECT_PAGES_LAYOUT = 3;
 
 /**
  * BugFix.5 (2026-09-05): разворачивает ссылки на общие паттерны в блоки
@@ -395,6 +455,15 @@ function fs_lms_theme_upgrade_subject_pages(): void {
 			),
 			$content
 		);
+
+		/**
+		 * Раскладка 3 (2026-09-07): у направления без учебника/тренажёра
+		 * секция «Хочешь больше?» ведёт в никуда — убираем её со страниц,
+		 * собранных до того, как эта проверка появилась.
+		 */
+		if ( ! fs_lms_theme_subject_has_resources( $subject_key ) ) {
+			$updated = fs_lms_theme_strip_subject_more( $updated );
+		}
 
 		if ( $updated === $content ) {
 			continue;

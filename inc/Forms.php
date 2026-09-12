@@ -160,6 +160,7 @@ function fs_lms_theme_signup_button_url(): string {
 		false !== strpos( $content, 'fs-lms-theme/contact-section' )
 		|| false !== strpos( $content, 'fs-lms-theme/subject-contact' )
 		|| false !== strpos( $content, 'fs-lms-theme/courses-contact' )
+		|| false !== strpos( $content, 'fs-lms-theme/contacts-info' )
 	) {
 		return '#signup';
 	}

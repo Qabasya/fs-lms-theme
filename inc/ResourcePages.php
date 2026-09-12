@@ -47,8 +47,16 @@ const FS_LMS_THEME_RESOURCE_ICON_ARTICLES = '<svg width="19" height="19" viewBox
 const FS_LMS_THEME_RESOURCE_ICON_TRAINER  = '<svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"></rect><path d="m6.5 9.5 2 2 5-5M7 14h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
 
 /**
- * Содержимое страницы «Учебник»/«Тренажёр»: центрированный заголовок с
- * разделителем (по мокапу), вводный абзац, сетка из 4 карточек направлений.
+ * Содержимое страницы «Учебник»/«Тренажёр»: заголовок, вводный абзац,
+ * сетка карточек направлений.
+ *
+ * 2026-09-07: заголовок больше не центрируется и черта-разделитель
+ * (`.fs-title-divider`) под ним убрана — обе страницы приведены к
+ * оформлению `/courses/` (`patterns/courses-catalog.php`): текст слева,
+ * сразу под заголовком вводный абзац. Размер заголовка (`xxl`) не
+ * менялся. В мокапах «Учебник»/«Тренажёр» заголовок был по центру с
+ * чертой — расхождение с макетом осознанное, по решению пользователя
+ * в пользу единого вида всех внутренних страниц.
  *
  * @param string $title    «Учебник» либо «Тренажёр».
  * @param string $intro    Вводный абзац под заголовком.
@@ -91,13 +99,9 @@ HTML;
 	return <<<HTML
 <!-- wp:group {"className":"fs-section"} -->
 <div class="wp-block-group fs-section">
-	<!-- wp:heading {"textAlign":"center","level":1,"fontSize":"xxl"} -->
-	<h1 class="wp-block-heading has-text-align-center has-xxl-font-size">{$title}</h1>
+	<!-- wp:heading {"level":1,"fontSize":"xxl"} -->
+	<h1 class="wp-block-heading has-xxl-font-size">{$title}</h1>
 	<!-- /wp:heading -->
-
-	<!-- wp:separator {"className":"fs-title-divider"} -->
-	<hr class="wp-block-separator has-alpha-channel-opacity fs-title-divider"/>
-	<!-- /wp:separator -->
 
 	<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md","style":{"typography":{"fontWeight":"300"}}} -->
 	<p class="has-text-secondary-color has-text-color has-md-font-size" style="font-weight:300">{$intro}</p>
@@ -195,3 +199,86 @@ add_action( 'after_switch_theme', 'fs_lms_theme_ensure_resource_pages' );
  * запросов случай, кэшируется в объектном кэше WP).
  */
 add_action( 'init', 'fs_lms_theme_ensure_resource_pages' );
+
+/**
+ * Версия раскладки страниц «Учебник»/«Тренажёр» — как
+ * `FS_LMS_THEME_SUBJECT_PAGES_LAYOUT` у направлений
+ * (`inc/SubjectPages.php`): меняется, когда вид страниц правится в коде и
+ * уже созданные страницы нужно перевести на новый.
+ */
+const FS_LMS_THEME_RESOURCE_PAGES_LAYOUT = 3;
+
+/**
+ * Раскладка 2-3 (2026-09-07): заголовок слева и без черты-разделителя, как
+ * на `/courses/`.
+ *
+ * `fs_lms_theme_ensure_resource_pages()` наполняет страницу ровно один раз,
+ * при создании, и существующую больше не трогает — правка генератора сама
+ * по себе ничего не меняет ни на локалке, ни на проде. Отсюда разовая
+ * миграция: снять `textAlign` с `<h1>` и удалить блок `wp:separator`
+ * `.fs-title-divider` под ним.
+ *
+ * Правится разметка, а не только классы: `textAlign` живёт и в атрибутах
+ * блока (иначе редактор покажет старое выравнивание в тулбаре и вернёт
+ * класс при первом же сохранении), и в самом `class` заголовка. Атрибут
+ * снимается регуляркой по началу блока, а не точным совпадением всей
+ * строки: страницы, созданные до задачи с `level:1`, лежат в базе с
+ * набором атрибутов `{"textAlign":"center","fontSize":"xxl"}` — точная
+ * замена мимо них промахивалась.
+ *
+ * Ручные правки редактора миграция не теряет: она не перезаписывает
+ * содержимое целиком, а точечно снимает центрирование и убирает
+ * разделитель; если пользователь уже сделал это сам, замена ничего не
+ * находит и страница не трогается.
+ */
+function fs_lms_theme_resource_page_align_left( string $content ): string {
+	$content = preg_replace(
+		'~\s*<!-- wp:separator \{"className":"fs-title-divider"\} -->.*?<!-- /wp:separator -->~s',
+		'',
+		$content
+	);
+
+	$content = preg_replace(
+		'~(<!-- wp:heading \{)"textAlign":"center",~',
+		'$1',
+		$content
+	);
+
+	$content = str_replace( ' has-text-align-center has-xxl-font-size', ' has-xxl-font-size', $content );
+
+	return $content;
+}
+
+/**
+ * Прогоняет миграцию по обеим страницам-хабам. Разовая: отметка о
+ * выполнении — в опции, тем же приёмом, что у направлений.
+ */
+function fs_lms_theme_upgrade_resource_pages(): void {
+	if ( (int) get_option( 'fs_lms_theme_resource_pages_layout', 0 ) >= FS_LMS_THEME_RESOURCE_PAGES_LAYOUT ) {
+		return;
+	}
+
+	foreach ( array( 'articles', 'tasks' ) as $slug ) {
+		$page = get_page_by_path( $slug );
+
+		if ( ! $page instanceof WP_Post ) {
+			continue;
+		}
+
+		$updated = fs_lms_theme_resource_page_align_left( $page->post_content );
+
+		if ( $updated === $page->post_content ) {
+			continue;
+		}
+
+		wp_update_post(
+			array(
+				'ID'           => $page->ID,
+				'post_content' => $updated,
+			)
+		);
+	}
+
+	update_option( 'fs_lms_theme_resource_pages_layout', FS_LMS_THEME_RESOURCE_PAGES_LAYOUT );
+}
+add_action( 'wp_loaded', 'fs_lms_theme_upgrade_resource_pages' );

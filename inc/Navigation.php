@@ -41,15 +41,36 @@ function fs_lms_theme_nav_page_link( string $slug, string $label ): string {
 			'<!-- wp:navigation-link {"label":"%s","type":"page","id":%d,"kind":"post-type","url":"%s"} /-->',
 			esc_attr( $label ),
 			$page->ID,
-			esc_url( get_permalink( $page ) )
+			esc_url( fs_lms_theme_nav_relative_url( get_permalink( $page ) ) )
 		);
 	}
 
 	return sprintf(
 		'<!-- wp:navigation-link {"label":"%s","url":"%s","kind":"custom"} /-->',
 		esc_attr( $label ),
-		esc_url( home_url( '/' . $slug . '/' ) )
+		esc_url( fs_lms_theme_nav_relative_url( home_url( '/' . $slug . '/' ) ) )
 	);
+}
+
+/**
+ * Адрес пункта меню без схемы и хоста.
+ *
+ * `render_block_core_navigation_link()` строит `href` из атрибута `url` и
+ * НЕ восстанавливает его по `id` (см. `wp-includes/blocks/navigation-link.php`),
+ * поэтому URL приходится хранить. Но меню — запись в БД, которая живёт
+ * дольше домена: абсолютный адрес переживает перенос базы с локалки на
+ * прод и уводит всё меню на `http://localhost:8080`. `wp_make_link_relative()`
+ * оставляет путь целиком, включая подкаталог установки, — ссылка остаётся
+ * рабочей и на сайте в подпапке.
+ *
+ * @param string $url Абсолютный URL страницы.
+ *
+ * @return string Путь вида `/about/`.
+ */
+function fs_lms_theme_nav_relative_url( string $url ): string {
+	$relative = wp_make_link_relative( $url );
+
+	return '' === $relative ? $url : $relative;
 }
 
 /**
@@ -65,6 +86,13 @@ function fs_lms_theme_nav_page_link( string $slug, string $label ): string {
  * убрана) — по прямому указанию пользователя стали обычными ссылками на
  * новые страницы-хабы `/articles/`/`/tasks/` (`inc/ResourcePages.php`),
  * которые сами ведут дальше на страницы конкретных направлений.
+ *
+ * 2026-09-07: «Контакты» (`/contacts/`, `inc/StaticPages.php`) в меню
+ * сознательно НЕ добавляются — по прямому указанию пользователя ссылка на
+ * страницу живёт только в QR-кодах. Пункт был добавлен и в тот же день
+ * убран вместе с механикой дописывания недостающих пунктов в уже
+ * созданное меню; если такая механика понадобится снова — см. историю
+ * этого файла.
  */
 function fs_lms_theme_nav_default_content(): string {
 	$items = array(
@@ -79,12 +107,14 @@ function fs_lms_theme_nav_default_content(): string {
 }
 
 /**
- * ID меню шапки: из опции, из существующей записи или из свежесозданной.
+ * ID уже существующего меню шапки: из опции либо из записи по слагу.
  *
- * @return int ID записи `wp_navigation` либо 0, если создать не удалось
- *             (тогда паттерн отрисует запасные инлайновые пункты).
+ * Отделено от создания: починка меню ниже не должна заводить его на
+ * ровном месте — она чинит только то, что уже есть.
+ *
+ * @return int ID записи `wp_navigation` либо 0, если меню ещё нет.
  */
-function fs_lms_theme_navigation_id(): int {
+function fs_lms_theme_find_navigation_id(): int {
 	$cached = (int) get_option( FS_LMS_THEME_NAV_OPTION, 0 );
 
 	if ( $cached > 0 ) {
@@ -111,6 +141,22 @@ function fs_lms_theme_navigation_id(): int {
 		return (int) $existing[0]->ID;
 	}
 
+	return 0;
+}
+
+/**
+ * ID меню шапки: найденного либо свежесозданного.
+ *
+ * @return int ID записи `wp_navigation` либо 0, если создать не удалось
+ *             (тогда паттерн отрисует запасные инлайновые пункты).
+ */
+function fs_lms_theme_navigation_id(): int {
+	$found = fs_lms_theme_find_navigation_id();
+
+	if ( $found > 0 ) {
+		return $found;
+	}
+
 	$new_id = wp_insert_post(
 		array(
 			'post_type'    => 'wp_navigation',
@@ -129,3 +175,140 @@ function fs_lms_theme_navigation_id(): int {
 
 	return (int) $new_id;
 }
+
+/** Опция-счётчик выполненных починок меню и её текущая версия. */
+const FS_LMS_THEME_NAV_REPAIR_OPTION  = 'fs_lms_theme_nav_repaired';
+const FS_LMS_THEME_NAV_REPAIR_VERSION = 1;
+
+/**
+ * Слаг страницы из пути ссылки: `/about/` → `about`, с учётом установки
+ * WordPress в подкаталог (`/wp/about/` → `about`).
+ *
+ * @param string $path Путь из `wp_parse_url()`.
+ *
+ * @return string Путь страницы для `get_page_by_path()`.
+ */
+function fs_lms_theme_nav_path_to_slug( string $path ): string {
+	$base = '/' . trim( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ), '/' );
+	$path = '/' . ltrim( $path, '/' );
+
+	if ( '/' !== $base && 0 === strpos( $path, $base . '/' ) ) {
+		$path = substr( $path, strlen( $base ) );
+	}
+
+	return trim( $path, '/' );
+}
+
+/**
+ * Рекурсивная починка пунктов меню (подменю тоже).
+ *
+ * Два правила, оба консервативные — трогаем ровно то, что сломано:
+ *
+ *  1. Пункт `kind: post-type` — это ссылка на страницу сайта. Её адрес
+ *     пересчитывается по слагу из пути и записывается относительным:
+ *     чинит и протухший ID после переноса базы, и абсолютный
+ *     `http://localhost:8080/...`.
+ *  2. Пункт `kind: custom` повышается до ссылки на страницу, только если
+ *     страница с таким путём реально есть на этом сайте. Внешние ссылки
+ *     (другой хост, страницы нет) не трогаются вообще — иначе починка
+ *     сломала бы то, что редактор добавил руками.
+ *
+ * @param array<int, array<string, mixed>> $blocks  Разобранные блоки меню.
+ * @param bool                             $changed Флаг «содержимое изменилось».
+ *
+ * @return array<int, array<string, mixed>> Блоки с исправленными атрибутами.
+ */
+function fs_lms_theme_repair_nav_blocks( array $blocks, bool &$changed ): array {
+	foreach ( $blocks as $index => $block ) {
+		if ( ! empty( $block['innerBlocks'] ) ) {
+			$blocks[ $index ]['innerBlocks'] = fs_lms_theme_repair_nav_blocks( $block['innerBlocks'], $changed );
+		}
+
+		if ( 'core/navigation-link' !== ( $block['blockName'] ?? '' ) ) {
+			continue;
+		}
+
+		$attrs = $block['attrs'] ?? array();
+		$url   = (string) ( $attrs['url'] ?? '' );
+
+		if ( '' === $url ) {
+			continue;
+		}
+
+		$is_page_link = 'post-type' === ( $attrs['kind'] ?? '' );
+
+		if ( ! $is_page_link ) {
+			$host      = (string) wp_parse_url( $url, PHP_URL_HOST );
+			$home_host = (string) wp_parse_url( home_url(), PHP_URL_HOST );
+
+			if ( '' !== $host && $host !== $home_host ) {
+				continue;
+			}
+		}
+
+		$page = get_page_by_path( fs_lms_theme_nav_path_to_slug( (string) wp_parse_url( $url, PHP_URL_PATH ) ) );
+
+		if ( ! $page instanceof WP_Post ) {
+			continue;
+		}
+
+		$fixed = array_merge(
+			$attrs,
+			array(
+				'type' => 'page',
+				'id'   => $page->ID,
+				'kind' => 'post-type',
+				'url'  => fs_lms_theme_nav_relative_url( get_permalink( $page ) ),
+			)
+		);
+
+		if ( $fixed !== $attrs ) {
+			$blocks[ $index ]['attrs'] = $fixed;
+			$changed                   = true;
+		}
+	}
+
+	return $blocks;
+}
+
+/**
+ * Одноразовая починка уже созданного меню.
+ *
+ * Меню заводится один раз и сознательно никогда не перезаписывается, чтобы
+ * не терять правки редактора. Обратная сторона: сайт, где меню собралось
+ * раньше страниц (прод до BugFix 2026-09-07, `inc/StaticPages.php`), навсегда
+ * остаётся с битыми пунктами «О нас»/«Курсы» — новых страниц он уже не
+ * заметит. Поэтому вместо перезаписи — точечный проход по пунктам.
+ *
+ * Приоритет 20: `fs_lms_theme_ensure_static_pages()` и
+ * `fs_lms_theme_ensure_resource_pages()` висят на `init` с приоритетом по
+ * умолчанию, страницы к этому моменту уже созданы.
+ */
+function fs_lms_theme_repair_navigation(): void {
+	if ( (int) get_option( FS_LMS_THEME_NAV_REPAIR_OPTION, 0 ) >= FS_LMS_THEME_NAV_REPAIR_VERSION ) {
+		return;
+	}
+
+	$nav_id = fs_lms_theme_find_navigation_id();
+
+	if ( $nav_id > 0 ) {
+		$nav = get_post( $nav_id );
+
+		if ( $nav instanceof WP_Post ) {
+			$changed = false;
+			$blocks  = fs_lms_theme_repair_nav_blocks( parse_blocks( $nav->post_content ), $changed );
+
+			if ( $changed ) {
+				wp_update_post(
+					array(
+						'ID'           => $nav_id,
+						'post_content' => serialize_blocks( $blocks ),
+					)
+				);
+			}
+		}
+	}
+
+	update_option( FS_LMS_THEME_NAV_REPAIR_OPTION, FS_LMS_THEME_NAV_REPAIR_VERSION );
+}
+add_action( 'init', 'fs_lms_theme_repair_navigation', 20 );
