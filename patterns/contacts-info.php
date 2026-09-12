@@ -31,6 +31,12 @@
  * `<h1>` («Контакты») не дублируется — его рисует `wp:post-title` из
  * `templates/page-wide.html`, как на `/about/` и `/courses/`.
  *
+ * 2026-09-12: капча формы переведена на общий контейнер
+ * `fs_lms_theme_captcha_slot_html()`, как у остальных форм. Здесь оставалась
+ * старая разметка видимой капчи `<div class="smart-captcha">`: невидимый
+ * виджет `src/js/captcha.js` её не находил, и заявки с этой страницы уходили
+ * без капчи — под общим лимитом «без капчи» и с пометкой в письме.
+ *
  * Иконки телефона/почты — те же маски, что у `.fs-contact-list`
  * (`$fs-mask-phone`/`$fs-mask-mail` в `src/scss/theme.scss`), логотипы
  * четырёх сервисов — файлы темы в `img/`.
@@ -169,11 +175,9 @@
 				<input type="hidden" name="form_id" value="contacts-signup">
 				<input type="hidden" name="fs_form_token" value="<?php echo esc_attr( fs_lms_theme_form_timestamp_token() ); ?>">
 				<input type="text" name="<?php echo esc_attr( fs_lms_theme_honeypot_field() ); ?>" class="fs-form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-				<?php if ( function_exists( 'fs_lms_theme_captcha_configured' ) && fs_lms_theme_captcha_configured() ) : ?>
-				<div class="smart-captcha" data-sitekey="<?php echo esc_attr( get_option( 'fs_lms_theme_captcha_site_key', '' ) ); ?>"></div>
-				<?php endif; ?>
+				<?php echo fs_lms_theme_captcha_slot_html(); ?>
 				<button type="submit" class="fs-apply-form__submit">Отправить заявку</button>
-				<div class="fs-apply-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
+				<div class="fs-apply-form__note"><?php echo fs_lms_theme_form_consent_html(); ?>.</div>
 				<div class="fs-form-message" role="status"></div>
 			</form>
 			<!-- /wp:html -->

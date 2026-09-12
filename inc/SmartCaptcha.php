@@ -30,6 +30,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class FS_LMS_Theme_Smart_Captcha {
 
+	/** Исходы `verify()`: токен принят, отклонён, API Яндекса не ответил. */
+	public const PASSED = 'passed';
+
+	public const FAILED = 'failed';
+
+	public const UNAVAILABLE = 'unavailable';
+
 	private const HOST = 'https://smartcaptcha.yandexcloud.net';
 
 	private const OPTION_GROUP = 'fs_lms_theme_forms';
@@ -77,14 +84,20 @@ final class FS_LMS_Theme_Smart_Captcha {
 	 * Проверка токена через API Яндекса. Fail-open при недоступности API,
 	 * как у `YandexSmartCaptchaProvider` плагина: отказ стороннего сервиса не
 	 * должен блокировать легитимных посетителей.
+	 *
+	 * Отдаёт не `bool`, а исход проверки: в письме с заявкой видно, прошла ли
+	 * капча на самом деле или API не ответил и заявку пропустили без проверки.
+	 *
+	 * @return string `self::PASSED`, `self::FAILED` либо `self::UNAVAILABLE`
+	 *                (заявку принимаем).
 	 */
-	public function validate( string $token, string $ip ): bool {
+	public function verify( string $token, string $ip ): string {
 		if ( '' === $this->server_key() ) {
-			return true;
+			return self::UNAVAILABLE;
 		}
 
 		if ( '' === $token ) {
-			return false;
+			return self::FAILED;
 		}
 
 		$response = wp_remote_post( self::HOST . '/validate', array(
@@ -97,17 +110,17 @@ final class FS_LMS_Theme_Smart_Captcha {
 		) );
 
 		if ( is_wp_error( $response ) ) {
-			return true;
+			return self::UNAVAILABLE;
 		}
 
 		$code = (int) wp_remote_retrieve_response_code( $response );
 		$body = json_decode( (string) wp_remote_retrieve_body( $response ), true );
 
 		if ( 200 !== $code || ! is_array( $body ) ) {
-			return true;
+			return self::UNAVAILABLE;
 		}
 
-		return isset( $body['status'] ) && 'ok' === $body['status'];
+		return isset( $body['status'] ) && 'ok' === $body['status'] ? self::PASSED : self::FAILED;
 	}
 
 	/**

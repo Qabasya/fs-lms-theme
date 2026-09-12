@@ -44,7 +44,7 @@ const DISMISSED = 'captcha-dismissed';
 /** @type {Promise<object>|null} */
 let loading = null;
 
-/** @type {WeakMap<HTMLFormElement, {id: number, pending: object|null}>} */
+/** @type {WeakMap<HTMLFormElement, {id: number, pending: object|null, challenged: boolean}>} */
 const widgets = new WeakMap();
 
 export function isCaptchaEnabled() {
@@ -146,16 +146,23 @@ function getWidget( form, captcha ) {
 		return null;
 	}
 
-	const widget = { id: null, pending: null };
+	const widget = { id: null, pending: null, challenged: false };
 
 	widget.id = captcha.render( slot, {
 		sitekey: window.fsLmsTheme.captchaSiteKey,
 		invisible: true,
+		// Значок «Политика обработки данных» в углу экрана не показываем.
+		// Условия Яндекса разрешают это, только если посетителя уведомили об
+		// обработке данных SmartCaptcha иначе, — уведомление пользователь
+		// размещает на сайте сам (решение 2026-09-12).
+		hideShield: true,
 		hl: 'ru',
 		callback: ( token ) => settle( widget, ( pending ) => pending.resolve( token ) ),
 	} );
 
 	captcha.subscribe( widget.id, 'challenge-visible', () => {
+		widget.challenged = true;
+
 		if ( widget.pending ) {
 			window.clearTimeout( widget.pending.timer );
 		}
@@ -230,9 +237,23 @@ export function getCaptchaToken( form ) {
 		} );
 }
 
+/**
+ * Показывала ли капча задание при этой отправке — для пометки в письме с
+ * заявкой (`fs_lms_theme_form_captcha_note()`, `inc/Forms.php`).
+ */
+export function wasCaptchaChallengeShown( form ) {
+	return widgets.has( form ) && widgets.get( form ).challenged;
+}
+
 /** Токен одноразовый — после каждой отправки виджет сбрасываем. */
 export function resetCaptcha( form ) {
-	if ( widgets.has( form ) && hasApi() ) {
+	if ( ! widgets.has( form ) ) {
+		return;
+	}
+
+	widgets.get( form ).challenged = false;
+
+	if ( hasApi() ) {
 		window.smartCaptcha.reset( widgets.get( form ).id );
 	}
 }

@@ -337,3 +337,13 @@ function fs_lms_theme_shop_url(): string {
 
 	return esc_url( wc_get_page_permalink( 'shop' ) );
 }
+
+/**
+ * URL корзины для ссылок в инфо-полосе шапки и в футере (BugFix.6,
+ * 2026-09-12). `wc_get_cart_url()` отдаёт реальный адрес страницы корзины
+ * из настроек WooCommerce; без плагина — `/cart/`, куда корзина ляжет при
+ * его установке. Не экранирован: экранирует место вывода.
+ */
+function fs_lms_theme_cart_url(): string {
+	return function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/cart/' );
+}

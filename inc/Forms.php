@@ -61,6 +61,18 @@ const FS_LMS_THEME_FORM_NO_CAPTCHA_WINDOW = HOUR_IN_SECONDS;
 /** Получатель писем с лид-форм (решение 2, обсуждение 2026-09-02). */
 const FS_LMS_THEME_FORM_RECIPIENT = 'info@future-step.ru';
 
+/** Тема письма — одна на все формы (2026-09-12, по указанию пользователя). */
+const FS_LMS_THEME_FORM_MAIL_SUBJECT = 'Новая заявка на сайте';
+
+/**
+ * Подписи форм главной страницы в письме, `form_id` → подпись: форм там
+ * две, и одна ссылка на страницу их не различает.
+ */
+const FS_LMS_THEME_FRONT_PAGE_FORMS = array(
+	'hero'   => 'Форма 1',
+	'signup' => 'Форма 2',
+);
+
 /**
  * BugFix.4 (2026-09-05): правило для полей с именем — то же, что у плагина
  * fs-lms (`cyrillicName`: `/^[А-Яа-яЁё\s-]+$/u` — буквы кириллицы, пробелы
@@ -120,6 +132,21 @@ function fs_lms_theme_name_field_attrs_html(): string {
 	}
 
 	return implode( ' ', $attributes );
+}
+
+/**
+ * Подпись под кнопкой лид-формы — одна на все паттерны форм, без точки в
+ * конце (у `.fs-apply-form__note` её ставит паттерн, у hero её не было).
+ *
+ * Про SmartCaptcha здесь сознательно ничего нет: уведомление об обработке
+ * данных Яндексом (значок скрыт, `hideShield` в `src/js/captcha.js`)
+ * пользователь размещает на сайте сам (решение 2026-09-12).
+ */
+function fs_lms_theme_form_consent_html(): string {
+	return sprintf(
+		'Нажимая кнопку, вы соглашаетесь с <a href="%s" target="_blank" rel="noopener">политикой конфиденциальности</a>',
+		esc_url( home_url( '/privacy-policy/' ) )
+	);
 }
 
 /**
@@ -198,25 +225,34 @@ function fs_lms_theme_form_timestamp_token(): string {
 	return $ts . '.' . fs_lms_theme_form_sign( $ts );
 }
 
-function fs_lms_theme_form_is_human( string $honeypot_value, string $token ): bool {
-	if ( '' !== trim( $honeypot_value ) ) {
-		return false;
-	}
-
+/**
+ * Сколько секунд прошло с выдачи метки формы.
+ *
+ * @return int|null Null — метка битая или подпись не сходится.
+ */
+function fs_lms_theme_form_token_age( string $token ): ?int {
 	$parts = explode( '.', $token, 2 );
 	if ( 2 !== count( $parts ) ) {
-		return false;
+		return null;
 	}
 
 	list( $ts, $sig ) = $parts;
 
 	if ( ! ctype_digit( $ts ) || ! hash_equals( fs_lms_theme_form_sign( $ts ), $sig ) ) {
+		return null;
+	}
+
+	return time() - (int) $ts;
+}
+
+function fs_lms_theme_form_is_human( string $honeypot_value, string $token ): bool {
+	if ( '' !== trim( $honeypot_value ) ) {
 		return false;
 	}
 
-	$elapsed = time() - (int) $ts;
+	$elapsed = fs_lms_theme_form_token_age( $token );
 
-	return $elapsed >= FS_LMS_THEME_FORM_MIN_FILL_SECONDS && $elapsed <= FS_LMS_THEME_FORM_MAX_TOKEN_AGE;
+	return null !== $elapsed && $elapsed >= FS_LMS_THEME_FORM_MIN_FILL_SECONDS && $elapsed <= FS_LMS_THEME_FORM_MAX_TOKEN_AGE;
 }
 
 /* --------------------------------------------------------------------
@@ -266,6 +302,78 @@ function fs_lms_theme_phone_digits( string $phone ): string {
 	return $digits;
 }
 
+/**
+ * Откуда пришла заявка — для строки «Форма:» в письме: ссылка на страницу, а
+ * на главной ещё и подпись формы (`FS_LMS_THEME_FRONT_PAGE_FORMS`).
+ *
+ * Адрес присылает браузер (`page_url`, `src/js/forms.js`), поэтому ссылку на
+ * чужой хост не выводим (`wp_validate_redirect()`), а якорь вроде
+ * `#hero-form` срезаем: о странице он ничего не говорит.
+ *
+ * @param string $form_id  Скрытое поле `form_id` формы.
+ * @param string $page_url Адрес страницы, с которой отправили форму.
+ */
+function fs_lms_theme_form_source( string $form_id, string $page_url ): string {
+	$url = explode( '#', wp_validate_redirect( $page_url, '' ), 2 )[0];
+
+	if ( '' === $url ) {
+		return $form_id;
+	}
+
+	$path      = '/' . trim( (string) wp_parse_url( $url, PHP_URL_PATH ), '/' );
+	$home_path = '/' . trim( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ), '/' );
+
+	if ( $path === $home_path && isset( FS_LMS_THEME_FRONT_PAGE_FORMS[ $form_id ] ) ) {
+		return $url . ' — ' . FS_LMS_THEME_FRONT_PAGE_FORMS[ $form_id ];
+	}
+
+	return $url;
+}
+
+/**
+ * Строка «Капча:» технического блока письма (2026-09-12, по указанию
+ * пользователя) — чем закончилась проверка у этой заявки.
+ *
+ * Показывали ли посетителю задание, знает только браузер
+ * (`captcha_challenge`, `src/js/captcha.js`), — это пометка для чтения
+ * письма, на приём заявки она не влияет.
+ *
+ * @param bool   $configured Ключи капчи заданы.
+ * @param bool   $skipped    Токена нет — капча не загрузилась у посетителя.
+ * @param string $result     Исход `FS_LMS_Theme_Smart_Captcha::verify()`.
+ * @param bool   $challenge  Посетителю показали задание.
+ */
+function fs_lms_theme_form_captcha_note( bool $configured, bool $skipped, string $result, bool $challenge ): string {
+	if ( ! $configured ) {
+		return 'выключена (ключи не заданы в Настройки → Формы)';
+	}
+
+	if ( $skipped ) {
+		return 'не загрузилась у посетителя, заявка принята без неё';
+	}
+
+	if ( FS_LMS_Theme_Smart_Captcha::UNAVAILABLE === $result ) {
+		return 'не проверена — API Яндекса не ответил, заявка принята';
+	}
+
+	return $challenge ? 'пройдена, посетитель решал задание' : 'пройдена без задания';
+}
+
+/**
+ * Строка «Заполнение формы:» — возраст метки `fs_form_token` на момент
+ * прихода заявки. Метку `src/js/forms.js` берёт на первом фокусе в форме,
+ * так что это время от первого клика в форме до отправки: у ботов — секунды.
+ *
+ * @param int $seconds `fs_lms_theme_form_token_age()`.
+ */
+function fs_lms_theme_form_fill_time( int $seconds ): string {
+	if ( $seconds < MINUTE_IN_SECONDS ) {
+		return sprintf( '%d сек', $seconds );
+	}
+
+	return sprintf( '%d мин %d сек', intdiv( $seconds, MINUTE_IN_SECONDS ), $seconds % MINUTE_IN_SECONDS );
+}
+
 /* --------------------------------------------------------------------
  * Свежая метка времени для формы.
  *
@@ -299,6 +407,8 @@ add_action( 'wp_ajax_nopriv_fs_theme_submit_form', 'fs_lms_theme_handle_form_sub
 function fs_lms_theme_handle_form_submit(): void {
 	check_ajax_referer( 'fs-theme-form', 'nonce' );
 
+	$received_at = time();
+
 	$honeypot = isset( $_POST[ fs_lms_theme_honeypot_field() ] )
 		? (string) wp_unslash( $_POST[ fs_lms_theme_honeypot_field() ] )
 		: '';
@@ -307,6 +417,8 @@ function fs_lms_theme_handle_form_submit(): void {
 	if ( ! fs_lms_theme_form_is_human( $honeypot, $token ) ) {
 		wp_send_json_error( array( 'message' => __( 'Не удалось отправить форму. Обновите страницу и попробуйте ещё раз.', 'fs-lms-theme' ) ), 400 );
 	}
+
+	$fill_seconds = (int) fs_lms_theme_form_token_age( $token );
 
 	$ip = fs_lms_theme_client_ip();
 
@@ -317,19 +429,25 @@ function fs_lms_theme_handle_form_submit(): void {
 	$captcha         = new FS_LMS_Theme_Smart_Captcha();
 	$captcha_token   = isset( $_POST['smart-token'] ) ? sanitize_text_field( wp_unslash( $_POST['smart-token'] ) ) : '';
 	$captcha_skipped = $captcha->is_configured() && '' === $captcha_token;
+	$captcha_result  = '';
 
 	// Пустой токен — капча не загрузилась у посетителя, такие заявки идут под
 	// общим лимитом ниже. Присланный, но неверный токен — отказ.
-	if ( $captcha->is_configured() && ! $captcha_skipped && ! $captcha->validate( $captcha_token, $ip ) ) {
-		wp_send_json_error( array( 'message' => __( 'Проверка «Я не робот» не пройдена, попробуйте ещё раз.', 'fs-lms-theme' ) ), 400 );
+	if ( $captcha->is_configured() && ! $captcha_skipped ) {
+		$captcha_result = $captcha->verify( $captcha_token, $ip );
+
+		if ( FS_LMS_Theme_Smart_Captcha::FAILED === $captcha_result ) {
+			wp_send_json_error( array( 'message' => __( 'Проверка «Я не робот» не пройдена, попробуйте ещё раз.', 'fs-lms-theme' ) ), 400 );
+		}
 	}
 
 	$form_id = isset( $_POST['form_id'] ) ? sanitize_key( wp_unslash( $_POST['form_id'] ) ) : 'signup';
 	$name    = isset( $_POST['parent_name'] ) ? sanitize_text_field( wp_unslash( $_POST['parent_name'] ) ) : '';
 	$phone   = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '';
-	$grade   = isset( $_POST['grade'] ) ? sanitize_text_field( wp_unslash( $_POST['grade'] ) ) : '';
-	$subject = isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : '';
 	$page_url = isset( $_POST['page_url'] ) ? esc_url_raw( wp_unslash( $_POST['page_url'] ) ) : '';
+
+	$captcha_challenge = isset( $_POST['captcha_challenge'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['captcha_challenge'] ) );
+	$user_agent        = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 
 	if ( '' === $name || '' === $phone ) {
 		wp_send_json_error( array( 'message' => __( 'Заполните имя и телефон.', 'fs-lms-theme' ) ), 400 );
@@ -367,30 +485,20 @@ function fs_lms_theme_handle_form_submit(): void {
 	}
 
 	$lines = array(
-		sprintf( 'Форма: %s', $form_id ),
 		sprintf( 'Имя: %s', $name ),
 		sprintf( 'Телефон: %s', $phone ),
+		sprintf( 'IP: %s', $ip ),
+		sprintf( 'Форма: %s', fs_lms_theme_form_source( $form_id, $page_url ) ),
+		'',
+		'Техническая информация',
+		sprintf( 'Получена: %s', wp_date( 'd.m.Y H:i:s T', $received_at ) ),
+		sprintf( 'Капча: %s', fs_lms_theme_form_captcha_note( $captcha->is_configured(), $captcha_skipped, $captcha_result, $captcha_challenge ) ),
+		sprintf( 'Заполнение формы: %s', fs_lms_theme_form_fill_time( $fill_seconds ) ),
+		sprintf( 'Устройство: %s', wp_is_mobile() ? 'телефон или планшет' : 'компьютер' ),
+		sprintf( 'Браузер: %s', '' === $user_agent ? 'не передан' : $user_agent ),
 	);
 
-	if ( '' !== $grade ) {
-		$lines[] = sprintf( 'Класс: %s', $grade );
-	}
-	if ( '' !== $subject ) {
-		$lines[] = sprintf( 'Направление: %s', $subject );
-	}
-
-	if ( $captcha_skipped ) {
-		$lines[] = 'Капча: не загрузилась у посетителя, заявка принята без неё';
-	}
-
-	$lines[] = sprintf( 'IP: %s', $ip );
-	$lines[] = sprintf( 'Страница: %s', $page_url );
-
-	$sent = wp_mail(
-		FS_LMS_THEME_FORM_RECIPIENT,
-		sprintf( 'Заявка с сайта — %s', $form_id ),
-		implode( "\n", $lines )
-	);
+	$sent = wp_mail( FS_LMS_THEME_FORM_RECIPIENT, FS_LMS_THEME_FORM_MAIL_SUBJECT, implode( "\n", $lines ) );
 
 	if ( ! $sent ) {
 		wp_send_json_error( array( 'message' => __( 'Не получилось отправить заявку, попробуйте позже или позвоните нам: +7(995)326-44-86', 'fs-lms-theme' ) ), 500 );

@@ -21,7 +21,7 @@
  * невидимой капчи (`captcha.js`).
  */
 
-import { getCaptchaToken, isCaptchaDismissed, preloadCaptcha, resetCaptcha } from './captcha.js';
+import { getCaptchaToken, isCaptchaDismissed, preloadCaptcha, resetCaptcha, wasCaptchaChallengeShown } from './captcha.js';
 
 /**
  * Сервер не принимает форму раньше, чем через
@@ -303,6 +303,7 @@ function sendForm( form, captchaToken ) {
 	formData.set( 'nonce', window.fsLmsTheme.formNonce );
 	formData.set( 'page_url', window.location.href );
 	formData.set( 'smart-token', captchaToken );
+	formData.set( 'captcha_challenge', wasCaptchaChallengeShown( form ) ? '1' : '0' );
 
 	return fetch( window.fsLmsTheme.ajaxUrl, {
 		method: 'POST',

@@ -87,12 +87,10 @@ function fs_lms_theme_nav_relative_url( string $url ): string {
  * новые страницы-хабы `/articles/`/`/tasks/` (`inc/ResourcePages.php`),
  * которые сами ведут дальше на страницы конкретных направлений.
  *
- * 2026-09-07: «Контакты» (`/contacts/`, `inc/StaticPages.php`) в меню
- * сознательно НЕ добавляются — по прямому указанию пользователя ссылка на
- * страницу живёт только в QR-кодах. Пункт был добавлен и в тот же день
- * убран вместе с механикой дописывания недостающих пунктов в уже
- * созданное меню; если такая механика понадобится снова — см. историю
- * этого файла.
+ * BugFix.6 (2026-09-12): «Контакты» (`/contacts/`, `inc/StaticPages.php`)
+ * — после «Тренажёра», по прямому указанию пользователя (7 сентября пункт
+ * по его же указанию убирали). В уже созданное меню его дописывает
+ * починка ниже — `fs_lms_theme_add_missing_nav_items()`.
  */
 function fs_lms_theme_nav_default_content(): string {
 	$items = array(
@@ -101,6 +99,7 @@ function fs_lms_theme_nav_default_content(): string {
 		fs_lms_theme_nav_page_link( 'courses', 'Курсы' ),
 		fs_lms_theme_nav_page_link( 'articles', 'Учебник' ),
 		fs_lms_theme_nav_page_link( 'tasks', 'Тренажёр' ),
+		fs_lms_theme_nav_page_link( 'contacts', 'Контакты' ),
 	);
 
 	return implode( "\n\n", $items );
@@ -176,9 +175,15 @@ function fs_lms_theme_navigation_id(): int {
 	return (int) $new_id;
 }
 
-/** Опция-счётчик выполненных починок меню и её текущая версия. */
+/**
+ * Опция-счётчик выполненных починок меню и её текущая версия.
+ *
+ * Версия 3, а не 2: двойка 7 сентября несколько часов дописывала
+ * «Контакты» и могла успеть записаться в опцию — на таком сайте починка с
+ * версией 2 уже не запустилась бы.
+ */
 const FS_LMS_THEME_NAV_REPAIR_OPTION  = 'fs_lms_theme_nav_repaired';
-const FS_LMS_THEME_NAV_REPAIR_VERSION = 1;
+const FS_LMS_THEME_NAV_REPAIR_VERSION = 3;
 
 /**
  * Слаг страницы из пути ссылки: `/about/` → `about`, с учётом установки
@@ -272,13 +277,110 @@ function fs_lms_theme_repair_nav_blocks( array $blocks, bool &$changed ): array 
 }
 
 /**
+ * Страницы, ссылка на которые обязана быть в меню шапки.
+ *
+ * Меню заводится один раз и никогда не перезаписывается (правки редактора
+ * дороже), поэтому пункты, появившиеся в теме позже первого запуска сайта,
+ * в меню сами не попадают. Такой пункт дописывается починкой ниже — ровно
+ * один раз на версию (`FS_LMS_THEME_NAV_REPAIR_VERSION`); если редактор
+ * его потом удалит или переставит, второй раз тема не вмешается.
+ *
+ * @return array<string, array{label: string, after: string}> Слаг страницы →
+ *         подпись пункта и слаг пункта, за которым он встаёт (нет такого
+ *         пункта в меню — в конец).
+ */
+function fs_lms_theme_nav_required_pages(): array {
+	return array(
+		'contacts' => array(
+			'label' => 'Контакты',
+			'after' => 'tasks',
+		),
+	);
+}
+
+/**
+ * Слаг страницы, на которую ведёт пункт меню, — по пути ссылки, а не по ID:
+ * ID протухает после переноса базы, а путь чинит
+ * `fs_lms_theme_repair_nav_blocks()` перед этой проверкой.
+ *
+ * @param array<string, mixed> $block Разобранный блок меню.
+ *
+ * @return string Слаг либо пустая строка, если это не ссылка.
+ */
+function fs_lms_theme_nav_link_slug( array $block ): string {
+	if ( 'core/navigation-link' !== ( $block['blockName'] ?? '' ) ) {
+		return '';
+	}
+
+	$url = (string) ( $block['attrs']['url'] ?? '' );
+
+	return '' === $url ? '' : fs_lms_theme_nav_path_to_slug( (string) wp_parse_url( $url, PHP_URL_PATH ) );
+}
+
+/**
+ * Есть ли в меню (включая подменю) пункт, ведущий на страницу с этим слагом.
+ *
+ * @param array<int, array<string, mixed>> $blocks Разобранные блоки меню.
+ * @param string                           $slug   Слаг страницы.
+ */
+function fs_lms_theme_nav_has_page_link( array $blocks, string $slug ): bool {
+	foreach ( $blocks as $block ) {
+		if ( $slug === fs_lms_theme_nav_link_slug( $block ) ) {
+			return true;
+		}
+
+		if ( ! empty( $block['innerBlocks'] ) && fs_lms_theme_nav_has_page_link( $block['innerBlocks'], $slug ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Дописывает пункты на страницы, которых в меню ещё нет, — сразу за
+ * пунктом из `after` верхнего уровня, а без него в конец.
+ *
+ * @param array<int, array<string, mixed>> $blocks  Разобранные блоки меню.
+ * @param bool                             $changed Флаг «содержимое изменилось».
+ *
+ * @return array<int, array<string, mixed>> Блоки с добавленными пунктами.
+ */
+function fs_lms_theme_add_missing_nav_items( array $blocks, bool &$changed ): array {
+	foreach ( fs_lms_theme_nav_required_pages() as $slug => $item ) {
+		if ( fs_lms_theme_nav_has_page_link( $blocks, $slug ) ) {
+			continue;
+		}
+
+		$position = count( $blocks );
+
+		foreach ( $blocks as $index => $block ) {
+			if ( $item['after'] === fs_lms_theme_nav_link_slug( $block ) ) {
+				$position = $index + 1;
+				break;
+			}
+		}
+
+		// Перенос строк впереди `parse_blocks()` отдаёт отдельным пустым
+		// блоком — в сохранённом меню пункты остаются разделены, как их
+		// пишет редактор.
+		array_splice( $blocks, $position, 0, parse_blocks( "\n\n" . fs_lms_theme_nav_page_link( $slug, $item['label'] ) ) );
+		$changed = true;
+	}
+
+	return $blocks;
+}
+
+/**
  * Одноразовая починка уже созданного меню.
  *
  * Меню заводится один раз и сознательно никогда не перезаписывается, чтобы
  * не терять правки редактора. Обратная сторона: сайт, где меню собралось
  * раньше страниц (прод до BugFix 2026-09-07, `inc/StaticPages.php`), навсегда
  * остаётся с битыми пунктами «О нас»/«Курсы» — новых страниц он уже не
- * заметит. Поэтому вместо перезаписи — точечный проход по пунктам.
+ * заметит. Поэтому вместо перезаписи — точечный проход по пунктам плюс
+ * (версия 3, 2026-09-12) добавление отсутствующих пунктов из
+ * `fs_lms_theme_nav_required_pages()` — сейчас это «Контакты».
  *
  * Приоритет 20: `fs_lms_theme_ensure_static_pages()` и
  * `fs_lms_theme_ensure_resource_pages()` висят на `init` с приоритетом по
@@ -297,6 +399,7 @@ function fs_lms_theme_repair_navigation(): void {
 		if ( $nav instanceof WP_Post ) {
 			$changed = false;
 			$blocks  = fs_lms_theme_repair_nav_blocks( parse_blocks( $nav->post_content ), $changed );
+			$blocks  = fs_lms_theme_add_missing_nav_items( $blocks, $changed );
 
 			if ( $changed ) {
 				wp_update_post(

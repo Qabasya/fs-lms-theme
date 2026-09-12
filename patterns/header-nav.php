@@ -66,6 +66,10 @@
  * Там же `fs-header-container` на обеих внутренних группах-обёртках —
  * их горизонтальный паддинг на узких телефонах ужимается с `xxl` до `lg`.
  *
+ * BugFix.6 (2026-09-12): в инфо-полосе после почты — ссылка на корзину
+ * (`fs_lms_theme_cart_url()`, `inc/WooCommerce.php`). Пункт «Контакты» в
+ * основном меню — `inc/Navigation.php`.
+ *
  * Слоган в инфо-полосе — абзац, а не `<h1>`: заголовок первого уровня на
  * странице должен быть один (и это заголовок самой страницы), иначе
  * поисковик видит на каждой странице сайта один и тот же h1.
@@ -90,6 +94,10 @@ $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme
 
 				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
 				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="mailto:info@future-step.ru">info@future-step.ru</a></p>
+				<!-- /wp:paragraph -->
+
+				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
+				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="<?php echo esc_url( fs_lms_theme_cart_url() ); ?>">Корзина</a></p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->

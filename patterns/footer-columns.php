@@ -23,6 +23,9 @@
  *
  * 2026-09-12: в колонке «Информация» — ссылка на форму заявки плагина
  * (`/apply/`, адрес через `fs_lms_theme_url()`).
+ *
+ * BugFix.6 (2026-09-12): после «Политики конфиденциальности» — «Контакты»
+ * (`/contacts/`) и «Корзина» (`fs_lms_theme_cart_url()`).
  */
 ?>
 <!-- wp:group {"tagName":"div","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xxxl","bottom":"0"}},"color":{"background":"#2b2f36"}},"textColor":"white"} -->
@@ -89,6 +92,14 @@
 
 					<!-- wp:paragraph -->
 					<p><a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>">Политика конфиденциальности</a></p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph -->
+					<p><a href="<?php echo esc_url( home_url( '/contacts/' ) ); ?>">Контакты</a></p>
+					<!-- /wp:paragraph -->
+
+					<!-- wp:paragraph -->
+					<p><a href="<?php echo esc_url( fs_lms_theme_cart_url() ); ?>">Корзина</a></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
