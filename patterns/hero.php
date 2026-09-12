@@ -68,7 +68,7 @@
 				<!-- wp:group {"className":"fs-hero-dirs__item"} -->
 				<div class="wp-block-group fs-hero-dirs__item">
 					<!-- wp:paragraph {"className":"fs-hero-dirs__name"} -->
-					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'python', 'overview' ) ); ?>">Разработка на Python</a></p>
+					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'python', 'overview' ) ); ?>">Программирование на Python</a></p>
 					<!-- /wp:paragraph -->
 
 					<!-- wp:paragraph {"className":"fs-hero-dirs__grade"} -->
@@ -111,9 +111,7 @@
 				<input type="hidden" name="form_id" value="hero">
 				<input type="hidden" name="fs_form_token" value="<?php echo esc_attr( fs_lms_theme_form_timestamp_token() ); ?>">
 				<input type="text" name="<?php echo esc_attr( fs_lms_theme_honeypot_field() ); ?>" class="fs-form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-				<?php if ( function_exists( 'fs_lms_theme_captcha_configured' ) && fs_lms_theme_captcha_configured() ) : ?>
-				<div class="smart-captcha" data-sitekey="<?php echo esc_attr( get_option( 'fs_lms_theme_captcha_site_key', '' ) ); ?>"></div>
-				<?php endif; ?>
+				<?php echo fs_lms_theme_captcha_slot_html(); ?>
 				<button type="submit" class="fs-hero-form__submit">Отправить</button>
 				<div class="fs-hero-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</div>
 				<div class="fs-form-message" role="status"></div>

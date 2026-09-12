@@ -12,8 +12,8 @@
 		"icon": { "type": "string", "default": "users" },
 		"iconColor": { "type": "string", "default": "accent" },
 		"iconBackground": { "type": "string", "default": "accent-soft" },
-		"title": { "type": "string", "source": "html", "selector": "h3", "default": "Заголовок преимущества" },
-		"text": { "type": "string", "source": "html", "selector": "p", "default": "Короткое описание преимущества." }
+		"title": { "type": "string", "role": "content", "source": "html", "selector": "h3", "default": "Заголовок преимущества" },
+		"text": { "type": "string", "role": "content", "source": "html", "selector": "p", "default": "Короткое описание преимущества." }
 	},
 	"supports": { "html": false },
 	"editorScript": "fs-lms-feature-card-editor-script",

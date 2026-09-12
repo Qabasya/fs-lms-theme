@@ -17,8 +17,12 @@
  *   - Navigation.php — меню шапки как объект `wp_navigation` (Фаза 17.4)
  *   - WooCommerce.php — каталог товаров (Фаза 10.3+)
  *   - Checkout.php — корзина/оформление заказа, степпер шагов (Фаза 16.3+)
+ *   - SmartCaptcha.php — невидимая Yandex SmartCaptcha лид-форм: ключи,
+ *                     контейнер виджета, проверка токена
+ *   - SubjectCardIcons.php — иконки карточек «Учебник»/«Тренажёр» при выводе
+ *   - ContentUpgrades.php — разовые правки сохранённого контента страниц
  *   - Forms.php    — AJAX-приём лид-форм (`#hero-form`/`#signup`), honeypot +
- *                     HMAC-таймер + Yandex SmartCaptcha + rate-limit (Фаза 14)
+ *                     HMAC-таймер + rate-limit (Фаза 14)
  */
 
 declare(strict_types=1);
@@ -27,6 +31,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'Seo', 'PluginRoutes', 'SubjectPages', 'ResourcePages', 'Navigation', 'WooCommerce', 'Checkout', 'Forms' ) as $module ) {
+foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'Seo', 'PluginRoutes', 'SubjectPages', 'ResourcePages', 'Navigation', 'WooCommerce', 'Checkout', 'SmartCaptcha', 'SubjectCardIcons', 'ContentUpgrades', 'Forms' ) as $module ) {
 	require_once get_template_directory() . "/inc/{$module}.php";
 }

@@ -297,6 +297,28 @@
 			border-color: var( --wp--preset--color--text-secondary );
 		}
 	}
+
+	// BugFix.1 (2026-09-12): шаги «Корзина»/«Оформление заказа» — ссылки
+	// (`fs_lms_theme_checkout_steps()`, `inc/Checkout.php`).
+	a {
+		text-decoration: none;
+		transition: background-color .15s ease, color .15s ease;
+
+		&:hover {
+			background: var( --wp--preset--color--surface-2 );
+			color: var( --wp--preset--color--text );
+		}
+
+		&.is-active:hover {
+			background: var( --wp--preset--color--accent-soft );
+			color: var( --wp--preset--color--accent-700 );
+		}
+
+		&:focus-visible {
+			outline: 2px solid var( --wp--preset--color--accent );
+			outline-offset: 2px;
+		}
+	}
 }
 
 /**
@@ -311,6 +333,16 @@
 	font-weight: 700;
 	line-height: 1.15;
 	letter-spacing: -.015em;
+}
+
+/**
+ * «Мой аккаунт» для гостя — форма входа WooCommerce. Страница стоит на
+ * `templates/page.html`, который с 2026-09-12 шириной 1200px, как остальные
+ * (раньше 720px): без своего ограничения поля растянулись бы на всю ширину.
+ */
+.woocommerce-account:not(.logged-in) .fs-main .woocommerce {
+	max-width: 35rem;
+	margin-inline: auto;
 }
 
 /**

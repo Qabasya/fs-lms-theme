@@ -26,10 +26,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Степпер шагов оформления заказа (Фаза 16.3, по макету) — общий для
- * страниц «Корзина»/«Оформление заказа»/«Заказ завершён» (последняя пока
- * не в скоупе темы, шаг просто не подсвечивается активным ни на одной
- * реализованной странице).
+ * Степпер шагов оформления заказа (Фаза 16.3, по макету) — на страницах
+ * «Корзина» и «Оформление заказа». На «Заказ получен» его нет (решение
+ * пользователя 2026-09-05, подтверждено 2026-09-12).
+ *
+ * BugFix.1 (2026-09-12): шаги «Корзина» и «Оформление заказа» — ссылки, по
+ * ним можно вернуться назад и перейти вперёд. «Заказ завершён» остаётся
+ * текстом: пока заказа нет, вести этой ссылке некуда.
  *
  * @param int $active_step 1 — Корзина, 2 — Оформление заказа, 3 — Заказ завершён.
  */
@@ -40,7 +43,12 @@ function fs_lms_theme_checkout_steps( int $active_step ): void {
 		3 => __( 'Заказ завершён', 'fs-lms-theme' ),
 	);
 
-	echo '<div class="fs-checkout-steps">';
+	$urls = array(
+		1 => wc_get_cart_url(),
+		2 => wc_get_checkout_url(),
+	);
+
+	echo '<nav class="fs-checkout-steps" aria-label="' . esc_attr__( 'Шаги оформления заказа', 'fs-lms-theme' ) . '">';
 
 	$i = 0;
 	foreach ( $steps as $num => $label ) {
@@ -56,15 +64,30 @@ function fs_lms_theme_checkout_steps( int $active_step ): void {
 			$state = 'is-done';
 		}
 
-		printf(
-			'<span class="fs-checkout-steps__step %1$s"><span class="fs-checkout-steps__num">%2$d</span>%3$s</span>',
-			esc_attr( $state ),
+		$inner = sprintf(
+			'<span class="fs-checkout-steps__num">%1$d</span>%2$s',
 			(int) $num,
 			esc_html( $label )
 		);
+
+		if ( isset( $urls[ $num ] ) ) {
+			printf(
+				'<a class="fs-checkout-steps__step %1$s" href="%2$s"%3$s>%4$s</a>',
+				esc_attr( $state ),
+				esc_url( $urls[ $num ] ),
+				$num === $active_step ? ' aria-current="step"' : '',
+				$inner
+			);
+		} else {
+			printf(
+				'<span class="fs-checkout-steps__step %1$s">%2$s</span>',
+				esc_attr( $state ),
+				$inner
+			);
+		}
 	}
 
-	echo '</div>';
+	echo '</nav>';
 }
 
 /**

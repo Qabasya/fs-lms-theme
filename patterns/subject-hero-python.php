@@ -1,12 +1,12 @@
 <?php
 /**
- * Title: Hero страницы направления — Разработка на Python
+ * Title: Hero страницы направления — Программирование на Python
  * Slug: fs-lms-theme/subject-hero-python
  * Categories: fs-lms-sections
  * Keywords: hero, направление, python, предмет, форма
  *
  * Копия `patterns/subject-hero.php` (ЕГЭ-вариант, Фаза 13.0) под
- * направление «Разработка на Python» — тот же визуальный шаблон, свой
+ * направление «Программирование на Python» — тот же визуальный шаблон, свой
  * бейдж/заголовок/описание и модификатор цвета `--python` (BugFix.7,
  * сопоставление цвет↔направление — то же, что бейджи `courses-grid.php`,
  * BugFix.6: Python = зелёный). Текст — черновик, сгенерирован по образцу
@@ -30,7 +30,7 @@
 				<!-- /wp:paragraph -->
 
 				<!-- wp:heading {"level":1,"fontSize":"xxxl"} -->
-				<h1 class="wp-block-heading has-xxxl-font-size">Разработка на Python</h1>
+				<h1 class="wp-block-heading has-xxxl-font-size">Программирование на Python</h1>
 				<!-- /wp:heading -->
 
 				<!-- wp:paragraph {"fontSize":"lead"} -->
@@ -63,9 +63,7 @@
 				<input type="hidden" name="form_id" value="hero">
 				<input type="hidden" name="fs_form_token" value="<?php echo esc_attr( fs_lms_theme_form_timestamp_token() ); ?>">
 				<input type="text" name="<?php echo esc_attr( fs_lms_theme_honeypot_field() ); ?>" class="fs-form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-				<?php if ( function_exists( 'fs_lms_theme_captcha_configured' ) && fs_lms_theme_captcha_configured() ) : ?>
-				<div class="smart-captcha" data-sitekey="<?php echo esc_attr( get_option( 'fs_lms_theme_captcha_site_key', '' ) ); ?>"></div>
-				<?php endif; ?>
+				<?php echo fs_lms_theme_captcha_slot_html(); ?>
 				<button type="submit" class="fs-hero-form__submit">Отправить</button>
 				<div class="fs-hero-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</div>
 				<div class="fs-form-message" role="status"></div>

@@ -11,8 +11,8 @@
  *
  * Защита — тот же стек, что у формы заявки плагина, но свой инстанс:
  * honeypot + подписанный HMAC-таймер (по образцу
- * `Inc\Services\Security\FormGuardService` плагина) + Yandex SmartCaptcha
- * (по образцу `YandexSmartCaptchaProvider`, свои ключи в настройках темы)
+ * `Inc\Services\Security\FormGuardService` плагина) + невидимая Yandex
+ * SmartCaptcha (`inc/SmartCaptcha.php`, свои ключи в настройках темы)
  * + rate-limit по IP на transient.
  */
 
@@ -43,6 +43,20 @@ const FS_LMS_THEME_FORM_PHONE_LIMIT = 2;
 
 /** Окно лимита по номеру телефона, сек. */
 const FS_LMS_THEME_FORM_PHONE_WINDOW = HOUR_IN_SECONDS;
+
+/**
+ * Лимит на заявки без токена капчи — общий на весь сайт, не по IP.
+ *
+ * BugFix (2026-09-12, решение пользователя): если у посетителя капча не
+ * загрузилась (блокировщик рекламы, сеть), заявку всё равно принимаем.
+ * Сервер не может отличить такого посетителя от бота, который просто не
+ * прислал токен, поэтому поток «без капчи» ограничен целиком: при атаке
+ * упрётся в лимит он, а заявки с пройденной капчей идут как обычно.
+ */
+const FS_LMS_THEME_FORM_NO_CAPTCHA_LIMIT = 5;
+
+/** Окно лимита заявок без капчи, сек. */
+const FS_LMS_THEME_FORM_NO_CAPTCHA_WINDOW = HOUR_IN_SECONDS;
 
 /** Получатель писем с лид-форм (решение 2, обсуждение 2026-09-02). */
 const FS_LMS_THEME_FORM_RECIPIENT = 'info@future-step.ru';
@@ -108,66 +122,6 @@ function fs_lms_theme_name_field_attrs_html(): string {
 	return implode( ' ', $attributes );
 }
 
-/* --------------------------------------------------------------------
- * Настройки: Настройки → Формы (Yandex SmartCaptcha, независимо от
- * настроек плагина — `SmartCaptchaSettingsController` не переиспользуем,
- * тема не должна знать о классах плагина).
- * ------------------------------------------------------------------ */
-
-add_action( 'admin_menu', function (): void {
-	add_options_page(
-		__( 'Формы сайта', 'fs-lms-theme' ),
-		__( 'Формы', 'fs-lms-theme' ),
-		'manage_options',
-		'fs-lms-theme-forms',
-		'fs_lms_theme_render_forms_settings_page'
-	);
-} );
-
-add_action( 'admin_init', function (): void {
-	register_setting( 'fs_lms_theme_forms', 'fs_lms_theme_captcha_site_key', array(
-		'type'              => 'string',
-		'sanitize_callback' => 'sanitize_text_field',
-		'default'           => '',
-	) );
-	register_setting( 'fs_lms_theme_forms', 'fs_lms_theme_captcha_server_key', array(
-		'type'              => 'string',
-		'sanitize_callback' => 'sanitize_text_field',
-		'default'           => '',
-	) );
-} );
-
-function fs_lms_theme_render_forms_settings_page(): void {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
-	?>
-	<div class="wrap">
-		<h1><?php esc_html_e( 'Настройки форм', 'fs-lms-theme' ); ?></h1>
-		<p><?php esc_html_e( 'Ключи Yandex SmartCaptcha для лид-форм темы (#hero-form, #signup). Независимо от настроек капчи плагина.', 'fs-lms-theme' ); ?></p>
-		<form method="post" action="options.php">
-			<?php settings_fields( 'fs_lms_theme_forms' ); ?>
-			<table class="form-table" role="presentation">
-				<tr>
-					<th scope="row"><label for="fs_lms_theme_captcha_site_key"><?php esc_html_e( 'Site key', 'fs-lms-theme' ); ?></label></th>
-					<td><input type="text" class="regular-text" id="fs_lms_theme_captcha_site_key" name="fs_lms_theme_captcha_site_key" value="<?php echo esc_attr( get_option( 'fs_lms_theme_captcha_site_key', '' ) ); ?>"></td>
-				</tr>
-				<tr>
-					<th scope="row"><label for="fs_lms_theme_captcha_server_key"><?php esc_html_e( 'Server key', 'fs-lms-theme' ); ?></label></th>
-					<td><input type="text" class="regular-text" id="fs_lms_theme_captcha_server_key" name="fs_lms_theme_captcha_server_key" value="<?php echo esc_attr( get_option( 'fs_lms_theme_captcha_server_key', '' ) ); ?>"></td>
-				</tr>
-			</table>
-			<p class="description"><?php esc_html_e( 'Если оба поля пустые, формы отправляются без капчи — защита держится на honeypot и таймере заполнения.', 'fs-lms-theme' ); ?></p>
-			<?php submit_button(); ?>
-		</form>
-	</div>
-	<?php
-}
-
-function fs_lms_theme_captcha_configured(): bool {
-	return '' !== get_option( 'fs_lms_theme_captcha_site_key', '' ) && '' !== get_option( 'fs_lms_theme_captcha_server_key', '' );
-}
-
 /**
  * Задача 9 (tasks.md, 2026-09-04): URL кнопки «Записаться» в шапке
  * (`patterns/header-nav.php`). Если на текущей странице есть форма
@@ -212,16 +166,6 @@ function fs_lms_theme_signup_button_url(): string {
 
 	return $home_anchor;
 }
-
-/**
- * Подключение `captcha.js` — только если обе настройки заданы (иначе
- * форма отправляется без капчи, не ломается на голой установке).
- */
-add_action( 'wp_enqueue_scripts', function (): void {
-	if ( fs_lms_theme_captcha_configured() ) {
-		wp_enqueue_script( 'fs-lms-theme-smartcaptcha', 'https://smartcaptcha.yandexcloud.net/captcha.js', array(), null, true );
-	}
-}, 25 );
 
 /* --------------------------------------------------------------------
  * FormGuard — honeypot + HMAC-таймер (1:1 логика с FormGuardService
@@ -275,46 +219,6 @@ function fs_lms_theme_form_is_human( string $honeypot_value, string $token ): bo
 }
 
 /* --------------------------------------------------------------------
- * Капча — серверная проверка токена (fail-open при недоступности API,
- * как у YandexSmartCaptchaProvider плагина — не блокируем легитимных
- * пользователей отказом стороннего сервиса).
- * ------------------------------------------------------------------ */
-
-function fs_lms_theme_captcha_validate( string $token, string $ip ): bool {
-	$server_key = get_option( 'fs_lms_theme_captcha_server_key', '' );
-
-	if ( '' === $server_key ) {
-		return true;
-	}
-
-	if ( '' === $token ) {
-		return false;
-	}
-
-	$response = wp_remote_post( 'https://smartcaptcha.yandexcloud.net/validate', array(
-		'timeout' => 5,
-		'body'    => array(
-			'secret' => $server_key,
-			'token'  => $token,
-			'ip'     => $ip,
-		),
-	) );
-
-	if ( is_wp_error( $response ) ) {
-		return true;
-	}
-
-	$code = (int) wp_remote_retrieve_response_code( $response );
-	$body = json_decode( (string) wp_remote_retrieve_body( $response ), true );
-
-	if ( 200 !== $code || ! is_array( $body ) ) {
-		return true;
-	}
-
-	return isset( $body['status'] ) && 'ok' === $body['status'];
-}
-
-/* --------------------------------------------------------------------
  * Rate-limit — простой transient-счётчик по хэшу IP (не копия
  * RateLimitService плагина).
  * ------------------------------------------------------------------ */
@@ -362,6 +266,28 @@ function fs_lms_theme_phone_digits( string $phone ): string {
 }
 
 /* --------------------------------------------------------------------
+ * Свежая метка времени для формы.
+ *
+ * BugFix (2026-09-12): `fs_form_token` печатается в разметку при рендере
+ * страницы, а кэш страниц (WP Rocket на проде) отдаёт эту разметку часами.
+ * Метка старше `FS_LMS_THEME_FORM_MAX_TOKEN_AGE` не проходит проверку, и
+ * посетитель кэшированной страницы не мог отправить форму — «обновите
+ * страницу» не помогало, обновлялся тот же кэш. `src/js/forms.js` берёт
+ * метку и nonce здесь при первом фокусе в форме; `admin-ajax.php` кэш
+ * страниц не трогает.
+ * ------------------------------------------------------------------ */
+
+add_action( 'wp_ajax_fs_theme_form_token', 'fs_lms_theme_handle_form_token' );
+add_action( 'wp_ajax_nopriv_fs_theme_form_token', 'fs_lms_theme_handle_form_token' );
+
+function fs_lms_theme_handle_form_token(): void {
+	wp_send_json_success( array(
+		'token' => fs_lms_theme_form_timestamp_token(),
+		'nonce' => wp_create_nonce( 'fs-theme-form' ),
+	) );
+}
+
+/* --------------------------------------------------------------------
  * AJAX-обработчик — общий для всех форм темы, различает форму по
  * скрытому полю `form_id` ('signup' / 'hero').
  * ------------------------------------------------------------------ */
@@ -387,8 +313,13 @@ function fs_lms_theme_handle_form_submit(): void {
 		wp_send_json_error( array( 'message' => __( 'Слишком много попыток. Попробуйте немного позже.', 'fs-lms-theme' ) ), 429 );
 	}
 
-	$captcha_token = isset( $_POST['smart-token'] ) ? sanitize_text_field( wp_unslash( $_POST['smart-token'] ) ) : '';
-	if ( fs_lms_theme_captcha_configured() && ! fs_lms_theme_captcha_validate( $captcha_token, $ip ) ) {
+	$captcha         = new FS_LMS_Theme_Smart_Captcha();
+	$captcha_token   = isset( $_POST['smart-token'] ) ? sanitize_text_field( wp_unslash( $_POST['smart-token'] ) ) : '';
+	$captcha_skipped = $captcha->is_configured() && '' === $captcha_token;
+
+	// Пустой токен — капча не загрузилась у посетителя, такие заявки идут под
+	// общим лимитом ниже. Присланный, но неверный токен — отказ.
+	if ( $captcha->is_configured() && ! $captcha_skipped && ! $captcha->validate( $captcha_token, $ip ) ) {
 		wp_send_json_error( array( 'message' => __( 'Проверка «Я не робот» не пройдена, попробуйте ещё раз.', 'fs-lms-theme' ) ), 400 );
 	}
 
@@ -428,6 +359,12 @@ function fs_lms_theme_handle_form_submit(): void {
 		wp_send_json_error( array( 'message' => __( 'Слишком много попыток. Попробуйте немного позже.', 'fs-lms-theme' ) ), 429 );
 	}
 
+	// Считаем только прошедшие валидацию заявки, чтобы мусорные запросы не
+	// выедали лимит у настоящих посетителей без капчи.
+	if ( $captcha_skipped && fs_lms_theme_form_rate_limited( 'no-captcha', FS_LMS_THEME_FORM_NO_CAPTCHA_LIMIT, FS_LMS_THEME_FORM_NO_CAPTCHA_WINDOW ) ) {
+		wp_send_json_error( array( 'message' => __( 'Не получилось отправить заявку, попробуйте позже или позвоните нам: +7(995)326-44-86', 'fs-lms-theme' ) ), 429 );
+	}
+
 	$lines = array(
 		sprintf( 'Форма: %s', $form_id ),
 		sprintf( 'Имя: %s', $name ),
@@ -439,6 +376,10 @@ function fs_lms_theme_handle_form_submit(): void {
 	}
 	if ( '' !== $subject ) {
 		$lines[] = sprintf( 'Направление: %s', $subject );
+	}
+
+	if ( $captcha_skipped ) {
+		$lines[] = 'Капча: не загрузилась у посетителя, заявка принята без неё';
 	}
 
 	$lines[] = sprintf( 'IP: %s', $ip );

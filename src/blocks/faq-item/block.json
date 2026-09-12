@@ -9,8 +9,8 @@
 	"keywords": [ "faq", "вопрос", "ответ", "аккордеон" ],
 	"textdomain": "fs-lms-theme",
 	"attributes": {
-		"question": { "type": "string", "source": "html", "selector": ".fs-faq-item__question-text", "default": "Вопрос" },
-		"answer": { "type": "string", "source": "html", "selector": ".fs-faq-item__answer", "default": "Ответ на вопрос." },
+		"question": { "type": "string", "role": "content", "source": "html", "selector": ".fs-faq-item__question-text", "default": "Вопрос" },
+		"answer": { "type": "string", "role": "content", "source": "html", "selector": ".fs-faq-item__answer", "default": "Ответ на вопрос." },
 		"defaultOpen": { "type": "boolean", "default": false }
 	},
 	"supports": { "html": false },

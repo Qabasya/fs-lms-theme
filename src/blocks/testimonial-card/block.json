@@ -9,12 +9,12 @@
 	"keywords": [ "отзыв", "рейтинг", "testimonial", "карточка" ],
 	"textdomain": "fs-lms-theme",
 	"attributes": {
-		"imageId": { "type": "number", "default": 0 },
-		"imageUrl": { "type": "string", "default": "" },
-		"imageAlt": { "type": "string", "default": "" },
-		"authorName": { "type": "string", "source": "html", "selector": ".fs-testimonial-card__name", "default": "Имя Фамилия" },
-		"authorRole": { "type": "string", "source": "html", "selector": ".fs-testimonial-card__role", "default": "Родитель, 11 класс" },
-		"quote": { "type": "string", "source": "html", "selector": ".fs-testimonial-card__quote", "default": "Текст отзыва." },
+		"imageId": { "type": "number", "role": "content", "default": 0 },
+		"imageUrl": { "type": "string", "role": "content", "default": "" },
+		"imageAlt": { "type": "string", "role": "content", "default": "" },
+		"authorName": { "type": "string", "role": "content", "source": "html", "selector": ".fs-testimonial-card__name", "default": "Имя Фамилия" },
+		"authorRole": { "type": "string", "role": "content", "source": "html", "selector": ".fs-testimonial-card__role", "default": "Родитель, 11 класс" },
+		"quote": { "type": "string", "role": "content", "source": "html", "selector": ".fs-testimonial-card__quote", "default": "Текст отзыва." },
 		"rating": { "type": "number", "default": 5 }
 	},
 	"supports": { "html": false },

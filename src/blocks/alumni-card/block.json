@@ -9,12 +9,12 @@
 	"keywords": [ "выпускник", "отзыв", "alumni", "карточка" ],
 	"textdomain": "fs-lms-theme",
 	"attributes": {
-		"imageId": { "type": "number", "default": 0 },
-		"imageUrl": { "type": "string", "default": "" },
-		"imageAlt": { "type": "string", "default": "" },
-		"scoreText": { "type": "string", "source": "html", "selector": ".fs-alumni-card__score", "default": "98 баллов" },
-		"authorName": { "type": "string", "source": "html", "selector": ".fs-alumni-card__name", "default": "Имя Фамилия" },
-		"quote": { "type": "string", "source": "html", "selector": ".fs-alumni-card__quote", "default": "Короткий отзыв выпускника." }
+		"imageId": { "type": "number", "role": "content", "default": 0 },
+		"imageUrl": { "type": "string", "role": "content", "default": "" },
+		"imageAlt": { "type": "string", "role": "content", "default": "" },
+		"scoreText": { "type": "string", "role": "content", "source": "html", "selector": ".fs-alumni-card__score", "default": "98 баллов" },
+		"authorName": { "type": "string", "role": "content", "source": "html", "selector": ".fs-alumni-card__name", "default": "Имя Фамилия" },
+		"quote": { "type": "string", "role": "content", "source": "html", "selector": ".fs-alumni-card__quote", "default": "Короткий отзыв выпускника." }
 	},
 	"supports": { "html": false },
 	"editorScript": "fs-lms-alumni-card-editor-script",

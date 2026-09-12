@@ -75,9 +75,7 @@
 				<input type="hidden" name="form_id" value="signup">
 				<input type="hidden" name="fs_form_token" value="<?php echo esc_attr( fs_lms_theme_form_timestamp_token() ); ?>">
 				<input type="text" name="<?php echo esc_attr( fs_lms_theme_honeypot_field() ); ?>" class="fs-form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-				<?php if ( function_exists( 'fs_lms_theme_captcha_configured' ) && fs_lms_theme_captcha_configured() ) : ?>
-				<div class="smart-captcha" data-sitekey="<?php echo esc_attr( get_option( 'fs_lms_theme_captcha_site_key', '' ) ); ?>"></div>
-				<?php endif; ?>
+				<?php echo fs_lms_theme_captcha_slot_html(); ?>
 				<button type="submit" class="fs-apply-form__submit">Отправить заявку</button>
 				<div class="fs-apply-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</div>
 				<div class="fs-form-message" role="status"></div>

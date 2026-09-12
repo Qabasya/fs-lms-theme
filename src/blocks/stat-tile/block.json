@@ -9,9 +9,9 @@
 	"keywords": [ "статистика", "цифры", "stat", "карточка" ],
 	"textdomain": "fs-lms-theme",
 	"attributes": {
-		"value": { "type": "string", "source": "html", "selector": ".fs-stat-tile__value", "default": "100" },
-		"label": { "type": "string", "source": "html", "selector": ".fs-stat-tile__label", "default": "подпись" },
-		"description": { "type": "string", "source": "html", "selector": "p", "default": "Короткое пояснение к цифре." },
+		"value": { "type": "string", "role": "content", "source": "html", "selector": ".fs-stat-tile__value", "default": "100" },
+		"label": { "type": "string", "role": "content", "source": "html", "selector": ".fs-stat-tile__label", "default": "подпись" },
+		"description": { "type": "string", "role": "content", "source": "html", "selector": "p", "default": "Короткое пояснение к цифре." },
 		"accentColor": { "type": "string", "default": "accent" }
 	},
 	"supports": { "html": false },

@@ -23,6 +23,44 @@
 		color: var( --wp--preset--color--accent-700 );
 	}
 
+	/**
+	 * BugFix.3 (2026-09-12): карусели «Наши выпускники» и «Наши выпускники
+	 * поступают» (`patterns/alumni-carousel.php`, `alumni-strip.php`). Splide
+	 * в редакторе не запускается, а стили темы и Splide туда не попадают:
+	 * слайды шли столбиком во всю ширину, логотипы — в исходном размере.
+	 * Здесь слайды стоят в ряд с прокруткой, как на сайте.
+	 */
+	.fs-carousel .splide__list {
+		display: flex;
+		gap: 1.25rem;
+		overflow-x: auto;
+		padding-bottom: .5rem;
+
+		> * {
+			flex: 0 0 auto;
+			margin-block: 0;
+		}
+
+		> .fs-alumni-card {
+			width: min( 22rem, 85% );
+		}
+
+		> .fs-alumni-logo {
+			height: 120px;
+
+			img {
+				width: auto;
+				max-width: none;
+				height: 100%;
+				object-fit: contain;
+			}
+		}
+	}
+
+	.fs-carousel-mask--strip .splide__list {
+		align-items: center;
+	}
+
 	.fs-placeholder-tile {
 		--fs-placeholder-line: var( --wp--preset--color--border );
 

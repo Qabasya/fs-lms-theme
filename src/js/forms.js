@@ -14,7 +14,30 @@
  * `initAnchorAutofocus()` (задача 3, 2026-09-04) — тоже не зависит от
  * `window.fsLmsTheme`: переход по якорю на форму записи ставит фокус на
  * поле «ФИО родителя», это чистый UX-хук, не связанный с AJAX-отправкой.
+ *
+ * BugFix (2026-09-12): на первом фокусе в форме — свежая метка времени
+ * `fs_form_token` с сервера (метка из разметки в кэше страниц устаревает,
+ * см. `fs_lms_theme_handle_form_token()` в `inc/Forms.php`) и прогрев
+ * невидимой капчи (`captcha.js`).
  */
+
+import { getCaptchaToken, isCaptchaDismissed, preloadCaptcha, resetCaptcha } from './captcha.js';
+
+/**
+ * Сервер не принимает форму раньше, чем через
+ * `FS_LMS_THEME_FORM_MIN_FILL_SECONDS` после выдачи метки, мс. С запасом на
+ * округление секунд на сервере.
+ */
+const MIN_FILL_TIME = 3200;
+
+/** Метку старше этого перед отправкой берём заново (сервер держит час), мс. */
+const TOKEN_REFRESH_AFTER = 30 * 60 * 1000;
+
+const CAPTCHA_DISMISSED_MESSAGE = 'Подтвердите, что вы не робот, и отправьте форму ещё раз.';
+const NETWORK_ERROR_MESSAGE = 'Не получилось отправить форму, проверьте соединение и попробуйте ещё раз.';
+
+/** @type {WeakMap<HTMLFormElement, {issuedAt: number|null, request: Promise|null}>} */
+const formTokens = new WeakMap();
 
 export function initForms() {
 	initPhoneMask();
@@ -25,11 +48,82 @@ export function initForms() {
 	}
 
 	document.querySelectorAll( 'form[data-fs-form]' ).forEach( ( form ) => {
+		form.addEventListener( 'focusin', () => {
+			requestFormToken( form );
+			preloadCaptcha( form );
+		}, { once: true } );
+
 		form.addEventListener( 'submit', ( event ) => {
 			event.preventDefault();
 			submitForm( form );
 		} );
 	} );
+}
+
+function getTokenState( form ) {
+	if ( ! formTokens.has( form ) ) {
+		formTokens.set( form, { issuedAt: null, request: null } );
+	}
+
+	return formTokens.get( form );
+}
+
+/**
+ * Если запрос не удался, в форме остаётся метка из разметки — на
+ * некэшированной странице она и так свежая.
+ */
+function requestFormToken( form ) {
+	const state = getTokenState( form );
+
+	if ( state.request ) {
+		return state.request;
+	}
+
+	const body = new FormData();
+	body.set( 'action', 'fs_theme_form_token' );
+
+	state.request = fetch( window.fsLmsTheme.ajaxUrl, { method: 'POST', body } )
+		.then( ( response ) => response.json() )
+		.then( ( data ) => {
+			if ( ! data || ! data.success ) {
+				return;
+			}
+
+			const input = form.querySelector( 'input[name="fs_form_token"]' );
+
+			if ( input ) {
+				input.value = data.data.token;
+			}
+
+			window.fsLmsTheme.formNonce = data.data.nonce;
+			state.issuedAt = window.performance.now();
+		} )
+		.catch( () => {} )
+		.finally( () => {
+			state.request = null;
+		} );
+
+	return state.request;
+}
+
+function ensureFreshToken( form ) {
+	const state = getTokenState( form );
+	const isStale = null === state.issuedAt || window.performance.now() - state.issuedAt > TOKEN_REFRESH_AFTER;
+
+	return state.request || ( isStale ? requestFormToken( form ) : Promise.resolve() );
+}
+
+/**
+ * Метку выдали только что (автозаполнение и сразу «Отправить») — ждём
+ * остаток минимального времени, вместо того чтобы получить отказ сервера.
+ */
+function waitMinFillTime( form ) {
+	const { issuedAt } = getTokenState( form );
+	const remaining = null === issuedAt ? 0 : MIN_FILL_TIME - ( window.performance.now() - issuedAt );
+
+	return remaining > 0
+		? new Promise( ( resolve ) => window.setTimeout( resolve, remaining ) )
+		: Promise.resolve();
 }
 
 /**
@@ -168,16 +262,10 @@ function submitForm( form ) {
 		submitButton.disabled = true;
 	}
 
-	const formData = new FormData( form );
-	formData.set( 'action', 'fs_theme_submit_form' );
-	formData.set( 'nonce', window.fsLmsTheme.formNonce );
-	formData.set( 'page_url', window.location.href );
-
-	fetch( window.fsLmsTheme.ajaxUrl, {
-		method: 'POST',
-		body: formData,
-	} )
-		.then( ( response ) => response.json() )
+	ensureFreshToken( form )
+		.then( () => waitMinFillTime( form ) )
+		.then( () => getCaptchaToken( form ) )
+		.then( ( captchaToken ) => sendForm( form, captchaToken ) )
 		.then( ( data ) => {
 			const success = Boolean( data && data.success );
 			const text = data && data.data && data.data.message
@@ -192,14 +280,34 @@ function submitForm( form ) {
 				form.reset();
 			}
 		} )
-		.catch( () => {
-			showMessage( message, 'Не получилось отправить форму, проверьте соединение и попробуйте ещё раз.', false );
+		.catch( ( error ) => {
+			showMessage( message, isCaptchaDismissed( error ) ? CAPTCHA_DISMISSED_MESSAGE : NETWORK_ERROR_MESSAGE, false );
 		} )
 		.finally( () => {
+			resetCaptcha( form );
+
 			if ( submitButton ) {
 				submitButton.disabled = false;
 			}
 		} );
+}
+
+/**
+ * Пустой `smart-token` сервер понимает как «капча не загрузилась». Поле
+ * задаём явно: виджет Яндекса держит в форме своё скрытое поле с тем же
+ * именем, и там может остаться токен прошлой отправки.
+ */
+function sendForm( form, captchaToken ) {
+	const formData = new FormData( form );
+	formData.set( 'action', 'fs_theme_submit_form' );
+	formData.set( 'nonce', window.fsLmsTheme.formNonce );
+	formData.set( 'page_url', window.location.href );
+	formData.set( 'smart-token', captchaToken );
+
+	return fetch( window.fsLmsTheme.ajaxUrl, {
+		method: 'POST',
+		body: formData,
+	} ).then( ( response ) => response.json() );
 }
 
 function showMessage( element, text, success ) {

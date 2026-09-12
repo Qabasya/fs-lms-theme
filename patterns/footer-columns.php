@@ -20,6 +20,9 @@
  * решение 2 Фазы 12, разворот этого решения по прямому указанию
  * пользователя); ширина/высота пересчитаны под реальное соотношение
  * сторон файла (2800×816), не растянуты произвольно.
+ *
+ * 2026-09-12: в колонке «Информация» — ссылка на форму заявки плагина
+ * (`/apply/`, адрес через `fs_lms_theme_url()`).
  */
 ?>
 <!-- wp:group {"tagName":"div","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xxxl","bottom":"0"}},"color":{"background":"#2b2f36"}},"textColor":"white"} -->
@@ -76,6 +79,10 @@
 
 				<!-- wp:group {"className":"fs-footer-grid__contacts"} -->
 				<div class="wp-block-group fs-footer-grid__contacts">
+					<!-- wp:paragraph -->
+					<p><a href="<?php echo esc_url( fs_lms_theme_url( 'apply' ) ); ?>">Подать заявку на обучение</a></p>
+					<!-- /wp:paragraph -->
+
 					<!-- wp:paragraph -->
 					<p><a href="<?php echo esc_url( home_url( '/public-offer/' ) ); ?>">Публичная оферта</a></p>
 					<!-- /wp:paragraph -->

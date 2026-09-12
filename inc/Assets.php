@@ -80,17 +80,17 @@ add_action( 'wp_enqueue_scripts', function (): void {
 		 * каталога WooCommerce, Фаза 10.5, убран — новый макет магазина его
 		 * не предусматривает).
 		 */
+		$captcha = new FS_LMS_Theme_Smart_Captcha();
+
 		wp_localize_script( 'fs-lms-theme', 'fsLmsTheme', array(
 			'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
 			'formNonce'      => wp_create_nonce( 'fs-theme-form' ),
 			/**
 			 * `captchaSiteKey` пуст, если Yandex SmartCaptcha не настроена в
-			 * Настройки → Формы — тогда JS не рендерит виджет капчи, форма
-			 * отправляется без него.
+			 * Настройки → Формы — тогда `src/js/captcha.js` не грузит скрипт
+			 * Яндекса, форма отправляется без капчи.
 			 */
-			'captchaSiteKey' => function_exists( 'fs_lms_theme_captcha_configured' ) && fs_lms_theme_captcha_configured()
-				? get_option( 'fs_lms_theme_captcha_site_key', '' )
-				: '',
+			'captchaSiteKey' => $captcha->is_configured() ? $captcha->site_key() : '',
 		) );
 	}
 } );

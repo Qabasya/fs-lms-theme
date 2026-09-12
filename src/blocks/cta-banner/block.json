@@ -9,12 +9,12 @@
 	"keywords": [ "cta", "призыв", "баннер" ],
 	"textdomain": "fs-lms-theme",
 	"attributes": {
-		"heading": { "type": "string", "source": "html", "selector": ".fs-cta-banner__heading", "default": "Заголовок призыва к действию" },
-		"text": { "type": "string", "source": "html", "selector": ".fs-cta-banner__text", "default": "Короткое пояснение." },
-		"primaryText": { "type": "string", "default": "Записаться" },
-		"primaryUrl": { "type": "string", "default": "#" },
-		"secondaryText": { "type": "string", "default": "" },
-		"secondaryUrl": { "type": "string", "default": "" },
+		"heading": { "type": "string", "role": "content", "source": "html", "selector": ".fs-cta-banner__heading", "default": "Заголовок призыва к действию" },
+		"text": { "type": "string", "role": "content", "source": "html", "selector": ".fs-cta-banner__text", "default": "Короткое пояснение." },
+		"primaryText": { "type": "string", "role": "content", "default": "Записаться" },
+		"primaryUrl": { "type": "string", "role": "content", "default": "#" },
+		"secondaryText": { "type": "string", "role": "content", "default": "" },
+		"secondaryUrl": { "type": "string", "role": "content", "default": "" },
 		"variant": { "type": "string", "default": "solid" }
 	},
 	"supports": { "html": false },
