@@ -407,11 +407,82 @@ function fs_lms_theme_seed_subject_page(): void {
 add_action( 'template_redirect', 'fs_lms_theme_seed_subject_page' );
 
 /**
+ * Переводит вводный абзац секции «Как устроены занятия» с размера `md` на
+ * `base` (раскладка 4).
+ *
+ * 2026-09-13 (tasks.md, шаг 9): абзац «Формат одинаковый на всех
+ * направлениях…» по указанию пользователя — размер `base`. В паттерне и в
+ * стартовом контенте (`fs_lms_theme_subject_intensive_blocks()`) это
+ * исправлено, но на уже созданных страницах направлений секция лежит копией
+ * в `post_content` — там абзац остался `md`, а в редакторе размер поменять
+ * не удалось.
+ *
+ * Секцию ищем по классу чек-листа (`fs-checklist`), абзац — по размеру
+ * `md`, а не по тексту: текст на странице могли переписать под предмет,
+ * а других абзацев `md` в секции нет. Разбор блоками, а не заменой строки —
+ * меняется и атрибут блока, и класс в разметке, иначе редактор посчитал бы
+ * блок повреждённым.
+ *
+ * `md` проверяется и в атрибуте, и в классе: на странице «Робототехника»
+ * атрибут уже поправили руками на `base`, а класс `has-md-font-size`
+ * остался — такой блок тоже доводим до согласованного вида.
+ *
+ * @param string $content Содержимое страницы направления.
+ *
+ * @return string Содержимое с абзацем `base` (или исходное, если менять нечего).
+ */
+function fs_lms_theme_subject_intensive_lead_to_base( string $content ): string {
+	$blocks  = parse_blocks( $content );
+	$changed = false;
+
+	foreach ( $blocks as $index => $block ) {
+		if ( null !== $block['blockName'] && str_contains( serialize_block( $block ), 'fs-checklist' ) ) {
+			$blocks[ $index ] = fs_lms_theme_paragraphs_md_to_base( $block, $changed );
+		}
+	}
+
+	return $changed ? serialize_blocks( $blocks ) : $content;
+}
+
+/**
+ * Рекурсивно переводит абзацы размера `md` внутри блока на `base`.
+ *
+ * @param array $block   Блок в формате `parse_blocks()`.
+ * @param bool  $changed Становится `true`, если хоть один абзац изменён.
+ *
+ * @return array Блок с изменёнными абзацами.
+ */
+function fs_lms_theme_paragraphs_md_to_base( array $block, bool &$changed ): array {
+	$is_md = 'md' === ( $block['attrs']['fontSize'] ?? '' ) || str_contains( $block['innerHTML'], 'has-md-font-size' );
+
+	if ( 'core/paragraph' === $block['blockName'] && $is_md ) {
+		$block['attrs']['fontSize'] = 'base';
+		$block['innerHTML']         = str_replace( 'has-md-font-size', 'has-base-font-size', $block['innerHTML'] );
+		$block['innerContent']      = array_map(
+			static function ( $part ) {
+				return is_string( $part ) ? str_replace( 'has-md-font-size', 'has-base-font-size', $part ) : $part;
+			},
+			$block['innerContent']
+		);
+		$changed                    = true;
+	}
+
+	foreach ( $block['innerBlocks'] as $index => $inner ) {
+		$block['innerBlocks'][ $index ] = fs_lms_theme_paragraphs_md_to_base( $inner, $changed );
+	}
+
+	return $block;
+}
+
+/**
  * Версия «раскладки» страниц направлений. Меняется, когда очередная секция
  * переезжает со ссылки на паттерн в собственные блоки страницы и уже
  * созданные страницы нужно перевести на новый вид.
+ *
+ * 4 (2026-09-13) — абзац «Формат одинаковый…» с `md` на `base`
+ * (`fs_lms_theme_subject_intensive_lead_to_base()`).
  */
-const FS_LMS_THEME_SUBJECT_PAGES_LAYOUT = 3;
+const FS_LMS_THEME_SUBJECT_PAGES_LAYOUT = 4;
 
 /**
  * BugFix.5 (2026-09-05): разворачивает ссылки на общие паттерны в блоки
@@ -465,14 +536,21 @@ function fs_lms_theme_upgrade_subject_pages(): void {
 			$updated = fs_lms_theme_strip_subject_more( $updated );
 		}
 
+		$updated = fs_lms_theme_subject_intensive_lead_to_base( $updated );
+
 		if ( $updated === $content ) {
 			continue;
 		}
 
+		// `wp_insert_post()` снимает слеши с данных (`wp_unslash()`), а
+		// `serialize_blocks()` пишет в атрибуты экранирование вида `-`:
+		// без `wp_slash()` обратные слеши пропали бы и атрибуты блоков сломались.
 		wp_update_post(
-			array(
-				'ID'           => $page->ID,
-				'post_content' => $updated,
+			wp_slash(
+				array(
+					'ID'           => $page->ID,
+					'post_content' => $updated,
+				)
 			)
 		);
 	}
