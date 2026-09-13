@@ -38,6 +38,8 @@
  * зазор до вводного абзаца задаёт `margin-top` у `.fs-shop-intro` ниже.
  * Своё правило, а не общий селектор `h1`: разметку печатает плагин, у неё
  * свои классы, а глобального размера `h1` в `theme.json` тема не задаёт.
+ * Класс `has-xxl-font-size` на него дописывает `inc/WooCommerce.php`;
+ * `font-size` здесь остаётся на случай, если плагин сменит разметку блока.
  */
 .woocommerce-products-header__title.page-title {
 	margin: 0;
@@ -340,14 +342,14 @@
 }
 
 /**
- * Заголовок страниц корзины и оформления — 34px/700 под степпером, как в
+ * Заголовок страниц корзины и оформления — 700 под степпером, как в
  * макетах; печатает его `fs_lms_theme_checkout_heading()`
- * (`inc/Checkout.php`). У страницы благодарности свой заголовок — она
- * целиком собрана шаблоном темы, см. `.fs-thankyou` ниже.
+ * (`inc/Checkout.php`). Кегль задаёт класс пресета `has-xxl-font-size` в
+ * разметке, как у `<h1>` остальных страниц. У страницы благодарности свой
+ * заголовок — она целиком собрана шаблоном темы, см. `.fs-thankyou` ниже.
  */
 .fs-page-title {
 	margin: 0 0 var( --wp--preset--spacing--xl );
-	font-size: 2.125rem;
 	font-weight: 700;
 	line-height: 1.15;
 	letter-spacing: -.015em;
@@ -396,11 +398,12 @@
 		}
 	}
 
-	// В макете заголовок легче, чем на корзине и оформлении: 32px обычного
-	// начертания вместо 34px полужирного.
+	// В макете заголовок легче, чем на корзине и оформлении: обычного
+	// начертания вместо полужирного. Кегль — тот же токен заголовков
+	// страниц (2026-09-13, было `2rem` = 38.4px — крупнее самих заголовков).
 	&__title {
 		margin: 0;
-		font-size: 2rem;
+		font-size: var( --wp--preset--font-size--xxl );
 		font-weight: 400;
 		line-height: 1.25;
 		letter-spacing: -.01em;
@@ -1236,7 +1239,7 @@ form.checkout_coupon {
 				}
 
 				td {
-					font-size: 1.625rem;
+					font-size: var( --wp--preset--font-size--xl );
 					font-weight: 700;
 				}
 			}
@@ -1513,7 +1516,10 @@ form.checkout_coupon {
 			border: 1px solid var( --wp--preset--color--border );
 			border-radius: var( --wp--custom--radius--lg );
 			list-style: none;
-			font-size: var( --wp--preset--font-size--lead );
+
+			// Кегль подписей полей формы («Телефон», «Email») — по указанию
+			// пользователя (2026-09-12), было `lead`.
+			font-size: var( --wp--preset--font-size--xs );
 			font-weight: 700;
 			color: var( --wp--preset--color--text );
 		}
@@ -1665,7 +1671,7 @@ form.checkout_coupon {
 				}
 
 				td {
-					font-size: 1.625rem;
+					font-size: var( --wp--preset--font-size--xl );
 					font-weight: 700;
 					white-space: nowrap;
 				}

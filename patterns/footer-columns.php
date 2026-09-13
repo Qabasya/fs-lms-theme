@@ -21,6 +21,10 @@
  * пользователя); ширина/высота пересчитаны под реальное соотношение
  * сторон файла (2800×816), не растянуты произвольно.
  *
+ * 2026-09-13 (по указанию пользователя): ширина логотипа 200px (было
+ * 172px), высота по пропорциям файла — ~58px, ограничение `max-height`
+ * в `theme.scss` поднято под неё.
+ *
  * 2026-09-12: в колонке «Информация» — ссылка на форму заявки плагина
  * (`/apply/`, адрес через `fs_lms_theme_url()`).
  *
@@ -36,8 +40,8 @@
 		<div class="wp-block-group fs-footer-grid">
 			<!-- wp:group {"className":"fs-footer-grid__col"} -->
 			<div class="wp-block-group fs-footer-grid__col">
-				<!-- wp:image {"width":"172px","className":"fs-footer-logo","linkDestination":"custom"} -->
-				<figure class="wp-block-image is-resized fs-footer-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'img/logo-footer.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" style="width:172px"/></a></figure>
+				<!-- wp:image {"width":"200px","className":"fs-footer-logo","linkDestination":"custom"} -->
+				<figure class="wp-block-image is-resized fs-footer-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php echo esc_url( get_theme_file_uri( 'img/logo-footer.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" style="width:200px"/></a></figure>
 				<!-- /wp:image -->
 
 				<!-- wp:paragraph {"className":"fs-footer-grid__lead"} -->

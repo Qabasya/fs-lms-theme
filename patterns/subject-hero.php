@@ -51,16 +51,16 @@
 				<p class="fs-subject-hero-box__badge">11 класс</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:heading {"level":1,"fontSize":"xxxl"} -->
-				<h1 class="wp-block-heading has-xxxl-font-size">ЕГЭ по информатике</h1>
+				<!-- wp:heading {"level":1,"fontSize":"xxl"} -->
+				<h1 class="wp-block-heading has-xxl-font-size">ЕГЭ по информатике</h1>
 				<!-- /wp:heading -->
 
 				<!-- wp:paragraph {"fontSize":"lead"} -->
 				<p class="has-lead-font-size">Все задания экзамена, программирование на Python и индивидуальные консультации с репетитором.</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
-				<p class="has-text-secondary-color has-text-color has-md-font-size">Разбираем каждый тип задания от простого к сложному, регулярно решаем полные варианты в форме реального экзамена и разбираем ошибки — к июню ученик подходит с уверенным пониманием формата, а не только теории.</p>
+				<!-- wp:paragraph {"fontSize":"lead"} -->
+				<p class="has-lead-font-size">Разбираем каждый тип задания от простого к сложному, регулярно решаем полные варианты в форме реального экзамена и разбираем ошибки — к июню ученик подходит с уверенным пониманием формата, а не только теории.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->

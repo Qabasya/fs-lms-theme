@@ -24,12 +24,22 @@
 		}
 	}
 
+	/**
+	 * 2026-09-13: карточка в сетке из 4 колонок — ~282px, и после корневого
+	 * масштаба 120% цена с кнопкой в неё не входили, «12 000 ₽ / мес»
+	 * переносилось на две строки. Поэтому внутри карточки сжато: боковые
+	 * отступы `lg` вместо `xl`, в подвале цена `lead`, «/ мес» `xxs`, кнопка
+	 * `sm` с отступами 10px, зазор `sm`. Вместе с зазором сетки `lg` и её
+	 * переходом на 2 колонки ниже 1320px (`.fs-courses-grid`, `theme.scss`)
+	 * ряд умещается с запасом ~12px при пятизначной цене — пропорции как в
+	 * макете до масштаба.
+	 */
 	&__body {
 		display: flex;
 		flex: 1;
 		flex-direction: column;
 		gap: var( --wp--preset--spacing--sm );
-		padding: var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--xl ) var( --wp--preset--spacing--xl );
+		padding: var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--xl );
 	}
 
 	&__badge {
@@ -56,22 +66,26 @@
 		font-weight: 300;
 	}
 
+	// `flex-wrap` — страховка на цену длиннее пятизначной: кнопка уходит на
+	// следующую строку, а не вылезает за карточку.
 	&__footer {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
-		gap: var( --wp--preset--spacing--md );
+		gap: var( --wp--preset--spacing--sm );
 		margin-top: auto;
 		padding-top: var( --wp--preset--spacing--md );
 	}
 
 	&__price {
-		font-size: 1.25rem;
+		font-size: var( --wp--preset--font-size--lead );
 		font-weight: 700;
+		white-space: nowrap;
 	}
 
 	&__price-unit {
 		margin-left: .125rem;
-		font-size: var( --wp--preset--font-size--xs );
+		font-size: var( --wp--preset--font-size--xxs );
 		font-weight: 400;
 		color: var( --wp--preset--color--muted );
 	}
@@ -83,11 +97,11 @@
 		align-items: center;
 		justify-content: center;
 		height: 2.375rem;
-		padding: 0 14px!important;
+		padding: 0 10px!important;
 		border-radius: var( --wp--custom--radius--control );
 		background: var( --wp--preset--color--accent-2 );
 		color: var( --wp--preset--color--white );
-		font-size: var( --wp--preset--font-size--base );
+		font-size: var( --wp--preset--font-size--sm );
 		font-weight: 600;
 		text-decoration: none;
 

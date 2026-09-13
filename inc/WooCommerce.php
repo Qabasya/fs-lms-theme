@@ -62,6 +62,27 @@ add_filter( 'loop_shop_columns', function (): int {
 } );
 
 /**
+ * Класс пресета `has-xxl-font-size` на `<h1>` каталога — как у `<h1>`
+ * остальных страниц (2026-09-12, по указанию пользователя).
+ *
+ * Заголовок печатает сам плагин внутри блока `woocommerce/legacy-template`
+ * (`ClassicTemplate::render_archive_product()`), разметка вшита в PHP, а не
+ * в шаблон `loop/header.php`, так что переопределением шаблона класс не
+ * добавить. Дописываем его в готовый HTML блока.
+ */
+add_filter( 'render_block_woocommerce/legacy-template', function ( string $content ): string {
+	$tags = new WP_HTML_Tag_Processor( $content );
+
+	if ( ! $tags->next_tag( array( 'tag_name' => 'h1', 'class_name' => 'woocommerce-products-header__title' ) ) ) {
+		return $content;
+	}
+
+	$tags->add_class( 'has-xxl-font-size' );
+
+	return $tags->get_updated_html();
+} );
+
+/**
  * Вводный абзац под заголовком «Магазин» (Фаза 16.2) — в макете это
  * статичный маркетинговый текст, не поле WooCommerce/CPT; выводится только
  * на корневом архиве магазина (`is_shop()`), не на страницах категорий —

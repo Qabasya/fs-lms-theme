@@ -73,29 +73,34 @@
  * совсем, вслед за `/courses/`, где разделителя между заголовком и
  * описанием никогда не было; строка ИНН/ОГРНИП тоже больше не
  * центрируется.
+ *
+ * 2026-09-13 (по указанию пользователя): весь текст страницы — один стиль
+ * `.fs-legal-text` (`theme.scss`), общий с реквизитами и ответами
+ * аккордеона. Раньше у каждого абзаца был свой пресет: 19px светлого
+ * начертания, 18px, 16px приглушённого цвета — и разная высота строки.
+ * Обёртка `fs-section` снята: её нижний отступ (3.5rem) давал 90px между
+ * «Посмотреть лицензию» и первым абзацем `about-accordion.php` вместо
+ * обычных 24px между блоками. Паттерн — несколько блоков подряд, поэтому
+ * все отступы между ними одинаковые (`blockGap` страницы).
  */
 ?>
-<!-- wp:group {"className":"fs-section"} -->
-<div class="wp-block-group fs-section">
-	<!-- wp:paragraph {"fontSize":"md"} -->
-	<p class="has-md-font-size">ИНН 390407910400, ОГРНИП 322390000000350</p>
-	<!-- /wp:paragraph -->
+<!-- wp:paragraph {"className":"fs-legal-text"} -->
+<p class="fs-legal-text">ИНН 390407910400, ОГРНИП 322390000000350</p>
+<!-- /wp:paragraph -->
 
-	<!-- wp:html -->
-	<div class="fs-about-requisites">
-		<div class="fs-about-requisites__item"><b>Место нахождения:</b> 236006, г. Калининград, ул. Черняховского, д. 6, каб. 316</div>
-		<div class="fs-about-requisites__item"><b>Режим и график работы:</b> с понедельника по субботу с 11.00 до 21.00 (по московскому времени)</div>
-		<div class="fs-about-requisites__item"><b>Контактный телефон:</b> <a href="tel:+79953264486">+7 (995) 326-44-86</a></div>
-		<div class="fs-about-requisites__item"><b>Адрес электронной почты:</b> <a href="mailto:info@future-step.ru">info@future-step.ru</a></div>
-	</div>
-	<!-- /wp:html -->
-
-	<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md","style":{"typography":{"fontWeight":"300"}}} -->
-	<p class="has-text-secondary-color has-text-color has-md-font-size" style="font-weight:300">Оказание образовательных услуг осуществляется на основании лицензии на осуществление образовательной деятельности № 11193 от 02.10.2025 года (рег. номер в сводном реестре лицензий на осуществление образовательной деятельности №Л035-01236-39/03314396), выданной Министерством образования Калининградской области.</p>
-	<!-- /wp:paragraph -->
-
-	<!-- wp:paragraph -->
-	<p><a href="<?php echo esc_url( FS_LMS_THEME_LICENSE_URL ); ?>" target="_blank" rel="noopener">Посмотреть лицензию →</a></p>
-	<!-- /wp:paragraph -->
+<!-- wp:html -->
+<div class="fs-about-requisites">
+	<div class="fs-about-requisites__item"><b>Место нахождения:</b> 236006, г. Калининград, ул. Черняховского, д. 6, каб. 316</div>
+	<div class="fs-about-requisites__item"><b>Режим и график работы:</b> с понедельника по субботу с 11.00 до 21.00 (по московскому времени)</div>
+	<div class="fs-about-requisites__item"><b>Контактный телефон:</b> <a href="tel:+79953264486">+7 (995) 326-44-86</a></div>
+	<div class="fs-about-requisites__item"><b>Адрес электронной почты:</b> <a href="mailto:info@future-step.ru">info@future-step.ru</a></div>
 </div>
-<!-- /wp:group -->
+<!-- /wp:html -->
+
+<!-- wp:paragraph {"className":"fs-legal-text"} -->
+<p class="fs-legal-text">Оказание образовательных услуг осуществляется на основании лицензии на осуществление образовательной деятельности № 11193 от 02.10.2025 года (рег. номер в сводном реестре лицензий на осуществление образовательной деятельности №Л035-01236-39/03314396), выданной Министерством образования Калининградской области.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"fs-legal-text"} -->
+<p class="fs-legal-text"><a href="<?php echo esc_url( FS_LMS_THEME_LICENSE_URL ); ?>" target="_blank" rel="noopener">Посмотреть лицензию →</a></p>
+<!-- /wp:paragraph -->

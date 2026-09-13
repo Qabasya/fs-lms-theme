@@ -38,6 +38,16 @@
  * `rem` она ехала вместе с масштабом и раздувала страницы до 1440px.
  * Увеличиваем шрифты и отступы, колонка страницы остаётся 1200px.
  *
+ * Шрифтовая шкала (2026-09-13, по указанию пользователя) — целые пиксели:
+ * 14/15/16/18/19/21/22/24/36/56. Простое ×1.2 давало дробные размеры
+ * (15.6, 40.8px), а заголовки при колонке 1200px выходили слишком
+ * крупными. Токены в `theme.json` записаны как `calc(Nrem / 19.2)` — это
+ * ровно N пикселей при корневых 19.2px и по-прежнему `rem`. В SCSS размеры
+ * шрифта — только через токены: `cssnano` сворачивает такой `calc()` до
+ * пяти знаков (`14.00006px`). Где без своего значения не обойтись
+ * (мобильные заголовки ниже), берём кратное 3px — оно делится на 19.2
+ * без остатка (`27px` = `1.40625rem`).
+ *
  * Процент, а не `19.2px`: так множитель ложится поверх размера шрифта,
  * выбранного пользователем в настройках браузера. Жёсткий `px` этот
  * выбор затирает и ломает доступность для тех, кто увеличил шрифт
@@ -287,12 +297,24 @@ $fs-gap-containers:
 	grid-template-columns: repeat( 4, 1fr );
 	align-items: stretch;
 
+	// Зазор `lg`, а не общий `blockGap` (1.25rem): каждой из 4 карточек
+	// достаётся ещё ~4px под ряд «цена + кнопка» (`fs-lms/course-card`).
+	gap: var( --wp--preset--spacing--lg );
+
 	> * {
 		height: 100%;
 	}
 }
 
-@media ( max-width: 1199px ) {
+/**
+ * 2026-09-13: на 2 колонки — уже с 1319px, а не с 1199px. «12 000 ₽ / мес»
+ * и «Подробнее» должны стоять в карточке в одну строку (по указанию
+ * пользователя), а после корневого масштаба 120% это умещается только в
+ * полную ширину контейнера 1200px — с запасом ~12px. Уже ~1300px окна
+ * (минус боковые отступы и полоса прокрутки) карточка сжималась, и кнопка
+ * переносилась под цену.
+ */
+@media ( max-width: 1319px ) {
 	.fs-courses-grid {
 		grid-template-columns: repeat( 2, 1fr );
 	}
@@ -330,7 +352,7 @@ $fs-gap-containers:
 	border-top: 1px solid var( --wp--preset--color--border );
 
 	&__number {
-		font-size: 1.375rem;
+		font-size: var( --wp--preset--font-size--xl );
 		font-weight: 700;
 	}
 
@@ -381,7 +403,7 @@ $fs-gap-containers:
 		&::before {
 			content: "→";
 			color: var( --wp--preset--color--accent-2 );
-			font-size: 1.125rem;
+			font-size: var( --wp--preset--font-size--lead );
 		}
 
 		&--last {
@@ -399,7 +421,7 @@ $fs-gap-containers:
 
 	&__name {
 		min-width: 0;
-		font-size: 1.3125rem;
+		font-size: var( --wp--preset--font-size--xl );
 
 		a {
 			color: inherit;
@@ -788,7 +810,7 @@ $fs-gap-containers:
 	&__filename {
 		margin-left: .375rem;
 		font-family: 'JetBrains Mono', monospace;
-		font-size: .75rem;
+		font-size: var( --wp--preset--font-size--xxs );
 		font-weight: 500;
 		color: var( --wp--preset--color--muted );
 	}
@@ -798,7 +820,7 @@ $fs-gap-containers:
 		grid-template-columns: 2rem 1fr;
 		padding: 1.25rem 1rem;
 		font-family: 'JetBrains Mono', monospace;
-		font-size: .875rem;
+		font-size: var( --wp--preset--font-size--sm );
 		line-height: 1.9;
 	}
 
@@ -837,6 +859,31 @@ $fs-gap-containers:
 	display: block;
 	width: 100%;
 	aspect-ratio: 16 / 9;
+}
+
+/**
+ * «Как устроены занятия» (`#lessons` — `patterns/intensive-split.php` на
+ * главной и копия блоков на страницах направлений, `inc/SubjectPages.php`):
+ * верх заглавной «К» — на одной линии с верхним краем фото в левой
+ * колонке (2026-09-13, по указанию пользователя).
+ *
+ * `line-height: 1` убирает межстрочный зазор над строкой, но и тогда над
+ * заглавной остаётся запас шрифта под выносные элементы: у Ubuntu при
+ * `line-height: 1` верх заглавной на 0.18em ниже верха строки (метрики
+ * шрифта: ascent .932, descent .189, высота заглавной .693 —
+ * `(1 − 1.121) / 2 + .932 − .693`; замер в браузере — 6px при 36px). Его
+ * снимает отрицательный `margin-top` в `em`, поэтому выравнивание
+ * держится и на мобильном кегле. Селектор по `id`: у копий на страницах
+ * направлений класса на заголовке нет, а сами страницы в базе.
+ *
+ * Только когда колонки стоят рядом: ниже 960px они складываются
+ * (`.wp-block-columns` ниже в файле), и заголовок уходит под фото.
+ */
+@media ( min-width: 961px ) {
+	#lessons .wp-block-column > .wp-block-heading:first-child {
+		margin-top: -.18em;
+		line-height: 1;
+	}
 }
 
 /**
@@ -892,7 +939,8 @@ $fs-gap-containers:
 	display: flex;
 	text-align: center;
 	align-items: center;
-	max-width: 240px;
+	width: fit-content;
+	max-width: 100%;
 	gap: var( --wp--preset--spacing--md );
 	padding: 1.5rem var( --wp--preset--spacing--lg );
 	margin-bottom: var( --wp--preset--spacing--lg );
@@ -901,8 +949,13 @@ $fs-gap-containers:
 	border-radius: var( --wp--custom--radius--card );
 
 	/**
-	 * BugFix.9 (2026-09-03): контейнер сжат до 240px — каждая из двух
-	 * половин («2 часа»/«800 ₽» + подпись) занимает 120px.
+	 * BugFix.9 (2026-09-03): плашка по ширине содержимого — две половины
+	 * («2 часа»/«800 ₽» + подпись) фиксированной ширины.
+	 *
+	 * 2026-09-13 (по указанию пользователя): половина — `7.5rem` (144px), а
+	 * не `120px`, и без `max-width: 240px` у плашки. Шрифты с корневым
+	 * масштабом выросли, а ширина в `px` осталась: половины ужимались до
+	 * 91px, и «одно занятие» переносилось на вторую строку.
 	 *
 	 * Фаза 17.3: половины — обычные `wp:group` (`__part`), разделитель между
 	 * ними рисует CSS (`+ &__part::before`), а не пустой `<div>` в разметке:
@@ -914,7 +967,7 @@ $fs-gap-containers:
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		width: 120px;
+		width: 7.5rem;
 
 		& + & {
 			position: relative;
@@ -1194,6 +1247,10 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 		border-radius: var( --wp--custom--radius--control );
 		background: var( --wp--preset--color--accent-2 );
 		color: var( --wp--preset--color--white );
+
+		// `<button>` не наследует шрифт страницы — без этого кнопка
+		// рисовалась системным Arial.
+		font-family: inherit;
 		font-size: var( --wp--preset--font-size--base );
 		font-weight: 600;
 		cursor: pointer;
@@ -1234,25 +1291,37 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 }
 
 /**
+ * Текст юридической страницы `/about/` (2026-09-13, по указанию
+ * пользователя) — один стиль на все абзацы (`about-header.php`,
+ * `about-accordion.php`), строки реквизитов и ответы аккордеона. Кегль —
+ * основной текст сайта, строка 1.6 — длинный юридический текст на всю
+ * ширину 1200px иначе читается тяжело.
+ */
+.fs-legal-text,
+.fs-about-requisites__item,
+.fs-legal-accordion__answer {
+	font-size: var( --wp--preset--font-size--base );
+	font-weight: 400;
+	line-height: 1.6;
+	color: var( --wp--preset--color--text-secondary );
+}
+
+/**
  * Реквизиты организации (Фаза 15/16.1, `patterns/about-header.php`) —
  * вертикальный список «подпись: значение» на одной строке (сверено с
  * макетом `О нас - мокап.dc.html` в Фазе 16.1 — раньше была 2×2 сетка
  * с подписью НАД значением отдельной строкой, макет так не делает).
+ *
+ * 2026-09-13: строки идут без зазоров, одним абзацем — как строки через
+ * `<br>` в ответах аккордеона. Отступ до соседних блоков не задаём: его
+ * даёт `blockGap` страницы, тот же, что между абзацами.
  */
 .fs-about-requisites {
 	display: flex;
 	flex-direction: column;
-	gap: .875rem;
-	margin: var( --wp--preset--spacing--lg ) 0;
 
-	&__item {
-		font-size: var( --wp--preset--font-size--md );
-		line-height: 1.6;
-		color: var( --wp--preset--color--text );
-
-		a {
-			color: inherit;
-		}
+	&__item a {
+		color: inherit;
 	}
 }
 
@@ -1568,14 +1637,17 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 		--wp--style--root--padding-right: 1rem;
 
 		/**
-		 * Крупные заголовки (`has-xxxl-font-size` — h1 hero, 52px;
-		 * `has-xxl-font-size` — h2 секций, 34px) не влезают по ширине на
-		 * узких экранах — та же переменная, что использует утилитный класс
-		 * WP (`var(--wp--preset--font-size--xxxl)`), просто переопределена
-		 * ниже брейкпоинта, без отдельного класса на каждый заголовок.
+		 * Крупные заголовки (`has-xxxl-font-size` — 56px;
+		 * `has-xxl-font-size` — h1 страниц и h2 секций, 36px) не влезают по
+		 * ширине на узких экранах — та же переменная, что использует
+		 * утилитный класс WP (`var(--wp--preset--font-size--xxxl)`), просто
+		 * переопределена ниже брейкпоинта, без отдельного класса на каждый
+		 * заголовок. Значения — ровные 36px и 27px (кратные 3px, см. шапку
+		 * файла про шрифтовую шкалу).
 		 */
-		--wp--preset--font-size--xxxl: 2rem;
-		--wp--preset--font-size--xxl: 1.5rem;
+		--wp--preset--font-size--xxxl: 1.875rem;
+		/* stylelint-disable-next-line number-max-precision -- 27px ровно, при 4 знаках вышло бы 27.001px */
+		--wp--preset--font-size--xxl: 1.40625rem;
 	}
 }
 
@@ -1824,8 +1896,11 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 	max-height: 64px;
 }
 
+// Логотип футера — 200px в ширину (`patterns/footer-columns.php`), при
+// пропорциях файла 2800×816 это ~58px в высоту. Прежний предел 50px
+// сжимал бы картинку обратно до 172px.
 .fs-footer-logo img {
-	max-height: 50px;
+	max-height: 59px;
 }
 
 .fs-footer-bottom {
@@ -1954,15 +2029,19 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 		transform: rotate( 180deg );
 	}
 
+	// Кегль, цвет и высота строки — общий стиль `.fs-legal-text` выше;
+	// зазор между абзацами ответа — тот же `blockGap`, что между абзацами
+	// страницы (раньше выходило 16.8px от браузерного `margin` у `<p>`).
 	&__answer {
 		margin: 0;
 		padding: var( --wp--preset--spacing--sm ) var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--md );
-		color: var( --wp--preset--color--text-secondary );
-		font-size: var( --wp--preset--font-size--sm );
-		line-height: 1.62;
+
+		p {
+			margin: 0;
+		}
 
 		p + p {
-			margin-top: var( --wp--preset--spacing--sm );
+			margin-top: var( --wp--style--block-gap );
 		}
 	}
 }

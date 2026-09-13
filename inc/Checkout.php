@@ -99,11 +99,15 @@ function fs_lms_theme_checkout_steps( int $active_step ): void {
  * другим кеглем — поэтому страницам корзины/оформления назначается шаблон
  * без заголовка (`page-subject`, см. ниже), а `<h1>` выводится здесь.
  *
+ * Класс `has-xxl-font-size` — тот же пресет, что у `<h1>` остальных страниц
+ * (`templates/page.html`, `page-wide.html`), вместе с его уменьшением на
+ * мобильных (`theme.scss`, брейкпоинт 767px).
+ *
  * @param string $title Заголовок; по умолчанию — название страницы.
  */
 function fs_lms_theme_checkout_heading( string $title = '' ): void {
 	printf(
-		'<h1 class="fs-page-title">%s</h1>',
+		'<h1 class="fs-page-title has-xxl-font-size">%s</h1>',
 		esc_html( '' !== $title ? $title : get_the_title() )
 	);
 }
@@ -144,6 +148,20 @@ add_action( 'woocommerce_before_cart', function (): void {
 add_action( 'woocommerce_after_cart', function (): void {
 	echo '</div>';
 }, 99 );
+
+/**
+ * Пустая корзина — у неё свой шаблон (`cart/cart-empty.php`), и
+ * `woocommerce_before_cart` там не вызывается: страница оставалась без
+ * `<h1>` (2026-09-12, по указанию пользователя). Приоритет 1 — до
+ * уведомлений (`woocommerce_output_all_notices`, 5) и текста «Корзина
+ * пуста» (`wc_empty_cart_message`, 10), тот же порядок, что у полной
+ * корзины. Удаление последнего товара без перезагрузки заголовок не
+ * теряет: `cart.js` плагина подменяет весь `.woocommerce` разметкой пустой
+ * корзины, вместе с ним.
+ */
+add_action( 'woocommerce_cart_is_empty', function (): void {
+	fs_lms_theme_checkout_heading();
+}, 1 );
 
 /**
  * «Вернуться в магазин» (Фаза 16.3, по макету) — у классического шаблона

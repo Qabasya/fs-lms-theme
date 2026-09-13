@@ -487,7 +487,6 @@ function fs_lms_theme_handle_form_submit(): void {
 	$lines = array(
 		sprintf( 'Имя: %s', $name ),
 		sprintf( 'Телефон: %s', $phone ),
-		sprintf( 'IP: %s', $ip ),
 		sprintf( 'Форма: %s', fs_lms_theme_form_source( $form_id, $page_url ) ),
 		'',
 		'Техническая информация',
@@ -495,6 +494,7 @@ function fs_lms_theme_handle_form_submit(): void {
 		sprintf( 'Капча: %s', fs_lms_theme_form_captcha_note( $captcha->is_configured(), $captcha_skipped, $captcha_result, $captcha_challenge ) ),
 		sprintf( 'Заполнение формы: %s', fs_lms_theme_form_fill_time( $fill_seconds ) ),
 		sprintf( 'Устройство: %s', wp_is_mobile() ? 'телефон или планшет' : 'компьютер' ),
+		sprintf( 'IP: %s', $ip ),
 		sprintf( 'Браузер: %s', '' === $user_agent ? 'не передан' : $user_agent ),
 	);
 

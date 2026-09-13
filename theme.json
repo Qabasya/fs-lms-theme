@@ -67,16 +67,16 @@
 				}
 			],
 			"fontSizes": [
-				{ "name": "2XS", "slug": "xxs", "size": "0.75rem" },
-				{ "name": "XS", "slug": "xs", "size": "0.8125rem" },
-				{ "name": "SM", "slug": "sm", "size": "0.875rem" },
-				{ "name": "Base", "slug": "base", "size": "0.9375rem" },
-				{ "name": "MD", "slug": "md", "size": "1rem" },
-				{ "name": "Lead", "slug": "lead", "size": "1.125rem" },
-				{ "name": "LG", "slug": "lg", "size": "1.1875rem" },
-				{ "name": "XL", "slug": "xl", "size": "1.375rem" },
-				{ "name": "2XL", "slug": "xxl", "size": "2.125rem" },
-				{ "name": "3XL (заголовок)", "slug": "xxxl", "size": "3.25rem" }
+				{ "name": "2XS (14px)", "slug": "xxs", "size": "calc(14rem / 19.2)" },
+				{ "name": "XS (15px)", "slug": "xs", "size": "calc(15rem / 19.2)" },
+				{ "name": "SM (16px)", "slug": "sm", "size": "calc(16rem / 19.2)" },
+				{ "name": "Base (18px)", "slug": "base", "size": "calc(18rem / 19.2)" },
+				{ "name": "MD (19px)", "slug": "md", "size": "calc(19rem / 19.2)" },
+				{ "name": "Lead (21px)", "slug": "lead", "size": "calc(21rem / 19.2)" },
+				{ "name": "LG (22px)", "slug": "lg", "size": "calc(22rem / 19.2)" },
+				{ "name": "XL (24px)", "slug": "xl", "size": "calc(24rem / 19.2)" },
+				{ "name": "2XL (36px, заголовок)", "slug": "xxl", "size": "calc(36rem / 19.2)" },
+				{ "name": "3XL (56px)", "slug": "xxxl", "size": "calc(56rem / 19.2)" }
 			],
 			"fontWeight": true,
 			"lineHeight": true

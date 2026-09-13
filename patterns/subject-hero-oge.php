@@ -29,16 +29,16 @@
 				<p class="fs-subject-hero-box__badge">9 класс</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:heading {"level":1,"fontSize":"xxxl"} -->
-				<h1 class="wp-block-heading has-xxxl-font-size">ОГЭ по информатике</h1>
+				<!-- wp:heading {"level":1,"fontSize":"xxl"} -->
+				<h1 class="wp-block-heading has-xxl-font-size">ОГЭ по информатике</h1>
 				<!-- /wp:heading -->
 
 				<!-- wp:paragraph {"fontSize":"lead"} -->
 				<p class="has-lead-font-size">Все задания ОГЭ, практика в реальных программах и разбор типичных ошибок с репетитором.</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
-				<p class="has-text-secondary-color has-text-color has-md-font-size">Проходим весь экзаменационный минимум по порядку, регулярно решаем варианты в формате ОГЭ и следим за скоростью выполнения — к маю девятиклассник уверенно укладывается в отведённое время и не боится практической части.</p>
+				<!-- wp:paragraph {"fontSize":"lead"} -->
+				<p class="has-lead-font-size">Проходим весь экзаменационный минимум по порядку, регулярно решаем варианты в формате ОГЭ и следим за скоростью выполнения — к маю девятиклассник уверенно укладывается в отведённое время и не боится практической части.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->

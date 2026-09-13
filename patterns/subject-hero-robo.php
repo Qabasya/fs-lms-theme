@@ -29,16 +29,16 @@
 				<p class="fs-subject-hero-box__badge">5–8 класс</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:heading {"level":1,"fontSize":"xxxl"} -->
-				<h1 class="wp-block-heading has-xxxl-font-size">Робототехника</h1>
+				<!-- wp:heading {"level":1,"fontSize":"xxl"} -->
+				<h1 class="wp-block-heading has-xxl-font-size">Робототехника</h1>
 				<!-- /wp:heading -->
 
 				<!-- wp:paragraph {"fontSize":"lead"} -->
 				<p class="has-lead-font-size">Собираем и программируем роботов, разбираем механику и датчики, готовимся к соревнованиям.</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
-				<p class="has-text-secondary-color has-text-color has-md-font-size">Занятия построены вокруг практических задач — от сборки первой модели до участия в соревнованиях: ребёнок учится работать руками, программировать контроллер и доводить проект до результата в команде.</p>
+				<!-- wp:paragraph {"fontSize":"lead"} -->
+				<p class="has-lead-font-size">Занятия построены вокруг практических задач — от сборки первой модели до участия в соревнованиях: ребёнок учится работать руками, программировать контроллер и доводить проект до результата в команде.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->

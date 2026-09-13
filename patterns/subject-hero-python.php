@@ -29,16 +29,16 @@
 				<p class="fs-subject-hero-box__badge">10 класс</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:heading {"level":1,"fontSize":"xxxl"} -->
-				<h1 class="wp-block-heading has-xxxl-font-size">Программирование на Python</h1>
+				<!-- wp:heading {"level":1,"fontSize":"xxl"} -->
+				<h1 class="wp-block-heading has-xxl-font-size">Программирование на Python</h1>
 				<!-- /wp:heading -->
 
 				<!-- wp:paragraph {"fontSize":"lead"} -->
 				<p class="has-lead-font-size">От основ синтаксиса до своего проекта: алгоритмы, структуры данных, боты и мини-приложения.</p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
-				<p class="has-text-secondary-color has-text-color has-md-font-size">Каждая тема закрепляется практикой на реальных задачах, а не абстрактными примерами — к концу курса у ученика есть законченный проект в портфолио и уверенное владение языком для дальнейшего обучения.</p>
+				<!-- wp:paragraph {"fontSize":"lead"} -->
+				<p class="has-lead-font-size">Каждая тема закрепляется практикой на реальных задачах, а не абстрактными примерами — к концу курса у ученика есть законченный проект в портфолио и уверенное владение языком для дальнейшего обучения.</p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
