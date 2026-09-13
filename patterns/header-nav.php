@@ -79,9 +79,13 @@
  * Слоган в инфо-полосе — абзац, а не `<h1>`: заголовок первого уровня на
  * странице должен быть один (и это заголовок самой страницы), иначе
  * поисковик видит на каждой странице сайта один и тот же h1.
+ *
+ * Этап 4 (2026-09-13): телефон и почта в инфо-полосе — из «Настроек сайта»
+ * (`inc/Showcase/Site_Settings.php`), `$fs_settings` ниже.
  */
 $fs_nav_id  = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navigation_id() : 0;
 $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme_signup_button_url() : '#hero-form';
+$fs_settings = FS_LMS_Theme_Showcase::settings();
 ?>
 <!-- wp:group {"tagName":"div","className":"fs-header-band","backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|xs","bottom":"var:preset|spacing|xs"}},"border":{"bottom":{"color":"var:preset|color|border-light","width":"1px"}}}} -->
 <div class="wp-block-group fs-header-band has-surface-2-background-color has-background" style="border-bottom-color:var(--wp--preset--color--border-light);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--xs);padding-bottom:var(--wp--preset--spacing--xs)">
@@ -95,11 +99,11 @@ $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme
 			<!-- wp:group {"layout":{"type":"flex"},"style":{"spacing":{"blockGap":"var:preset|spacing|xl","margin":{"left":"auto"}}}} -->
 			<div class="wp-block-group" style="margin-left:auto">
 				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
-				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="tel:+79953264486">+7 995 326 44 86</a></p>
+				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="<?php echo esc_url( $fs_settings->phone_href() ); ?>"><?php echo esc_html( $fs_settings->get( 'phone' ) ); ?></a></p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
-				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="mailto:info@future-step.ru">info@future-step.ru</a></p>
+				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="<?php echo esc_url( 'mailto:' . $fs_settings->get( 'email' ) ); ?>"><?php echo esc_html( $fs_settings->get( 'email' ) ); ?></a></p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-topbar__cart","textColor":"muted","fontSize":"xxs"} -->

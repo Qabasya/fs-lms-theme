@@ -58,8 +58,11 @@ const FS_LMS_THEME_FORM_NO_CAPTCHA_LIMIT = 5;
 /** Окно лимита заявок без капчи, сек. */
 const FS_LMS_THEME_FORM_NO_CAPTCHA_WINDOW = HOUR_IN_SECONDS;
 
-/** Получатель писем с лид-форм (решение 2, обсуждение 2026-09-02). */
-const FS_LMS_THEME_FORM_RECIPIENT = 'info@future-step.ru';
+/*
+ * Получатель писем с лид-форм (решение 2, обсуждение 2026-09-02) — с этапа 4
+ * (2026-09-13) поле «Куда приходят заявки с форм» в «Настройках сайта»
+ * (`inc/Showcase/Site_Settings.php`), по умолчанию прежний info@future-step.ru.
+ */
 
 /** Тема письма — одна на все формы (2026-09-12, по указанию пользователя). */
 const FS_LMS_THEME_FORM_MAIL_SUBJECT = 'Новая заявка на сайте';
@@ -498,7 +501,7 @@ function fs_lms_theme_handle_form_submit(): void {
 		sprintf( 'Браузер: %s', '' === $user_agent ? 'не передан' : $user_agent ),
 	);
 
-	$sent = wp_mail( FS_LMS_THEME_FORM_RECIPIENT, FS_LMS_THEME_FORM_MAIL_SUBJECT, implode( "\n", $lines ) );
+	$sent = wp_mail( FS_LMS_Theme_Showcase::settings()->get( 'leads_email' ), FS_LMS_THEME_FORM_MAIL_SUBJECT, implode( "\n", $lines ) );
 
 	if ( ! $sent ) {
 		wp_send_json_error( array( 'message' => __( 'Не получилось отправить заявку, попробуйте позже или позвоните нам: +7(995)326-44-86', 'fs-lms-theme' ) ), 500 );

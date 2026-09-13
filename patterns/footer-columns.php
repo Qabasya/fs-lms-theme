@@ -35,7 +35,11 @@
  * ядро даёт группам с фоном боковой паддинг 2.375em, вместе с отступом
  * страницы на телефоне оставалось ~208px под текст. Ниже 767px паддинг
  * снимается (`theme.scss`).
+ *
+ * Этап 4 (2026-09-13): телефон, почта, адрес — из «Настроек сайта»
+ * (`inc/Showcase/Site_Settings.php`), `$fs_settings` ниже.
  */
+$fs_settings = FS_LMS_Theme_Showcase::settings();
 ?>
 <!-- wp:group {"tagName":"div","className":"fs-footer","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xxxl","bottom":"0"}},"color":{"background":"#2b2f36"}},"textColor":"white"} -->
 <div class="wp-block-group fs-footer has-white-color has-text-color has-background" style="margin-top:0;padding-top:var(--wp--preset--spacing--xxxl);padding-bottom:0;background-color:#2b2f36">
@@ -55,20 +59,18 @@
 
 				<!-- wp:group {"className":"fs-footer-grid__contacts"} -->
 				<div class="wp-block-group fs-footer-grid__contacts">
+<?php foreach ( $fs_settings->address_lines() as $fs_address_line ) : ?>
 					<!-- wp:paragraph -->
-					<p>236006, г. Калининград,</p>
+					<p><?php echo esc_html( $fs_address_line ); ?></p>
 					<!-- /wp:paragraph -->
 
-                    <!-- wp:paragraph -->
-                    <p>ул.Черняховского, д. 6, каб. 316</p>
-                    <!-- /wp:paragraph -->
-
+<?php endforeach; ?>
 					<!-- wp:paragraph -->
-					<p><a href="tel:+79953264486">Телефон: +7 995 326 44 86</a></p>
+					<p><a href="<?php echo esc_url( $fs_settings->phone_href() ); ?>">Телефон: <?php echo esc_html( $fs_settings->get( 'phone' ) ); ?></a></p>
 					<!-- /wp:paragraph -->
 
 					<!-- wp:paragraph -->
-					<p><a href="mailto:info@future-step.ru">Почта: info@future-step.ru</a></p>
+					<p><a href="<?php echo esc_url( 'mailto:' . $fs_settings->get( 'email' ) ); ?>">Почта: <?php echo esc_html( $fs_settings->get( 'email' ) ); ?></a></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->

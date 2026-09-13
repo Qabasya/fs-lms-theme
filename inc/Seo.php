@@ -18,13 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** Контакты организации — те же, что в шапке и футере. */
-const FS_LMS_THEME_ORG_PHONE   = '+7 995 326 44 86';
-const FS_LMS_THEME_ORG_EMAIL   = 'info@future-step.ru';
-const FS_LMS_THEME_ORG_STREET  = 'ул. Черняховского, д. 6, каб. 316';
-const FS_LMS_THEME_ORG_CITY    = 'Калининград';
-const FS_LMS_THEME_ORG_ZIP     = '236006';
-
 /** Длина автоописания страницы, символов. */
 const FS_LMS_THEME_SEO_DESCRIPTION_LENGTH = 160;
 
@@ -113,11 +106,17 @@ add_action( 'wp_head', function (): void {
  * Микроразметка организации (schema.org/EducationalOrganization) — одна на
  * весь сайт, печатаем на главной: поисковикам достаточно одной страницы с
  * описанием организации, дублировать на каждой не нужно.
+ *
+ * Этап 4 (2026-09-13): контакты — из «Настроек сайта»
+ * (`inc/Showcase/Site_Settings.php`), те же, что в шапке и подвале; были
+ * константами здесь.
  */
 add_action( 'wp_head', function (): void {
 	if ( fs_lms_theme_seo_plugin_active() || ! is_front_page() ) {
 		return;
 	}
+
+	$settings = FS_LMS_Theme_Showcase::settings();
 
 	$schema = array(
 		'@context'      => 'https://schema.org',
@@ -126,13 +125,13 @@ add_action( 'wp_head', function (): void {
 		'description'   => get_bloginfo( 'description', 'display' ),
 		'url'           => home_url( '/' ),
 		'logo'          => get_theme_file_uri( 'img/logo-header.png' ),
-		'email'         => FS_LMS_THEME_ORG_EMAIL,
-		'telephone'     => FS_LMS_THEME_ORG_PHONE,
+		'email'         => $settings->get( 'email' ),
+		'telephone'     => $settings->get( 'phone' ),
 		'address'       => array(
 			'@type'           => 'PostalAddress',
-			'streetAddress'   => FS_LMS_THEME_ORG_STREET,
-			'addressLocality' => FS_LMS_THEME_ORG_CITY,
-			'postalCode'      => FS_LMS_THEME_ORG_ZIP,
+			'streetAddress'   => $settings->get( 'street' ),
+			'addressLocality' => $settings->get( 'city' ),
+			'postalCode'      => $settings->get( 'zip' ),
 			'addressCountry'  => 'RU',
 		),
 	);

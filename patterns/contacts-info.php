@@ -46,7 +46,11 @@
  * короткая ссылка Яндекс Карт и карточка организации в 2ГИС. Открываются
  * в новой вкладке (`target="_blank"` + `rel="noreferrer noopener"`) —
  * это внешние сайты, в отличие от всех остальных ссылок темы.
+ *
+ * Этап 4 (2026-09-13): телефон, почта, адрес и ссылки MAX/ВКонтакте/Карты/2ГИС — из «Настроек сайта»
+ * (`inc/Showcase/Site_Settings.php`), `$fs_settings` ниже.
  */
+$fs_settings = FS_LMS_Theme_Showcase::settings();
 ?>
 <!-- wp:group {"anchor":"signup","className":"fs-section"} -->
 <div id="signup" class="wp-block-group fs-section">
@@ -67,7 +71,7 @@
 					<!-- /wp:paragraph -->
 
 					<!-- wp:paragraph {"className":"fs-contact-tile__value"} -->
-					<p class="fs-contact-tile__value"><a href="tel:+79953264486">+7 995 326 44 86</a></p>
+					<p class="fs-contact-tile__value"><a href="<?php echo esc_url( $fs_settings->phone_href() ); ?>"><?php echo esc_html( $fs_settings->get( 'phone' ) ); ?></a></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -83,7 +87,7 @@
 					<!-- /wp:paragraph -->
 
 					<!-- wp:paragraph {"className":"fs-contact-tile__value"} -->
-					<p class="fs-contact-tile__value"><a href="mailto:info@future-step.ru">info@future-step.ru</a></p>
+					<p class="fs-contact-tile__value"><a href="<?php echo esc_url( 'mailto:' . $fs_settings->get( 'email' ) ); ?>"><?php echo esc_html( $fs_settings->get( 'email' ) ); ?></a></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -103,7 +107,7 @@
 					<!-- /wp:image -->
 
 					<!-- wp:paragraph {"className":"fs-contact-app__label"} -->
-					<p class="fs-contact-app__label"><a href="https://max.ru/u/f9LHodD0cOKoJqQrKkMSbocYBDaed99orfRNtpWEvXtVKst1I0xZAk2tjvg" target="_blank" rel="noreferrer noopener">MAX</a></p>
+					<p class="fs-contact-app__label"><a href="<?php echo esc_url( $fs_settings->get( 'max_url' ) ); ?>" target="_blank" rel="noreferrer noopener">MAX</a></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -115,7 +119,7 @@
 					<!-- /wp:image -->
 
 					<!-- wp:paragraph {"className":"fs-contact-app__label"} -->
-					<p class="fs-contact-app__label"><a href="https://vk.ru/future_step39" target="_blank" rel="noreferrer noopener">ВКонтакте</a></p>
+					<p class="fs-contact-app__label"><a href="<?php echo esc_url( $fs_settings->get( 'vk_url' ) ); ?>" target="_blank" rel="noreferrer noopener">ВКонтакте</a></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -127,7 +131,7 @@
 					<!-- /wp:image -->
 
 					<!-- wp:paragraph {"className":"fs-contact-app__label"} -->
-					<p class="fs-contact-app__label"><a href="https://yandex.ru/maps/-/CTdGaCPB" target="_blank" rel="noreferrer noopener">Яндекс Карты</a></p>
+					<p class="fs-contact-app__label"><a href="<?php echo esc_url( $fs_settings->get( 'yandex_maps_url' ) ); ?>" target="_blank" rel="noreferrer noopener">Яндекс Карты</a></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -139,7 +143,7 @@
 					<!-- /wp:image -->
 
 					<!-- wp:paragraph {"className":"fs-contact-app__label"} -->
-					<p class="fs-contact-app__label"><a href="https://2gis.ru/kaliningrad/firm/70000001080562359/tab/reviews" target="_blank" rel="noreferrer noopener">2ГИС</a></p>
+					<p class="fs-contact-app__label"><a href="<?php echo esc_url( $fs_settings->get( 'twogis_url' ) ); ?>" target="_blank" rel="noreferrer noopener">2ГИС</a></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -151,7 +155,7 @@
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md","style":{"typography":{"fontWeight":"300"}}} -->
-			<p class="has-text-secondary-color has-text-color has-md-font-size" style="font-weight:300">236006, г. Калининград, ул. Черняховского, д. 6, каб. 316</p>
+			<p class="has-text-secondary-color has-text-color has-md-font-size" style="font-weight:300"><?php echo esc_html( $fs_settings->address_full() ); ?></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->

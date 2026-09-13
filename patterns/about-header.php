@@ -82,7 +82,11 @@
  * «Посмотреть лицензию» и первым абзацем `about-accordion.php` вместо
  * обычных 24px между блоками. Паттерн — несколько блоков подряд, поэтому
  * все отступы между ними одинаковые (`blockGap` страницы).
+ *
+ * Этап 4 (2026-09-13): телефон, почта, адрес и режим работы — из «Настроек сайта»
+ * (`inc/Showcase/Site_Settings.php`), `$fs_settings` ниже.
  */
+$fs_settings = FS_LMS_Theme_Showcase::settings();
 ?>
 <!-- wp:paragraph {"className":"fs-legal-text"} -->
 <p class="fs-legal-text">ИНН 390407910400, ОГРНИП 322390000000350</p>
@@ -90,10 +94,10 @@
 
 <!-- wp:html -->
 <div class="fs-about-requisites">
-	<div class="fs-about-requisites__item"><b>Место нахождения:</b> 236006, г. Калининград, ул. Черняховского, д. 6, каб. 316</div>
-	<div class="fs-about-requisites__item"><b>Режим и график работы:</b> с понедельника по субботу с 11.00 до 21.00 (по московскому времени)</div>
-	<div class="fs-about-requisites__item"><b>Контактный телефон:</b> <a href="tel:+79953264486">+7 (995) 326-44-86</a></div>
-	<div class="fs-about-requisites__item"><b>Адрес электронной почты:</b> <a href="mailto:info@future-step.ru">info@future-step.ru</a></div>
+	<div class="fs-about-requisites__item"><b>Место нахождения:</b> <?php echo esc_html( $fs_settings->address_full() ); ?></div>
+	<div class="fs-about-requisites__item"><b>Режим и график работы:</b> <?php echo esc_html( $fs_settings->get( 'hours' ) ); ?></div>
+	<div class="fs-about-requisites__item"><b>Контактный телефон:</b> <a href="<?php echo esc_url( $fs_settings->phone_href() ); ?>"><?php echo esc_html( $fs_settings->get( 'phone' ) ); ?></a></div>
+	<div class="fs-about-requisites__item"><b>Адрес электронной почты:</b> <a href="<?php echo esc_url( 'mailto:' . $fs_settings->get( 'email' ) ); ?>"><?php echo esc_html( $fs_settings->get( 'email' ) ); ?></a></div>
 </div>
 <!-- /wp:html -->
 

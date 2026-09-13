@@ -23,7 +23,11 @@
  * Фаза 14: реальная отправка — `data-fs-form` + honeypot/HMAC-таймер/капча
  * (если настроена в Настройки → Формы), `src/js/forms.js` перехватывает
  * `submit` и шлёт AJAX на `inc/Forms.php`, без `action`/редиректа.
+ *
+ * Этап 4 (2026-09-13): телефон, почта, адрес — из «Настроек сайта»
+ * (`inc/Showcase/Site_Settings.php`), `$fs_settings` ниже.
  */
+$fs_settings = FS_LMS_Theme_Showcase::settings();
 ?>
 <!-- wp:group {"className":"fs-section"} -->
 <div id="signup" class="wp-block-group fs-section">
@@ -42,15 +46,15 @@
 			<!-- wp:group {"className":"fs-contact-list"} -->
 			<div class="wp-block-group fs-contact-list">
 				<!-- wp:paragraph {"className":"fs-contact-list__item fs-contact-list__item--phone"} -->
-				<p class="fs-contact-list__item fs-contact-list__item--phone"><a href="tel:+79953264486">+7 995 326 44 86</a></p>
+				<p class="fs-contact-list__item fs-contact-list__item--phone"><a href="<?php echo esc_url( $fs_settings->phone_href() ); ?>"><?php echo esc_html( $fs_settings->get( 'phone' ) ); ?></a></p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-contact-list__item fs-contact-list__item--mail"} -->
-				<p class="fs-contact-list__item fs-contact-list__item--mail"><a href="mailto:info@future-step.ru">info@future-step.ru</a></p>
+				<p class="fs-contact-list__item fs-contact-list__item--mail"><a href="<?php echo esc_url( 'mailto:' . $fs_settings->get( 'email' ) ); ?>"><?php echo esc_html( $fs_settings->get( 'email' ) ); ?></a></p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:paragraph {"className":"fs-contact-list__item fs-contact-list__item--pin"} -->
-				<p class="fs-contact-list__item fs-contact-list__item--pin">Калининград, ул. Черняховского, 6, каб. 316</p>
+				<p class="fs-contact-list__item fs-contact-list__item--pin"><?php echo esc_html( $fs_settings->address_short() ); ?></p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->

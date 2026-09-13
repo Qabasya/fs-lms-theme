@@ -30,7 +30,8 @@
  *
  * Этап 3 (2026-09-13): пункты списка направлений — из записей «Направления»
  * в админке (`inc/Showcase/Directions.php`): название, класс, ссылка на
- * страницу предмета. Факты под формой пока в коде (этап 4 — «Настройки сайта»).
+ * страницу предмета. Факты под формой — «Настройки сайта» (этап 4,
+ * `inc/Showcase/Site_Settings.php`).
  */
 ?>
 <!-- wp:group {"className":"fs-section-lead"} -->
@@ -76,45 +77,26 @@
 			</form>
 			<!-- /wp:html -->
 
+<?php $fs_hero_stats = FS_LMS_Theme_Showcase::settings()->hero_stats(); ?>
+<?php if ( array() !== $fs_hero_stats ) : ?>
 			<!-- wp:group {"className":"fs-hero-stats"} -->
 			<div class="wp-block-group fs-hero-stats">
+<?php foreach ( $fs_hero_stats as $fs_stat ) : ?>
 				<!-- wp:group {"className":"fs-hero-stats__item"} -->
 				<div class="wp-block-group fs-hero-stats__item">
 					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
-					<p class="fs-hero-stats__value">84</p>
+					<p class="fs-hero-stats__value"><?php echo esc_html( $fs_stat[0] ); ?></p>
 					<!-- /wp:paragraph -->
 
 					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
-					<p class="fs-hero-stats__label">средний балл</p>
+					<p class="fs-hero-stats__label"><?php echo esc_html( $fs_stat[1] ); ?></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"fs-hero-stats__item"} -->
-				<div class="wp-block-group fs-hero-stats__item">
-					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
-					<p class="fs-hero-stats__value">до 875 ₽</p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
-					<p class="fs-hero-stats__label">час занятий</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"fs-hero-stats__item"} -->
-				<div class="wp-block-group fs-hero-stats__item">
-					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
-					<p class="fs-hero-stats__value">до 8</p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
-					<p class="fs-hero-stats__label">человек в группе</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
+<?php endforeach; ?>
 			</div>
 			<!-- /wp:group -->
+<?php endif; ?>
 		</div>
 		<!-- /wp:column -->
 	</div>
