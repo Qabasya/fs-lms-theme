@@ -542,6 +542,19 @@ function fs_lms_theme_upgrade_subject_pages(): void {
 			continue;
 		}
 
+		/*
+		 * `wp_loaded` срабатывает и на запросе анонимного посетителя, а у него
+		 * контент при сохранении проходит kses — со страницы пропало бы всё,
+		 * чего нет в белом списке (так на проде уже пропадали SVG-иконки, см.
+		 * `inc/ContentUpgrades.php`). Меняем только известные фрагменты, поэтому
+		 * фильтр снимаем на время записи.
+		 */
+		$kses_active = false !== has_filter( 'content_save_pre', 'wp_filter_post_kses' );
+
+		if ( $kses_active ) {
+			kses_remove_filters();
+		}
+
 		// `wp_insert_post()` снимает слеши с данных (`wp_unslash()`), а
 		// `serialize_blocks()` пишет в атрибуты экранирование вида `-`:
 		// без `wp_slash()` обратные слеши пропали бы и атрибуты блоков сломались.
@@ -553,6 +566,10 @@ function fs_lms_theme_upgrade_subject_pages(): void {
 				)
 			)
 		);
+
+		if ( $kses_active ) {
+			kses_init_filters();
+		}
 	}
 
 	update_option( 'fs_lms_theme_subject_pages_layout', FS_LMS_THEME_SUBJECT_PAGES_LAYOUT );

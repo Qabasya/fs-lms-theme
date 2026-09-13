@@ -22,6 +22,10 @@
  *
  * Фаза 14: реальная отправка — `data-fs-form` + honeypot/HMAC-таймер/капча
  * (если настроена), `src/js/forms.js` перехватывает `submit` и шлёт AJAX.
+ *
+ * 2026-09-13 (по указанию пользователя): «Первое занятие — бесплатно.» —
+ * с новой строки (`<br>`, как в `contact-section.php`). Страницы
+ * направлений подключают паттерн ссылкой `wp:pattern`, правка видна сразу.
  */
 ?>
 <!-- wp:group {"className":"fs-section"} -->
@@ -35,7 +39,7 @@
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
-			<p class="has-text-secondary-color has-text-color has-md-font-size">Заполни форму и мы ответим на все интересующие вопросы. Первое занятие — бесплатно.</p>
+			<p class="has-text-secondary-color has-text-color has-md-font-size">Заполни форму и мы ответим на все интересующие вопросы.<br>Первое занятие — бесплатно.</p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:group {"className":"fs-contact-list"} -->

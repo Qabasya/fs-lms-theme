@@ -24,10 +24,12 @@
 		font-weight: 700;
 	}
 
+	// `base` (16px), по указанию пользователя (2026-09-13): после уменьшения
+	// `sm` до 14px текст карточек стал слишком мелким.
 	&__text {
 		margin: 0;
 		color: var( --wp--preset--color--text-secondary );
-		font-size: var( --wp--preset--font-size--sm );
+		font-size: var( --wp--preset--font-size--base );
 		font-weight: 300;
 		line-height: 1.62;
 	}
