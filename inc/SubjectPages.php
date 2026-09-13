@@ -198,8 +198,8 @@ function fs_lms_theme_subject_intensive_blocks(): string {
 			<h2 class="wp-block-heading has-xxl-font-size">Как устроены занятия</h2>
 			<!-- /wp:heading -->
 
-			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md"} -->
-			<p class="has-text-secondary-color has-text-color has-md-font-size">Формат одинаковый на всех направлениях — меняется только программа.</p>
+			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"base"} -->
+			<p class="has-text-secondary-color has-text-color has-base-font-size">Формат одинаковый на всех направлениях — меняется только программа.</p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:group {"className":"fs-checklist"} -->

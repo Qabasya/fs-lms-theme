@@ -1025,7 +1025,10 @@ form.checkout_coupon {
 				border-radius: var( --wp--custom--radius--control );
 				text-align: center;
 				font-family: inherit;
-				font-size: var( --wp--preset--font-size--sm );
+
+				// `base` (16px), не `sm` (14px с 2026-09-13): Safari на iPhone
+				// зумит страницу при фокусе на поле со шрифтом меньше 16px.
+				font-size: var( --wp--preset--font-size--base );
 			}
 		}
 

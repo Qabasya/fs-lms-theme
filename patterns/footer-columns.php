@@ -30,10 +30,15 @@
  *
  * BugFix.6 (2026-09-12): после «Политики конфиденциальности» — «Контакты»
  * (`/contacts/`) и «Корзина» (`fs_lms_theme_cart_url()`).
+ *
+ * BugFix (tasks.md, 2026-09-13, п.2): класс `fs-footer` на внешней группе —
+ * ядро даёт группам с фоном боковой паддинг 2.375em, вместе с отступом
+ * страницы на телефоне оставалось ~208px под текст. Ниже 767px паддинг
+ * снимается (`theme.scss`).
  */
 ?>
-<!-- wp:group {"tagName":"div","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xxxl","bottom":"0"}},"color":{"background":"#2b2f36"}},"textColor":"white"} -->
-<div class="wp-block-group has-white-color has-text-color has-background" style="margin-top:0;padding-top:var(--wp--preset--spacing--xxxl);padding-bottom:0;background-color:#2b2f36">
+<!-- wp:group {"tagName":"div","className":"fs-footer","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|xxxl","bottom":"0"}},"color":{"background":"#2b2f36"}},"textColor":"white"} -->
+<div class="wp-block-group fs-footer has-white-color has-text-color has-background" style="margin-top:0;padding-top:var(--wp--preset--spacing--xxxl);padding-bottom:0;background-color:#2b2f36">
 	<!-- wp:group {"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
 		<!-- wp:group {"className":"fs-footer-grid"} -->
@@ -45,14 +50,18 @@
 				<!-- /wp:image -->
 
 				<!-- wp:paragraph {"className":"fs-footer-grid__lead"} -->
-				<p class="fs-footer-grid__lead">Школа программирования и робототехники в Калининграде</p>
+				<p class="fs-footer-grid__lead">Школа программирования и&nbsp;робототехники в Калининграде</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:group {"className":"fs-footer-grid__contacts"} -->
 				<div class="wp-block-group fs-footer-grid__contacts">
 					<!-- wp:paragraph -->
-					<p>236006, г. Калининград, ул. Черняховского, д. 6, каб. 316</p>
+					<p>236006, г. Калининград,</p>
 					<!-- /wp:paragraph -->
+
+                    <!-- wp:paragraph -->
+                    <p>ул.Черняховского, д. 6, каб. 316</p>
+                    <!-- /wp:paragraph -->
 
 					<!-- wp:paragraph -->
 					<p><a href="tel:+79953264486">Телефон: +7 995 326 44 86</a></p>

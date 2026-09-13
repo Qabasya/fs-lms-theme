@@ -24,12 +24,17 @@
  * названием вуза (доступность/SEO не теряются, даже когда картинка у
  * всех слайдов одна и та же). Реальные логотипы редактор подставит
  * через медиатеку на каждый слайд отдельно.
+ *
+ * BugFix (tasks.md, 2026-09-13, п.2 и п.5): класс `fs-alumni-strip` на серой
+ * карточке — на телефоне её боковой паддинг (ядро даёт группам с фоном
+ * 2.375em) уменьшается до 1.25rem, логотипы — до 80px в высоту
+ * (`theme.scss`), иначе один логотип не помещался на экран.
  */
 ?>
 <!-- wp:group {"className":"fs-section"} -->
 <div class="wp-block-group fs-section">
-	<!-- wp:group {"backgroundColor":"surface-2","style":{"border":{"color":"var:preset|color|border","width":"1px","radius":"var:preset|spacing|md"},"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xxl"}}}} -->
-	<div class="wp-block-group has-border-color has-surface-2-background-color has-background" style="border-color:var(--wp--preset--color--border);border-width:1px;border-radius:var(--wp--preset--spacing--md);padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xxl)">
+	<!-- wp:group {"className":"fs-alumni-strip","backgroundColor":"surface-2","style":{"border":{"color":"var:preset|color|border","width":"1px","radius":"var:preset|spacing|md"},"spacing":{"padding":{"top":"var:preset|spacing|xl","bottom":"var:preset|spacing|xxl"}}}} -->
+	<div class="wp-block-group fs-alumni-strip has-border-color has-surface-2-background-color has-background" style="border-color:var(--wp--preset--color--border);border-width:1px;border-radius:var(--wp--preset--spacing--md);padding-top:var(--wp--preset--spacing--xl);padding-bottom:var(--wp--preset--spacing--xxl)">
 
         <!-- wp:heading {"textAlign":"center","fontSize":"xxl"} -->
         <h2 class="wp-block-heading has-text-align-center has-xxl-font-size">Наши выпускники поступают</h2>

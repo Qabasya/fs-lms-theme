@@ -70,6 +70,12 @@
  * (`fs_lms_theme_cart_url()`, `inc/WooCommerce.php`). Пункт «Контакты» в
  * основном меню — `inc/Navigation.php`.
  *
+ * BugFix (tasks.md, 2026-09-13): класс `fs-topbar__cart` — на телефоне
+ * (≤600px) корзина из инфо-полосы прячется (п.1). Класс, а не селектор по
+ * `href`: `wc_get_cart_url()` может отдать страницу с любым слагом. Обеим
+ * обёрткам с фоном — класс `fs-header-band`: ядро даёт группам с фоном
+ * боковой паддинг 2.375em, на телефоне он снимается (п.2, `theme.scss`).
+ *
  * Слоган в инфо-полосе — абзац, а не `<h1>`: заголовок первого уровня на
  * странице должен быть один (и это заголовок самой страницы), иначе
  * поисковик видит на каждой странице сайта один и тот же h1.
@@ -77,8 +83,8 @@
 $fs_nav_id  = function_exists( 'fs_lms_theme_navigation_id' ) ? fs_lms_theme_navigation_id() : 0;
 $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme_signup_button_url() : '#hero-form';
 ?>
-<!-- wp:group {"tagName":"div","backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|xs","bottom":"var:preset|spacing|xs"}},"border":{"bottom":{"color":"var:preset|color|border-light","width":"1px"}}}} -->
-<div class="wp-block-group has-surface-2-background-color has-background" style="border-bottom-color:var(--wp--preset--color--border-light);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--xs);padding-bottom:var(--wp--preset--spacing--xs)">
+<!-- wp:group {"tagName":"div","className":"fs-header-band","backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|xs","bottom":"var:preset|spacing|xs"}},"border":{"bottom":{"color":"var:preset|color|border-light","width":"1px"}}}} -->
+<div class="wp-block-group fs-header-band has-surface-2-background-color has-background" style="border-bottom-color:var(--wp--preset--color--border-light);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--xs);padding-bottom:var(--wp--preset--spacing--xs)">
 	<!-- wp:group {"className":"fs-header-container","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
 	<div class="wp-block-group fs-header-container" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 		<!-- wp:group {"className":"fs-topbar","layout":{"type":"flex","justifyContent":"space-between"}} -->
@@ -96,8 +102,8 @@ $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme
 				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="mailto:info@future-step.ru">info@future-step.ru</a></p>
 				<!-- /wp:paragraph -->
 
-				<!-- wp:paragraph {"textColor":"muted","fontSize":"xxs"} -->
-				<p class="has-muted-color has-text-color has-xxs-font-size"><a href="<?php echo esc_url( fs_lms_theme_cart_url() ); ?>">Корзина</a></p>
+				<!-- wp:paragraph {"className":"fs-topbar__cart","textColor":"muted","fontSize":"xxs"} -->
+				<p class="fs-topbar__cart has-muted-color has-text-color has-xxs-font-size"><a href="<?php echo esc_url( fs_lms_theme_cart_url() ); ?>">Корзина</a></p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
@@ -108,8 +114,8 @@ $fs_cta_url = function_exists( 'fs_lms_theme_signup_button_url' ) ? fs_lms_theme
 </div>
 <!-- /wp:group -->
 
-<!-- wp:group {"tagName":"div","backgroundColor":"white","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|lg","bottom":"var:preset|spacing|lg"}},"border":{"bottom":{"color":"var:preset|color|border","width":"1px"}}}} -->
-<div class="wp-block-group has-white-background-color has-background" style="margin-top:0;border-bottom-color:var(--wp--preset--color--border);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--lg);padding-bottom:var(--wp--preset--spacing--lg)">
+<!-- wp:group {"tagName":"div","className":"fs-header-band","backgroundColor":"white","style":{"spacing":{"margin":{"top":"0"},"padding":{"top":"var:preset|spacing|lg","bottom":"var:preset|spacing|lg"}},"border":{"bottom":{"color":"var:preset|color|border","width":"1px"}}}} -->
+<div class="wp-block-group fs-header-band has-white-background-color has-background" style="margin-top:0;border-bottom-color:var(--wp--preset--color--border);border-bottom-width:1px;padding-top:var(--wp--preset--spacing--lg);padding-bottom:var(--wp--preset--spacing--lg)">
 	<!-- wp:group {"className":"fs-header-container","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"left":"var:preset|spacing|xxl","right":"var:preset|spacing|xxl"}}}} -->
 	<div class="wp-block-group fs-header-container" style="padding-right:var(--wp--preset--spacing--xxl);padding-left:var(--wp--preset--spacing--xxl)">
 		<!-- wp:group {"className":"fs-header-row","layout":{"type":"flex","justifyContent":"space-between","verticalAlignment":"center"}} -->

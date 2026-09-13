@@ -69,9 +69,9 @@
 			"fontSizes": [
 				{ "name": "2XS (14px)", "slug": "xxs", "size": "calc(14rem / 19.2)" },
 				{ "name": "XS (15px)", "slug": "xs", "size": "calc(15rem / 19.2)" },
-				{ "name": "SM (16px)", "slug": "sm", "size": "calc(16rem / 19.2)" },
-				{ "name": "Base (18px)", "slug": "base", "size": "calc(18rem / 19.2)" },
-				{ "name": "MD (19px)", "slug": "md", "size": "calc(19rem / 19.2)" },
+				{ "name": "SM (14px)", "slug": "sm", "size": "calc(14rem / 19.2)" },
+				{ "name": "Base (16px)", "slug": "base", "size": "calc(16rem / 19.2)" },
+				{ "name": "MD (18px)", "slug": "md", "size": "calc(18rem / 19.2)" },
 				{ "name": "Lead (21px)", "slug": "lead", "size": "calc(21rem / 19.2)" },
 				{ "name": "LG (22px)", "slug": "lg", "size": "calc(22rem / 19.2)" },
 				{ "name": "XL (24px)", "slug": "xl", "size": "calc(24rem / 19.2)" },

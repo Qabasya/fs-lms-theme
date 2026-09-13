@@ -39,7 +39,9 @@
  * Увеличиваем шрифты и отступы, колонка страницы остаётся 1200px.
  *
  * Шрифтовая шкала (2026-09-13, по указанию пользователя) — целые пиксели:
- * 14/15/16/18/19/21/22/24/36/56. Простое ×1.2 давало дробные размеры
+ * 14/15/16/18/21/22/24/36/56. Вторая правка того же дня (tasks.md): `sm`
+ * 16→14, `base` 18→16, `md` 19→18 — `sm` теперь совпадает с `xxs`, это
+ * решение пользователя, не опечатка. Простое ×1.2 давало дробные размеры
  * (15.6, 40.8px), а заголовки при колонке 1200px выходили слишком
  * крупными. Токены в `theme.json` записаны как `calc(Nrem / 19.2)` — это
  * ровно N пикселей при корневых 19.2px и по-прежнему `rem`. В SCSS размеры
@@ -570,6 +572,63 @@ $fs-gap-containers:
 
 	&__row {
 		flex: 0 0 auto;
+	}
+}
+
+/**
+ * Hero на телефоне (tasks.md, 2026-09-13).
+ *
+ * П.2: десктопные паддинги карточек (2.5rem у направлений, 2rem у формы)
+ * съедали половину ширины — на 390px под текст оставалось 195–215px,
+ * теперь ~300px.
+ *
+ * П.4: в ячейку статистики шириной 93–130px значение 24px («до 875 ₽» —
+ * 96.6px) не влезало и переносилось, вместе с подписью выходило 4 строки.
+ * 21px (84.5px) влезает даже на 320px, `nowrap` держит значение одной
+ * строкой, подпись (`base`, 16px) — максимум в две. Ячейки тянутся на
+ * высоту ряда (разделители во всю высоту), значения прижаты к верху —
+ * стоят на одной линии, даже если подписи в одну и в две строки.
+ *
+ * Направления (по указанию пользователя, 2026-09-13): строка направления —
+ * всегда три строки: стрелка, название, класс. В ряду с переносом короткие
+ * названия вставали рядом со стрелкой, а длинные («Программирование на
+ * Python») уходили под неё — пункты списка выглядели по-разному.
+ * Зазор между строками — тот же `.375rem`, что был у переноса.
+ */
+@media ( max-width: 767px ) {
+	.fs-hero-dirs,
+	.fs-hero-form {
+		padding: 1.5rem 1.25rem;
+	}
+
+	.fs-hero-dirs__item {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: .375rem;
+	}
+
+	.fs-hero-stats {
+		align-items: stretch;
+
+		&__item {
+			justify-content: flex-start;
+		}
+
+		&__value {
+			font-size: var( --wp--preset--font-size--lead );
+			white-space: nowrap;
+		}
+	}
+}
+
+/**
+ * П.3: ФИО и телефон — друг под другом. В колонке ~100px подпись «ФИО
+ * родителя» переносилась на две строки, «Телефон» — нет, и поля съезжали
+ * по вертикали. На 601–767px на две колонки ширины хватает (от 250px на поле).
+ */
+@media ( max-width: 600px ) {
+	.fs-hero-form__row {
+		grid-template-columns: 1fr;
 	}
 }
 
@@ -1274,6 +1333,13 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 	}
 }
 
+// Телефон (tasks.md, 2026-09-13, п.2): те же 1.25rem по бокам, что у карточек hero.
+@media ( max-width: 767px ) {
+	.fs-apply-form {
+		padding: 1.25rem;
+	}
+}
+
 /**
  * Ссылка на политику конфиденциальности в подписи под кнопкой лид-форм
  * (`fs_lms_theme_form_consent_html()`, `inc/Forms.php`). Цвет подписи,
@@ -1541,6 +1607,25 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 }
 
 /**
+ * Телефон (tasks.md, 2026-09-13): стрелки вынесены за край карусели на
+ * 1.125rem, а боковой отступ страницы здесь 1rem — правая стрелка вылезала
+ * за экран и давала горизонтальный скролл всей страницы. Стрелки
+ * оставлены (по решению пользователя, свайп тоже работает — `drag` Splide
+ * по умолчанию), просто задвинуты внутрь отступа.
+ */
+@media ( max-width: 767px ) {
+	.fs-carousel-mask .splide__arrow {
+		&.splide__arrow--prev {
+			left: -.75rem;
+		}
+
+		&.splide__arrow--next {
+			right: -.75rem;
+		}
+	}
+}
+
+/**
  * Карусель вузов (`patterns/alumni-strip.php`, BugFix из tasks.md) —
  * контейнер фиксирован на 160px, логотипы центрированы по вертикали
  * внутри (сами логотипы остаются 3.25rem — `.fs-alumni-logo`).
@@ -1590,6 +1675,28 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 }
 
 /**
+ * Телефон (tasks.md, 2026-09-13, п.5): при высоте 120px слайд-логотип
+ * (файл 391×160) выходил 322px — шире карточки даже после снятия лишних
+ * паддингов (302px на 390px). 80px — слайд 224px, влезает и на 320px
+ * (трек 232px). `max-width` — страховка для реальных логотипов шире
+ * заглушки: не шире трека (100vw − 2×1rem отступ − 2×1.25rem карточка −
+ * 2px рамка − 2×.75rem паддинг слайда), пропорции держит `object-fit`.
+ */
+@media ( max-width: 767px ) {
+	.fs-carousel-mask--strip {
+		height: 120px;
+	}
+
+	.fs-alumni-logo {
+		height: 80px;
+
+		img {
+			max-width: calc( 100vw - 6rem - 2px );
+		}
+	}
+}
+
+/**
  * Заглушка под изображение (курс/блог/выпускник без реальной картинки).
  * Диагональная сетка на второй поверхности — тот же приём, что в мокапе
  * (`Главная — мокап.dc.html`), только вынесенный в переиспользуемый класс
@@ -1620,22 +1727,34 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 
 /**
  * Адаптив бокового отступа контейнера (Фаза 11) — `theme.json`
- * (`styles.spacing.padding`) задаёт базовое значение 60px (desktop,
- * ≥1200px), здесь — 32px (900–1199px) и 20px (<600px) поверх той же
- * CSS-переменной, которую использует `useRootPaddingAwareAlignments`.
+ * (`styles.spacing.padding`) задаёт базовое значение 2.5rem (48px,
+ * ≥1200px), здесь — 2rem (38.4px, 768–1199px) и 1rem (19.2px, ≤767px)
+ * поверх той же CSS-переменной, которую использует
+ * `useRootPaddingAwareAlignments` (`.has-global-padding`).
+ *
+ * BugFix (tasks.md, 2026-09-13, п.2): переменные раньше переопределялись
+ * на `:root` и не работали ни на одной ширине — ядро объявляет их на
+ * `body` (`global-styles-inline-css`), а своё значение у `body` перекрывает
+ * унаследованное от `:root`. На телефоне у `<main>` оставалось 48px с каждой
+ * стороны. `.wp-site-blocks` — потомок `body`, поэтому его значение
+ * выигрывает при любом порядке стилей (WP Rocket умеет их склеивать и
+ * переставлять).
  */
 @media ( max-width: 1199px ) {
-	:root {
+	.wp-site-blocks {
 		--wp--style--root--padding-left: 2rem;
 		--wp--style--root--padding-right: 2rem;
 	}
 }
 
 @media ( max-width: 767px ) {
-	:root {
+	.wp-site-blocks {
 		--wp--style--root--padding-left: 1rem;
 		--wp--style--root--padding-right: 1rem;
+	}
 
+	// Размеры шрифта ядро объявляет на `:root` — здесь переопределение работает.
+	:root {
 		/**
 		 * Крупные заголовки (`has-xxxl-font-size` — 56px;
 		 * `has-xxl-font-size` — h1 страниц и h2 секций, 36px) не влезают по
@@ -1648,6 +1767,29 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 		--wp--preset--font-size--xxxl: 1.875rem;
 		/* stylelint-disable-next-line number-max-precision -- 27px ровно, при 4 знаках вышло бы 27.001px */
 		--wp--preset--font-size--xxl: 1.40625rem;
+	}
+}
+
+/**
+ * BugFix (tasks.md, 2026-09-13, п.2): боковой паддинг ядра у групп с фоном.
+ * `wp-block-group-theme-inline-css` задаёт
+ * `:where(.wp-block-group.has-background) { padding: 1.25em 2.375em }` —
+ * 42.75px с каждой стороны. У шапки и подвала он складывался с отступом
+ * страницы, у карточки вузов — ещё и с отступом `<main>`: на телефоне под
+ * текст оставалось ~208px. Два класса перебивают `:where()` без
+ * `!important`; вертикальные паддинги групп заданы инлайном и не меняются.
+ * Задача — только про мобильную версию, десктопную шапку/подвал не трогаем.
+ */
+@media ( max-width: 767px ) {
+	.fs-header-band.has-background,
+	.fs-footer.has-background {
+		padding-right: 0;
+		padding-left: 0;
+	}
+
+	.fs-alumni-strip.has-background {
+		padding-right: 1.25rem;
+		padding-left: 1.25rem;
 	}
 }
 
@@ -1807,6 +1949,14 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 		padding-left: var( --wp--preset--spacing--md );
 		font-size: var( --wp--preset--font-size--xs );
 	}
+
+	// Паддинг обёрток шапки задан инлайном — отсюда `!important`.
+	// BugFix (tasks.md, 2026-09-13): было только ниже 400px — теперь на всём
+	// мобильном, логотип стоит на той же линии 1rem, что и контент страницы.
+	.fs-site-header .fs-header-container {
+		padding-right: var( --wp--preset--spacing--lg ) !important;
+		padding-left: var( --wp--preset--spacing--lg ) !important;
+	}
 }
 
 /**
@@ -1820,12 +1970,6 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 
 	.fs-header-row .fs-header-cta {
 		gap: var( --wp--preset--spacing--sm );
-	}
-
-	// Паддинг обёрток шапки тоже задан инлайном — отсюда `!important`.
-	.fs-site-header .fs-header-container {
-		padding-right: var( --wp--preset--spacing--lg ) !important;
-		padding-left: var( --wp--preset--spacing--lg ) !important;
 	}
 }
 
@@ -1870,13 +2014,18 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 		// `margin-left:auto` у блока контактов задан инлайном в атрибутах
 		// блока, перебить можно только `!important`.
 		//
-		// С «Корзиной» (BugFix.6, 2026-09-12) три ссылки в строку на узком
-		// телефоне не входят — переносятся по центру, с меньшим зазором.
+		// Если ссылки не влезут в строку, они переносятся по центру с меньшим зазором.
 		> .wp-block-group {
 			justify-content: center;
 			gap: 0 var( --wp--preset--spacing--md );
 			margin-left: 0 !important;
 			margin-top: 0 !important;
+		}
+
+		// BugFix (tasks.md, 2026-09-13, п.1): корзина — только на десктопе.
+		// Телефон и почта без неё помещаются в одну строку.
+		.fs-topbar__cart {
+			display: none;
 		}
 	}
 }
