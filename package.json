@@ -1,6 +1,6 @@
 {
   "name": "fs-lms-theme",
-  "version": "1.0.11",
+  "version": "1.1.0",
   "private": true,
   "description": "FS LMS Theme — блочная (FSE) тема: дизайн-система, кастомные блоки и паттерны Gutenberg. Сборка — gulp+webpack, по образцу плагина fs-lms.",
   "license": "GPL-2.0+",
