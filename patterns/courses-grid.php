@@ -26,6 +26,11 @@
  * `fs_lms_theme_subject_url( $key, 'overview' )` (тот же хелпер, что уже
  * использует кнопка «Программа» в `courses-catalog.php`) вместо якоря
  * `#signup`.
+ *
+ * Этап 3 (2026-09-13): карточки — из записей «Направления» в админке
+ * (`inc/Showcase/Directions.php`), в порядке поля «Порядок» — тот же, что у
+ * списка первого экрана и каталога «Курсы» (раньше здесь был обратный:
+ * Робототехника, Python, ОГЭ, ЕГЭ). Разметка карточки прежняя.
  */
 ?>
 <!-- wp:group {"className":"fs-section"} -->
@@ -43,21 +48,7 @@
 	<!-- wp:group {"className":"fs-courses-grid","layout":{"type":"grid","columnCount":4}} -->
 	<div class="wp-block-group fs-courses-grid">
 
-		<!-- wp:fs-lms/course-card {"imageUrl":"<?php echo esc_url( get_theme_file_uri( 'img/dir-robo.png' ) ); ?>","imageAlt":"Робототехника","badgeColor":"subject-yellow-text","buttonText":"Подробнее","buttonUrl":"<?php echo fs_lms_theme_subject_url( 'robo', 'overview' ); ?>"} -->
-		<div class="wp-block-fs-lms-course-card fs-course-card"><div class="fs-course-card__media"><img src="<?php echo esc_url( get_theme_file_uri( 'img/dir-robo.png' ) ); ?>" alt="Робототехника" /></div><div class="fs-course-card__body"><span class="fs-course-card__badge has-subject-yellow-text-color has-subject-yellow-background-color  has-text-color has-background">5–8 класс</span><h3 class="fs-course-card__title">Робототехника</h3><p class="fs-course-card__caption">Собираем электронные схемы и&nbsp;учимся программировать микроконтроллеры</p><div class="fs-course-card__footer"><div class="fs-course-card__price"><span class="fs-course-card__price-amount">9 000 ₽</span><span class="fs-course-card__price-unit">/ мес</span></div><a class="fs-course-card__button wp-element-button" href="<?php echo fs_lms_theme_subject_url( 'robo', 'overview' ); ?>">Подробнее</a></div></div></div>
-		<!-- /wp:fs-lms/course-card -->
-
-		<!-- wp:fs-lms/course-card {"imageUrl":"<?php echo esc_url( get_theme_file_uri( 'img/dir-py.png' ) ); ?>","imageAlt":"Программирование на Python","badgeColor":"ok","buttonText":"Подробнее","buttonUrl":"<?php echo fs_lms_theme_subject_url( 'python', 'overview' ); ?>"} -->
-		<div class="wp-block-fs-lms-course-card fs-course-card"><div class="fs-course-card__media"><img src="<?php echo esc_url( get_theme_file_uri( 'img/dir-py.png' ) ); ?>" alt="Программирование на Python" /></div><div class="fs-course-card__body"><span class="fs-course-card__badge has-ok-color has-ok-soft-background-color has-text-color has-background">10 класс</span><h3 class="fs-course-card__title">Программирование на Python</h3><p class="fs-course-card__caption">Изучаем язык программирования Python с опорой на задания ЕГЭ</p><div class="fs-course-card__footer"><div class="fs-course-card__price"><span class="fs-course-card__price-amount">12 000 ₽</span><span class="fs-course-card__price-unit">/ мес</span></div><a class="fs-course-card__button wp-element-button" href="<?php echo fs_lms_theme_subject_url( 'python', 'overview' ); ?>">Подробнее</a></div></div></div>
-		<!-- /wp:fs-lms/course-card -->
-
-		<!-- wp:fs-lms/course-card {"imageUrl":"<?php echo esc_url( get_theme_file_uri( 'img/dir-oge.png' ) ); ?>","imageAlt":"ОГЭ по информатике","badgeColor":"violet","buttonText":"Подробнее","buttonUrl":"<?php echo fs_lms_theme_subject_url( 'inf_oge', 'overview' ); ?>"} -->
-		<div class="wp-block-fs-lms-course-card fs-course-card"><div class="fs-course-card__media"><img src="<?php echo esc_url( get_theme_file_uri( 'img/dir-oge.png' ) ); ?>" alt="ОГЭ по информатике" /></div><div class="fs-course-card__body"><span class="fs-course-card__badge has-violet-color has-violet-soft-background-color  has-text-color has-background">9 класс</span><h3 class="fs-course-card__title">ОГЭ по информатике</h3><p class="fs-course-card__caption">Готовимся к основному экзамену и&nbsp;изучаем основы Python</p><div class="fs-course-card__footer"><div class="fs-course-card__price"><span class="fs-course-card__price-amount">10 000 ₽</span><span class="fs-course-card__price-unit">/ мес</span></div><a class="fs-course-card__button wp-element-button" href="<?php echo fs_lms_theme_subject_url( 'inf_oge', 'overview' ); ?>">Подробнее</a></div></div></div>
-		<!-- /wp:fs-lms/course-card -->
-
-		<!-- wp:fs-lms/course-card {"imageUrl":"<?php echo esc_url( get_theme_file_uri( 'img/dir-ege.png' ) ); ?>","imageAlt":"ЕГЭ по информатике","badgeColor":"info","buttonText":"Подробнее","buttonUrl":"<?php echo fs_lms_theme_subject_url( 'inf_ege', 'overview' ); ?>"} -->
-		<div class="wp-block-fs-lms-course-card fs-course-card"><div class="fs-course-card__media"><img src="<?php echo esc_url( get_theme_file_uri( 'img/dir-ege.png' ) ); ?>" alt="ЕГЭ по информатике" /></div><div class="fs-course-card__body"><span class="fs-course-card__badge has-info-color has-info-soft-background-color has-text-color has-background">11 класс</span><h3 class="fs-course-card__title">ЕГЭ по информатике</h3><p class="fs-course-card__caption">Разбираем все задания экзамена и&nbsp;учимся программировать на Python</p><div class="fs-course-card__footer"><div class="fs-course-card__price"><span class="fs-course-card__price-amount">14 000 ₽</span><span class="fs-course-card__price-unit">/ мес</span></div><a class="fs-course-card__button wp-element-button" href="<?php echo fs_lms_theme_subject_url( 'inf_ege', 'overview' ); ?>">Подробнее</a></div></div></div>
-		<!-- /wp:fs-lms/course-card -->
+<?php echo FS_LMS_Theme_Showcase::directions()->course_cards_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- карточки собраны с экранированием в FS_LMS_Theme_Directions. ?>
 
 	</div>
 	<!-- /wp:group -->

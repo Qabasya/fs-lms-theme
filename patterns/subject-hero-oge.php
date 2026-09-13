@@ -15,103 +15,12 @@
  *
  * Правая колонка (мини-форма `#hero-form` + плашка из 3 статов) — тот же
  * `wp:html`, что и в `hero.php`/`subject-hero.php`, без изменений.
+ *
+ * Этап 3 (2026-09-13): разметка первого экрана — общая для всех направлений
+ * (`inc/Showcase/views/subject-hero.php`), данные — запись «Направления» с
+ * ключом предмета `inf_oge` (`inc/Showcase/Directions.php`): класс, заголовок,
+ * текст, цвет плашки и факты под формой. Нет записи — стартовые данные темы.
+ * Файл паттерна остаётся: страницы направлений ссылаются на него по слагу.
  */
-?>
-<!-- wp:group {"className":"fs-section"} -->
-<div class="wp-block-group fs-section">
-	<!-- wp:columns {"className":"fs-hero-columns","style":{"spacing":{"blockGap":{"left":"2.5rem"}}}} -->
-	<div class="wp-block-columns fs-hero-columns">
-		<!-- wp:column -->
-		<div class="wp-block-column">
-			<!-- wp:group {"className":"fs-subject-hero-box fs-subject-hero-box--oge","layout":{"type":"constrained"}} -->
-			<div class="wp-block-group fs-subject-hero-box fs-subject-hero-box--oge">
-				<!-- wp:paragraph {"className":"fs-subject-hero-box__badge"} -->
-				<p class="fs-subject-hero-box__badge">9 класс</p>
-				<!-- /wp:paragraph -->
 
-				<!-- wp:heading {"level":1,"fontSize":"xxl"} -->
-				<h1 class="wp-block-heading has-xxl-font-size">ОГЭ по информатике</h1>
-				<!-- /wp:heading -->
-
-				<!-- wp:paragraph {"fontSize":"lead"} -->
-				<p class="has-lead-font-size">Все задания ОГЭ, практика в реальных программах и разбор типичных ошибок с репетитором.</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"fontSize":"lead"} -->
-				<p class="has-lead-font-size">Проходим весь экзаменационный минимум по порядку, регулярно решаем варианты в формате ОГЭ и следим за скоростью выполнения — к маю девятиклассник уверенно укладывается в отведённое время и не боится практической части.</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:column -->
-
-		<!-- wp:column -->
-		<div class="wp-block-column">
-			<!-- wp:html -->
-			<form id="hero-form" class="fs-hero-form" data-fs-form>
-				<div class="fs-hero-form__title">Запишитесь на пробное занятие</div>
-				<div class="fs-hero-form__row">
-					<div class="fs-form-field">
-						<label for="fs-subject-hero-name">ФИО родителя</label>
-						<input type="text" id="fs-subject-hero-name" name="parent_name" placeholder="Иванова Анна Ивановна" autocomplete="name" <?php echo fs_lms_theme_name_field_attrs_html(); ?> required>
-					</div>
-					<div class="fs-form-field">
-						<label for="fs-subject-hero-phone">Телефон</label>
-						<input type="tel" id="fs-subject-hero-phone" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
-					</div>
-				</div>
-				<input type="hidden" name="form_id" value="hero">
-				<input type="hidden" name="fs_form_token" value="<?php echo esc_attr( fs_lms_theme_form_timestamp_token() ); ?>">
-				<input type="text" name="<?php echo esc_attr( fs_lms_theme_honeypot_field() ); ?>" class="fs-form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-				<?php echo fs_lms_theme_captcha_slot_html(); ?>
-				<button type="submit" class="fs-hero-form__submit">Отправить</button>
-				<div class="fs-hero-form__note"><?php echo fs_lms_theme_form_consent_html(); ?></div>
-				<div class="fs-form-message" role="status"></div>
-			</form>
-			<!-- /wp:html -->
-
-			<!-- wp:group {"className":"fs-hero-stats"} -->
-			<div class="wp-block-group fs-hero-stats">
-				<!-- wp:group {"className":"fs-hero-stats__item"} -->
-				<div class="wp-block-group fs-hero-stats__item">
-					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
-					<p class="fs-hero-stats__value">2 раза</p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
-					<p class="fs-hero-stats__label">в неделю</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"fs-hero-stats__item"} -->
-				<div class="wp-block-group fs-hero-stats__item">
-					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
-					<p class="fs-hero-stats__value">2 часа</p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
-					<p class="fs-hero-stats__label">одно занятие</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"fs-hero-stats__item"} -->
-				<div class="wp-block-group fs-hero-stats__item">
-					<!-- wp:paragraph {"className":"fs-hero-stats__value"} -->
-					<p class="fs-hero-stats__value">до 8</p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
-					<p class="fs-hero-stats__label">человек в группе</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:column -->
-	</div>
-	<!-- /wp:columns -->
-</div>
-<!-- /wp:group -->
+echo FS_LMS_Theme_Showcase::directions()->subject_hero_markup( 'inf_oge' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранирование в inc/Showcase/views/subject-hero.php.

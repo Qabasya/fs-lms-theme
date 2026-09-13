@@ -27,6 +27,10 @@
  * (горизонтальная сетка `.fs-hero-form__row` сохранена). Класс
  * `fs-hero-columns` на `wp:columns` — растягивает `.fs-hero-form` +
  * `.fs-hero-stats` на всю высоту левой колонки (см. `theme.scss`).
+ *
+ * Этап 3 (2026-09-13): пункты списка направлений — из записей «Направления»
+ * в админке (`inc/Showcase/Directions.php`): название, класс, ссылка на
+ * страницу предмета. Факты под формой пока в коде (этап 4 — «Настройки сайта»).
  */
 ?>
 <!-- wp:group {"className":"fs-section-lead"} -->
@@ -41,53 +45,7 @@
 				<h2 class="wp-block-heading fs-hero-dirs__title">Направления подготовки</h2>
 				<!-- /wp:heading -->
 
-				<!-- wp:group {"className":"fs-hero-dirs__item"} -->
-				<div class="wp-block-group fs-hero-dirs__item">
-					<!-- wp:paragraph {"className":"fs-hero-dirs__name"} -->
-					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_ege', 'overview' ) ); ?>">ЕГЭ по информатике</a></p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-hero-dirs__grade"} -->
-					<p class="fs-hero-dirs__grade">11 класс</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"fs-hero-dirs__item"} -->
-				<div class="wp-block-group fs-hero-dirs__item">
-					<!-- wp:paragraph {"className":"fs-hero-dirs__name"} -->
-					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'inf_oge', 'overview' ) ); ?>">ОГЭ по информатике</a></p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-hero-dirs__grade"} -->
-					<p class="fs-hero-dirs__grade">9 класс</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"fs-hero-dirs__item"} -->
-				<div class="wp-block-group fs-hero-dirs__item">
-					<!-- wp:paragraph {"className":"fs-hero-dirs__name"} -->
-					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'python', 'overview' ) ); ?>">Программирование на Python</a></p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-hero-dirs__grade"} -->
-					<p class="fs-hero-dirs__grade">10 класс</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"fs-hero-dirs__item fs-hero-dirs__item--last"} -->
-				<div class="wp-block-group fs-hero-dirs__item fs-hero-dirs__item--last">
-					<!-- wp:paragraph {"className":"fs-hero-dirs__name"} -->
-					<p class="fs-hero-dirs__name"><a href="<?php echo esc_url( fs_lms_theme_subject_url( 'robo', 'overview' ) ); ?>">Робототехника</a></p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-hero-dirs__grade"} -->
-					<p class="fs-hero-dirs__grade">5–8 класс</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
+<?php echo FS_LMS_Theme_Showcase::directions()->hero_list_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- пункты собраны с экранированием в FS_LMS_Theme_Directions::hero_list_markup(). ?>
 			</div>
 			<!-- /wp:group -->
 		</div>
