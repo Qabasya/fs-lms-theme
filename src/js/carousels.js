@@ -79,7 +79,18 @@ export function initCarousels() {
 
 		if ( autoWidth ) {
 			options.autoWidth = true;
-			options.breakpoints = { 767: { gap: '0.75rem' } };
+
+			/**
+			 * Телефон (по указанию пользователя, 2026-09-13): активный логотип
+			 * по центру, по бокам — края соседних. По умолчанию Splide
+			 * прижимает активный слайд к левому краю, и в узкой ленте один
+			 * логотип обрезался слева, другой справа. `focus` Splide читает
+			 * при каждом пересчёте позиции, поэтому вне брейкпоинта (десктоп)
+			 * лента снова выравнивается по левому краю. Зазор больше, чем
+			 * был: у слайдов на телефоне нет своих боковых паддингов
+			 * (`.fs-alumni-logo`, `theme.scss`).
+			 */
+			options.breakpoints = { 767: { gap: '1.5rem', focus: 'center' } };
 		} else {
 			options.perPage = perPage;
 			options.breakpoints = {

@@ -1677,21 +1677,43 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 /**
  * Телефон (tasks.md, 2026-09-13, п.5): при высоте 120px слайд-логотип
  * (файл 391×160) выходил 322px — шире карточки даже после снятия лишних
- * паддингов (302px на 390px). 80px — слайд 224px, влезает и на 320px
- * (трек 232px). `max-width` — страховка для реальных логотипов шире
- * заглушки: не шире трека (100vw − 2×1rem отступ − 2×1.25rem карточка −
- * 2px рамка − 2×.75rem паддинг слайда), пропорции держит `object-fit`.
+ * паддингов (302px на 390px). На телефоне логотип 80px в высоту.
+ *
+ * Активный логотип — по центру, по бокам — края соседних (по указанию
+ * пользователя, 2026-09-13; `focus: 'center'` в `src/js/carousels.js`).
+ * Чтобы краям хватило места:
+ * - лента выходит на паддинг карточки (`margin-inline`) и занимает её
+ *   ширину целиком — 350px на 390px;
+ * - у слайдов нет своих боковых паддингов, расстояние между логотипами —
+ *   `gap` Splide (1.5rem), иначе край соседа был бы пустым паддингом;
+ * - маска гасит только полосу 1.25rem у края карточки (была 14% ширины —
+ *   края соседей уходили в прозрачность целиком);
+ * - `max-width` картинки — логотип не шире ленты минус два зазора и два
+ *   края по 2rem (100vw − 2×1rem отступ − 2px рамка − 2×1.5rem − 2×2rem),
+ *   края соседей видны даже на 320px и у логотипов шире заглушки.
+ *   Пропорции держит `object-fit: contain`.
  */
 @media ( max-width: 767px ) {
 	.fs-carousel-mask--strip {
 		height: 120px;
 	}
 
+	.fs-alumni-strip .fs-carousel-mask--strip {
+		margin-right: -1.25rem;
+		margin-left: -1.25rem;
+	}
+
+	.fs-carousel-mask--strip .splide__track {
+		mask-image: linear-gradient( 90deg, transparent, #000 1.25rem, #000 calc( 100% - 1.25rem ), transparent );
+	}
+
 	.fs-alumni-logo {
 		height: 80px;
+		padding-right: 0;
+		padding-left: 0;
 
 		img {
-			max-width: calc( 100vw - 6rem - 2px );
+			max-width: calc( 100vw - 9rem - 2px );
 		}
 	}
 }
