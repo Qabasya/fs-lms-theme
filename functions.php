@@ -24,6 +24,7 @@
  *   - Forms.php    — AJAX-приём лид-форм (`#hero-form`/`#signup`), honeypot +
  *                     HMAC-таймер + rate-limit (Фаза 14)
  *   - Updates.php  — обновление темы из GitHub Releases кнопкой в админке
+ *   - Showcase.php — «Выпускники» и «Вузы»: записи в админке для каруселей главной
  */
 
 declare(strict_types=1);
@@ -32,6 +33,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'Seo', 'PluginRoutes', 'SubjectPages', 'ResourcePages', 'Navigation', 'WooCommerce', 'Checkout', 'SmartCaptcha', 'SubjectCardIcons', 'ContentUpgrades', 'Forms', 'Updates' ) as $module ) {
+foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'Seo', 'PluginRoutes', 'SubjectPages', 'ResourcePages', 'Navigation', 'WooCommerce', 'Checkout', 'SmartCaptcha', 'SubjectCardIcons', 'ContentUpgrades', 'Forms', 'Updates', 'Showcase' ) as $module ) {
 	require_once get_template_directory() . "/inc/{$module}.php";
 }
