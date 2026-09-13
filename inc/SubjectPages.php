@@ -157,133 +157,42 @@ HTML;
 }
 
 /**
- * Секция «Как устроены занятия» — та же разметка, что у паттерна
- * `intensive-split.php`, но вставляется НЕ как `wp:pattern`-ссылка, а как
- * обычные блоки (задача 6, tasks.md, 2026-09-04).
+ * Ссылка на секцию «Как устроены занятия» — паттерн `intensive-split`.
  *
- * `wp:pattern` — это живая ссылка на зарегистрированный PHP-паттерн: на
- * главной (`templates/front-page.html`) она и нужна такой, тот же контент
- * для всех. На странице направления это раньше означало, что текст/фото
- * секции нельзя было поменять по-предметно — редактор всегда видел (и
- * правил бы вникуда) содержимое общего паттерна. Раз секция вставляется
- * как обычные блоки, WordPress сохраняет их в `post_content` конкретной
- * страницы направления — дальше редактор меняет текст/фото именно на ней,
- * не трогая остальные три (тот же приём, что уже применён к
- * `fs_lms_theme_subject_more_blocks()` выше).
- *
- * Стартовый контент — копия `patterns/intensive-split.php` (общий текст,
- * "Формат одинаковый на всех направлениях"); после первой вставки его
- * можно свободно переписать под конкретный предмет.
+ * Задача 6 (2026-09-04) вставляла на страницы направлений копию блоков
+ * секции, чтобы текст и фото правились по-предметно. С 2026-09-13 у каждого
+ * направления свой вариант секции в админке («Настройки темы → Как устроены
+ * занятия», `inc/Showcase/Lessons.php`), а паттерн сам выбирает вариант по
+ * слагу страницы — копия больше не нужна.
  */
-function fs_lms_theme_subject_intensive_blocks(): string {
-	$photo_url   = esc_url( get_theme_file_uri( 'img/photo.png' ) );
-	$courses_url = esc_url( home_url( '/courses/' ) );
+const FS_LMS_THEME_SUBJECT_INTENSIVE_PATTERN = '<!-- wp:pattern {"slug":"fs-lms-theme/intensive-split"} /-->';
 
-	return <<<HTML
-<!-- wp:group {"className":"fs-section"} -->
-<div id="lessons" class="wp-block-group fs-section">
-	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
-	<div class="wp-block-columns">
-		<!-- wp:column -->
-		<div class="wp-block-column">
-			<!-- wp:image {"className":"fs-aspect-4-3","style":{"border":{"radius":"var:preset|spacing|md"}}} -->
-			<figure class="wp-block-image fs-aspect-4-3" style="border-radius:var(--wp--preset--spacing--md)"><img src="{$photo_url}" alt="Фото занятия" /></figure>
-			<!-- /wp:image -->
-		</div>
-		<!-- /wp:column -->
+/**
+ * Раскладка 5: копия секции «Как устроены занятия» в содержимом страницы
+ * заменяется ссылкой на паттерн.
+ *
+ * Текст и фото из копии к этому моменту уже перенесены в вариант секции для
+ * этого направления: стартовые записи «Как устроены занятия» заводятся на
+ * `init` и читают их со страницы (`FS_LMS_Theme_Lessons::from_page()`), а это
+ * обновление идёт позже, на `wp_loaded`. Секцию ищем по чек-листу
+ * (`fs-checklist`), как и там.
+ *
+ * @param string $content Содержимое страницы направления.
+ *
+ * @return string Содержимое со ссылкой на паттерн (или исходное, если копии нет).
+ */
+function fs_lms_theme_subject_intensive_to_pattern( string $content ): string {
+	$blocks  = parse_blocks( $content );
+	$changed = false;
 
-		<!-- wp:column {"width":"480px"} -->
-		<div class="wp-block-column" style="flex-basis:480px">
-			<!-- wp:heading {"fontSize":"xxl"} -->
-			<h2 class="wp-block-heading has-xxl-font-size">Как устроены занятия</h2>
-			<!-- /wp:heading -->
+	foreach ( $blocks as $index => $block ) {
+		if ( null !== $block['blockName'] && str_contains( serialize_block( $block ), 'fs-checklist' ) ) {
+			$blocks[ $index ] = parse_blocks( FS_LMS_THEME_SUBJECT_INTENSIVE_PATTERN )[0];
+			$changed          = true;
+		}
+	}
 
-			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"base"} -->
-			<p class="has-text-secondary-color has-text-color has-base-font-size">Формат одинаковый на всех направлениях — меняется только программа.</p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:group {"className":"fs-checklist"} -->
-			<div class="wp-block-group fs-checklist">
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Занятия 2 раза в неделю</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Параллельная онлайн-трансляция каждого занятия</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Видеозаписи занятий в личном кабинете</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Домашнее задание после каждого занятия</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Регулярные контрольные и пробные экзамены</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Индивидуальные консультации с преподавателем</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Вся теория и шпаргалки в личном кабинете</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Дополнительные материалы по каждой теме</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:group -->
-
-			<!-- wp:group {"className":"fs-price-plaque"} -->
-			<div class="wp-block-group fs-price-plaque">
-				<!-- wp:group {"className":"fs-price-plaque__part"} -->
-				<div class="wp-block-group fs-price-plaque__part">
-					<!-- wp:paragraph {"className":"fs-price-plaque__value"} -->
-					<p class="fs-price-plaque__value">2 часа</p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-price-plaque__label"} -->
-					<p class="fs-price-plaque__label">одно занятие</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"fs-price-plaque__part"} -->
-				<div class="wp-block-group fs-price-plaque__part">
-					<!-- wp:paragraph {"className":"fs-price-plaque__value fs-price-plaque__value--accent"} -->
-					<p class="fs-price-plaque__value fs-price-plaque__value--accent">800 ₽</p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-price-plaque__label"} -->
-					<p class="fs-price-plaque__label">за час</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-			</div>
-			<!-- /wp:group -->
-
-			<!-- wp:buttons -->
-			<div class="wp-block-buttons">
-				<!-- wp:button {"backgroundColor":"accent-2"} -->
-				<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="#signup">Записаться</a></div>
-				<!-- /wp:button -->
-
-				<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
-				<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="{$courses_url}">Все направления</a></div>
-				<!-- /wp:button -->
-			</div>
-			<!-- /wp:buttons -->
-		</div>
-		<!-- /wp:column -->
-	</div>
-	<!-- /wp:columns -->
-</div>
-<!-- /wp:group -->
-HTML;
+	return $changed ? serialize_blocks( $blocks ) : $content;
 }
 
 /**
@@ -301,7 +210,7 @@ function fs_lms_theme_subject_page_blocks( string $subject_key ): string {
 	$sections = array(
 		sprintf( '<!-- wp:pattern {"slug":"%s"} /-->', $hero_pattern ),
 		'<!-- wp:pattern {"slug":"fs-lms-theme/features-grid"} /-->',
-		fs_lms_theme_subject_intensive_blocks(),
+		FS_LMS_THEME_SUBJECT_INTENSIVE_PATTERN,
 		'<!-- wp:pattern {"slug":"fs-lms-theme/subject-contact"} /-->',
 	);
 
@@ -412,7 +321,7 @@ add_action( 'template_redirect', 'fs_lms_theme_seed_subject_page' );
  *
  * 2026-09-13 (tasks.md, шаг 9): абзац «Формат одинаковый на всех
  * направлениях…» по указанию пользователя — размер `base`. В паттерне и в
- * стартовом контенте (`fs_lms_theme_subject_intensive_blocks()`) это
+ * стартовом контенте страниц направлений это
  * исправлено, но на уже созданных страницах направлений секция лежит копией
  * в `post_content` — там абзац остался `md`, а в редакторе размер поменять
  * не удалось.
@@ -481,8 +390,11 @@ function fs_lms_theme_paragraphs_md_to_base( array $block, bool &$changed ): arr
  *
  * 4 (2026-09-13) — абзац «Формат одинаковый…» с `md` на `base`
  * (`fs_lms_theme_subject_intensive_lead_to_base()`).
+ *
+ * 5 (2026-09-13) — копия «Как устроены занятия» → ссылка на паттерн
+ * (`fs_lms_theme_subject_intensive_to_pattern()`), текст и фото — в админке.
  */
-const FS_LMS_THEME_SUBJECT_PAGES_LAYOUT = 4;
+const FS_LMS_THEME_SUBJECT_PAGES_LAYOUT = 5;
 
 /**
  * BugFix.5 (2026-09-05): разворачивает ссылки на общие паттерны в блоки
@@ -517,11 +429,9 @@ function fs_lms_theme_upgrade_subject_pages(): void {
 		$content = $page->post_content;
 		$updated = str_replace(
 			array(
-				'<!-- wp:pattern {"slug":"fs-lms-theme/intensive-split"} /-->',
 				'<!-- wp:pattern {"slug":"fs-lms-theme/subject-more"} /-->',
 			),
 			array(
-				fs_lms_theme_subject_intensive_blocks(),
 				fs_lms_theme_subject_more_blocks( $subject_key ),
 			),
 			$content
@@ -537,6 +447,7 @@ function fs_lms_theme_upgrade_subject_pages(): void {
 		}
 
 		$updated = fs_lms_theme_subject_intensive_lead_to_base( $updated );
+		$updated = fs_lms_theme_subject_intensive_to_pattern( $updated );
 
 		if ( $updated === $content ) {
 			continue;

@@ -49,7 +49,7 @@ final class FS_LMS_Theme_Alumni extends FS_LMS_Theme_Showcase_Type {
 			'search_items'          => __( 'Найти выпускника', 'fs-lms-theme' ),
 			'not_found'             => __( 'Выпускников нет', 'fs-lms-theme' ),
 			'not_found_in_trash'    => __( 'В корзине выпускников нет', 'fs-lms-theme' ),
-			'all_items'             => __( 'Все выпускники', 'fs-lms-theme' ),
+			'all_items'             => __( 'Выпускники', 'fs-lms-theme' ),
 			'featured_image'        => __( 'Фото', 'fs-lms-theme' ),
 			'set_featured_image'    => __( 'Выбрать фото', 'fs-lms-theme' ),
 			'remove_featured_image' => __( 'Убрать фото', 'fs-lms-theme' ),

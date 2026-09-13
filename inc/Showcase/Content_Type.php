@@ -79,13 +79,14 @@ abstract class FS_LMS_Theme_Content_Type {
 				'labels'              => $this->labels(),
 				'public'              => false,
 				'show_ui'             => true,
-				'show_in_menu'        => true,
+				// Подпункт общего меню «Настройки темы» (`FS_LMS_Theme_Site_Settings::add_page()`),
+				// а не свой пункт верхнего уровня — по указанию пользователя, 2026-09-13.
+				'show_in_menu'        => FS_LMS_Theme_Showcase::MENU_SLUG,
 				'show_in_rest'        => false,
 				'exclude_from_search' => true,
 				'publicly_queryable'  => false,
 				'has_archive'         => false,
 				'rewrite'             => false,
-				'menu_position'       => 21,
 				'menu_icon'           => $this->menu_icon(),
 				'supports'            => $this->supports(),
 			)

@@ -42,7 +42,7 @@ final class FS_LMS_Theme_Universities extends FS_LMS_Theme_Showcase_Type {
 			'search_items'          => __( 'Найти вуз', 'fs-lms-theme' ),
 			'not_found'             => __( 'Вузов нет', 'fs-lms-theme' ),
 			'not_found_in_trash'    => __( 'В корзине вузов нет', 'fs-lms-theme' ),
-			'all_items'             => __( 'Все вузы', 'fs-lms-theme' ),
+			'all_items'             => __( 'Вузы', 'fs-lms-theme' ),
 			'featured_image'        => __( 'Логотип', 'fs-lms-theme' ),
 			'set_featured_image'    => __( 'Выбрать логотип', 'fs-lms-theme' ),
 			'remove_featured_image' => __( 'Убрать логотип', 'fs-lms-theme' ),

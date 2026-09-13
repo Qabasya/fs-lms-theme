@@ -58,19 +58,26 @@ const FS_LMS_THEME_RESOURCE_ICON_TRAINER  = '<svg width="19" height="19" viewBox
  * чертой — расхождение с макетом осознанное, по решению пользователя
  * в пользу единого вида всех внутренних страниц.
  *
- * @param string $title    «Учебник» либо «Тренажёр».
- * @param string $intro    Вводный абзац под заголовком.
+ * 2026-09-13 (по указанию пользователя): тексты — «Настройки темы → Учебник и
+ * тренажёр» (`inc/Showcase/Resource_Texts.php`), названия направлений на
+ * карточках — из «Направлений». Разметку выводят паттерны `resource-articles`/
+ * `resource-tasks`, в содержимом страниц — ссылка на них.
+ *
+ * @param string $slug     Слаг страницы (`articles`/`tasks`) — префикс её текстов.
  * @param string $page_key 'articles' либо 'trainer' — второй аргумент `fs_lms_theme_subject_url()`.
  * @param string $icon_svg Иконка карточек (одна из констант выше).
- * @param array<string, array{text: string, button: string}> $card_content Ключ — ключ предмета, значение — текст карточки и текст кнопки (у обоих мокапов кнопка называет предмет отдельно, не общей фразой).
  */
-function fs_lms_theme_resource_page_blocks( string $title, string $intro, string $page_key, string $icon_svg, array $card_content ): string {
+function fs_lms_theme_resource_page_blocks( string $slug, string $page_key, string $icon_svg ): string {
+	$texts = FS_LMS_Theme_Showcase::resource_texts();
 	$cards = '';
 
 	foreach ( fs_lms_theme_resource_subjects() as $subject_key => $subject ) {
+		$card        = (string) array_search( $subject_key, FS_LMS_Theme_Resource_Texts::CARDS, true );
+		$direction   = FS_LMS_Theme_Showcase::directions()->find( $subject_key );
+		$title       = esc_html( null === $direction ? $subject['title'] : $direction['title'] );
 		$url         = esc_url( fs_lms_theme_subject_url( $subject_key, $page_key ) );
-		$card_text   = $card_content[ $subject_key ]['text'];
-		$button_text = $card_content[ $subject_key ]['button'];
+		$card_text   = nl2br( esc_html( $texts->get( "{$slug}_{$card}_text" ) ) );
+		$button_text = esc_html( $texts->get( "{$slug}_{$card}_button" ) );
 
 		$cards .= <<<HTML
 
@@ -81,7 +88,7 @@ function fs_lms_theme_resource_page_blocks( string $title, string $intro, string
 			<!-- /wp:html -->
 
 			<!-- wp:paragraph {"className":"fs-subject-more-card__title"} -->
-			<p class="fs-subject-more-card__title">{$subject['title']}</p>
+			<p class="fs-subject-more-card__title">{$title}</p>
 			<!-- /wp:paragraph -->
 
 			<!-- wp:paragraph {"className":"fs-subject-more-card__text"} -->
@@ -96,11 +103,14 @@ function fs_lms_theme_resource_page_blocks( string $title, string $intro, string
 HTML;
 	}
 
+	$heading = esc_html( $texts->get( "{$slug}_title" ) );
+	$intro   = nl2br( esc_html( $texts->get( "{$slug}_intro" ) ) );
+
 	return <<<HTML
 <!-- wp:group {"className":"fs-section"} -->
 <div class="wp-block-group fs-section">
 	<!-- wp:heading {"level":1,"fontSize":"xxl"} -->
-	<h1 class="wp-block-heading has-xxl-font-size">{$title}</h1>
+	<h1 class="wp-block-heading has-xxl-font-size">{$heading}</h1>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"md","style":{"typography":{"fontWeight":"300"}}} -->
@@ -118,40 +128,23 @@ HTML;
 }
 
 function fs_lms_theme_articles_page_blocks(): string {
-	return fs_lms_theme_resource_page_blocks(
-		'Учебник',
-		'Учебник — это теория по всем темам экзамена, собранная в одном месте: разборы заданий, примеры решений и конспекты, которые можно открыть с компьютера и с телефона. Материалы структурированы по номерам заданий, поэтому вы всегда видите, что уже разобрано, а что осталось. Доступ открывается ученикам курсов и доступен в течение всего учебного года.',
-		'articles',
-		FS_LMS_THEME_RESOURCE_ICON_ARTICLES,
-		array(
-			'inf_ege' => array(
-				'text'   => '27 заданий: от кодирования информации и таблиц истинности до программирования на Python. Каждая тема — теория, разобранные примеры и типичные ошибки на экзамене.',
-				'button' => 'Открыть учебник ЕГЭ',
-			),
-			'inf_oge' => array(
-				'text'   => 'Теория к первой части и подробные разборы практических заданий 13–15: работа с файлами, электронные таблицы и написание программы.',
-				'button' => 'Открыть учебник ОГЭ',
-			),
-		)
-	);
+	return fs_lms_theme_resource_page_blocks( 'articles', 'articles', FS_LMS_THEME_RESOURCE_ICON_ARTICLES );
 }
 
 function fs_lms_theme_trainer_page_blocks(): string {
-	return fs_lms_theme_resource_page_blocks(
-		'Тренажёр',
-		'Тренажёр — это задачи по номерам заданий с моментальной проверкой ответа. Можно решать отдельную тему, пока она не начнёт получаться, или собрать вариант целиком и уложиться в экзаменационное время. Статистика показывает, сколько задач решено и где чаще всего возникают ошибки.',
-		'trainer',
-		FS_LMS_THEME_RESOURCE_ICON_TRAINER,
-		array(
-			'inf_ege' => array(
-				'text'   => 'Задачи ко всем 27 заданиям, задания с файлами и полные варианты с таймером. Ответы проверяются автоматически, к сложным задачам есть разбор решения.',
-				'button' => 'Перейти в тренажёр ЕГЭ',
-			),
-			'inf_oge' => array(
-				'text'   => 'Тестовая часть с проверкой ответа и практические задания 13–15 с файлами, которые нужно скачать, выполнить и загрузить обратно.',
-				'button' => 'Перейти в тренажёр ОГЭ',
-			),
-		)
+	return fs_lms_theme_resource_page_blocks( 'tasks', 'trainer', FS_LMS_THEME_RESOURCE_ICON_TRAINER );
+}
+
+/**
+ * Содержимое страниц-хабов — ссылка на паттерн (2026-09-13): страница
+ * показывает актуальные тексты из настроек, а не копию на момент создания.
+ *
+ * @return array<string, string> Слаг страницы → ссылка на паттерн.
+ */
+function fs_lms_theme_resource_page_patterns(): array {
+	return array(
+		'articles' => '<!-- wp:pattern {"slug":"fs-lms-theme/resource-articles"} /-->',
+		'tasks'    => '<!-- wp:pattern {"slug":"fs-lms-theme/resource-tasks"} /-->',
 	);
 }
 
@@ -164,8 +157,8 @@ function fs_lms_theme_trainer_page_blocks(): string {
  */
 function fs_lms_theme_ensure_resource_pages(): void {
 	$pages = array(
-		'articles' => array( 'title' => 'Учебник', 'blocks' => 'fs_lms_theme_articles_page_blocks' ),
-		'tasks'    => array( 'title' => 'Тренажёр', 'blocks' => 'fs_lms_theme_trainer_page_blocks' ),
+		'articles' => array( 'title' => 'Учебник' ),
+		'tasks'    => array( 'title' => 'Тренажёр' ),
 	);
 
 	foreach ( $pages as $slug => $page ) {
@@ -181,7 +174,7 @@ function fs_lms_theme_ensure_resource_pages(): void {
 				'post_title'   => $page['title'],
 				'post_name'    => $slug,
 				'post_status'  => 'publish',
-				'post_content' => call_user_func( $page['blocks'] ),
+				'post_content' => fs_lms_theme_resource_page_patterns()[ $slug ],
 			)
 		);
 
@@ -206,7 +199,7 @@ add_action( 'init', 'fs_lms_theme_ensure_resource_pages' );
  * (`inc/SubjectPages.php`): меняется, когда вид страниц правится в коде и
  * уже созданные страницы нужно перевести на новый.
  */
-const FS_LMS_THEME_RESOURCE_PAGES_LAYOUT = 3;
+const FS_LMS_THEME_RESOURCE_PAGES_LAYOUT = 4;
 
 /**
  * Раскладка 2-3 (2026-09-07): заголовок слева и без черты-разделителя, как
@@ -267,16 +260,40 @@ function fs_lms_theme_upgrade_resource_pages(): void {
 
 		$updated = fs_lms_theme_resource_page_align_left( $page->post_content );
 
+		/*
+		 * Раскладка 4 (2026-09-13): тексты со страницы — в «Учебник и тренажёр»
+		 * (только ещё не сохранённые там поля), содержимое — ссылка на паттерн.
+		 * Страницу без карточек-копии (её уже переписали руками) не трогаем.
+		 */
+		if ( str_contains( $updated, 'fs-subject-more-card' ) ) {
+			FS_LMS_Theme_Showcase::resource_texts()->import_from_content( $slug, $updated );
+			$updated = fs_lms_theme_resource_page_patterns()[ $slug ];
+		}
+
 		if ( $updated === $page->post_content ) {
 			continue;
 		}
 
+		// Хук срабатывает и у анонимного посетителя — kses снимаем на время
+		// записи, контент — через `wp_slash()` (см. `inc/ContentUpgrades.php`).
+		$kses_active = false !== has_filter( 'content_save_pre', 'wp_filter_post_kses' );
+
+		if ( $kses_active ) {
+			kses_remove_filters();
+		}
+
 		wp_update_post(
-			array(
-				'ID'           => $page->ID,
-				'post_content' => $updated,
+			wp_slash(
+				array(
+					'ID'           => $page->ID,
+					'post_content' => $updated,
+				)
 			)
 		);
+
+		if ( $kses_active ) {
+			kses_init_filters();
+		}
 	}
 
 	update_option( 'fs_lms_theme_resource_pages_layout', FS_LMS_THEME_RESOURCE_PAGES_LAYOUT );

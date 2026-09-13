@@ -23,7 +23,7 @@ final class FS_LMS_Theme_Site_Settings {
 
 	private const OPTION = 'fs_lms_theme_site_settings';
 	private const GROUP  = 'fs_lms_theme_site_settings_group';
-	private const PAGE   = 'fs-lms-theme-site-settings';
+	private const PAGE   = FS_LMS_Theme_Showcase::MENU_SLUG;
 
 	/** Значения по умолчанию — прежние значения из кода темы. */
 	private const DEFAULTS = array(
@@ -66,7 +66,10 @@ final class FS_LMS_Theme_Site_Settings {
 	private $values = null;
 
 	public function register(): void {
-		add_action( 'admin_menu', array( $this, 'add_page' ) );
+		// Приоритет 9: пункт «Настройки темы» и его первый подпункт должны
+		// появиться раньше подпунктов типов записей (`_add_post_type_submenus`,
+		// приоритет 10), иначе «Настройки сайта» окажутся в конце списка.
+		add_action( 'admin_menu', array( $this, 'add_page' ), 9 );
 		add_action( 'admin_init', array( $this, 'register_setting' ) );
 		add_action( 'update_option_' . self::OPTION, array( $this, 'after_update' ) );
 		add_filter( 'render_block_core/paragraph', array( $this, 'fill_lesson_plaque' ), 10, 2 );
@@ -141,13 +144,12 @@ final class FS_LMS_Theme_Site_Settings {
 	/**
 	 * Значения плашки «2 часа / одно занятие / 800 ₽ / за час» из настроек.
 	 *
-	 * Плашка живёт в паттерне главной (`intensive-split.php`) и копией в
-	 * `post_content` каждой страницы направления (секцию там можно править
-	 * по-предметно, `inc/SubjectPages.php`). Подмена при выводе, а не правка
-	 * сохранённых страниц: абзац плашки, в котором стоит прежнее значение по
-	 * умолчанию, показывает значение из настроек; значение, которое на
-	 * странице поменяли руками, остаётся своим. Разметка и классы абзаца
-	 * (акцентный цвет цены на страницах направлений) не трогаются.
+	 * Плашку выводит секция «Как устроены занятия» (`inc/Showcase/views/lessons.php`)
+	 * с прежними значениями по умолчанию. Подмена при выводе: абзац плашки,
+	 * в котором стоит прежнее значение, показывает значение из настроек;
+	 * другое значение (например, в старой копии секции, которую на странице
+	 * переписали руками) остаётся своим. Разметка и классы абзаца (акцентный
+	 * цвет цены на страницах направлений) не трогаются.
 	 *
 	 * @param string               $content Готовый HTML абзаца.
 	 * @param array<string, mixed> $block   Разобранный блок.
@@ -182,15 +184,29 @@ final class FS_LMS_Theme_Site_Settings {
 	 * Экран настроек
 	 * ------------------------------------------------------------------ */
 
+	/**
+	 * Общий пункт меню «Настройки темы» (по указанию пользователя, 2026-09-13):
+	 * все разделы темы — подпунктами под ним. Сам пункт открывает этот экран,
+	 * первый подпункт называется «Настройки сайта».
+	 */
 	public function add_page(): void {
 		add_menu_page(
 			__( 'Настройки сайта', 'fs-lms-theme' ),
-			__( 'Настройки сайта', 'fs-lms-theme' ),
+			__( 'Настройки темы', 'fs-lms-theme' ),
 			'manage_options',
 			self::PAGE,
 			array( $this, 'render_page' ),
 			'dashicons-admin-site-alt3',
-			22
+			21
+		);
+
+		add_submenu_page(
+			self::PAGE,
+			__( 'Настройки сайта', 'fs-lms-theme' ),
+			__( 'Настройки сайта', 'fs-lms-theme' ),
+			'manage_options',
+			self::PAGE,
+			array( $this, 'render_page' )
 		);
 	}
 
@@ -264,7 +280,7 @@ final class FS_LMS_Theme_Site_Settings {
 					'hero_stat_3_label'   => array( 'label' => '' ),
 					'lesson_length_value' => array(
 						'label' => __( '«Как устроены занятия»: длительность', 'fs-lms-theme' ),
-						'help'  => __( 'Плашка на главной и на страницах направлений. Если на странице направления значение поменяли вручную, там остаётся своё.', 'fs-lms-theme' ),
+						'help'  => __( 'Плашка под списком «Как устроены занятия» — на главной и на страницах направлений.', 'fs-lms-theme' ),
 					),
 					'lesson_length_label' => array( 'label' => '' ),
 					'lesson_price_value'  => array( 'label' => __( '«Как устроены занятия»: цена', 'fs-lms-theme' ) ),

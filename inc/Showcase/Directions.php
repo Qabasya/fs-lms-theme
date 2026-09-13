@@ -77,9 +77,24 @@ final class FS_LMS_Theme_Directions extends FS_LMS_Theme_Content_Type {
 		return 'fs_direction';
 	}
 
+	/** Опция разового обновления порядка стартовых записей. */
+	private const ORDER_OPTION = 'fs_lms_theme_directions_order';
+
+	/**
+	 * Порядок стартовых записей: ключ предмета → «Порядок» до (1.4.0) и после
+	 * (по указанию пользователя, 2026-09-13: ЕГЭ → Python → ОГЭ → Робототехника).
+	 */
+	private const ORDER_CHANGE = array(
+		'inf_ege' => array( 10, 10 ),
+		'inf_oge' => array( 20, 30 ),
+		'python'  => array( 30, 20 ),
+		'robo'    => array( 40, 40 ),
+	);
+
 	public function register(): void {
 		parent::register();
 
+		add_action( 'init', array( $this, 'upgrade_order' ), 30 );
 		add_action( 'add_meta_boxes_' . $this->post_type(), array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post_' . $this->post_type(), array( $this, 'save_meta' ), 5, 2 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
@@ -98,7 +113,7 @@ final class FS_LMS_Theme_Directions extends FS_LMS_Theme_Content_Type {
 			'search_items'          => __( 'Найти направление', 'fs-lms-theme' ),
 			'not_found'             => __( 'Направлений нет', 'fs-lms-theme' ),
 			'not_found_in_trash'    => __( 'В корзине направлений нет', 'fs-lms-theme' ),
-			'all_items'             => __( 'Все направления', 'fs-lms-theme' ),
+			'all_items'             => __( 'Направления', 'fs-lms-theme' ),
 			'featured_image'        => __( 'Картинка на главной', 'fs-lms-theme' ),
 			'set_featured_image'    => __( 'Выбрать картинку на главной', 'fs-lms-theme' ),
 			'remove_featured_image' => __( 'Убрать картинку на главной', 'fs-lms-theme' ),
@@ -141,6 +156,48 @@ final class FS_LMS_Theme_Directions extends FS_LMS_Theme_Content_Type {
 			},
 			$items
 		);
+	}
+
+	/**
+	 * Разово переставляет стартовые записи в порядок ЕГЭ → Python → ОГЭ →
+	 * Робототехника. Трогает только запись, у которой «Порядок» остался
+	 * стартовым из 1.4.0: если его уже поменяли руками, запись не меняется.
+	 * На свежей установке записи сразу заводятся в новом порядке
+	 * (`seeds/directions.php`), и обновлять нечего.
+	 */
+	public function upgrade_order(): void {
+		if ( ! add_option( self::ORDER_OPTION, '1', '', true ) ) {
+			return;
+		}
+
+		foreach ( self::ORDER_CHANGE as $subject_key => $orders ) {
+			$posts = get_posts(
+				array(
+					'post_type'        => $this->post_type(),
+					'post_status'      => 'any',
+					'numberposts'      => -1,
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- единицы записей.
+					'meta_query'       => array(
+						array(
+							'key'   => self::TEXT_FIELDS['key'],
+							'value' => $subject_key,
+						),
+					),
+					'suppress_filters' => false,
+				)
+			);
+
+			foreach ( $posts as $post ) {
+				if ( (int) $post->menu_order === $orders[0] && $orders[0] !== $orders[1] ) {
+					wp_update_post(
+						array(
+							'ID'         => $post->ID,
+							'menu_order' => $orders[1],
+						)
+					);
+				}
+			}
+		}
 	}
 
 	private static function stat_meta_key( int $index, string $part ): string {

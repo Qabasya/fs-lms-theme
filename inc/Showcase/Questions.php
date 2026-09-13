@@ -68,7 +68,7 @@ final class FS_LMS_Theme_Questions extends FS_LMS_Theme_Content_Type {
 			'search_items'       => __( 'Найти вопрос', 'fs-lms-theme' ),
 			'not_found'          => __( 'Вопросов нет', 'fs-lms-theme' ),
 			'not_found_in_trash' => __( 'В корзине вопросов нет', 'fs-lms-theme' ),
-			'all_items'          => __( 'Все вопросы', 'fs-lms-theme' ),
+			'all_items'          => __( 'Вопросы', 'fs-lms-theme' ),
 			'attributes'         => __( 'Порядок в аккордеоне', 'fs-lms-theme' ),
 		);
 	}

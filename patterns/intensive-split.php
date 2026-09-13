@@ -31,108 +31,15 @@
  * BugFix (2026-09-04): «Все направления» вела на якорь `#dirs` (секция
  * направлений на главной) — по указанию пользователя ведёт на страницу
  * каталога `/courses/`, как и одноимённый пункт меню.
+ *
+ * 2026-09-13 (по указанию пользователя): пять вариантов секции — главная и
+ * четыре направления — записи «Как устроены занятия» в админке
+ * (`inc/Showcase/Lessons.php`): фото, заголовок, подзаголовок, пункты. Паттерн
+ * выбирает вариант по месту показа (главная или слаг страницы направления),
+ * разметка — `inc/Showcase/views/lessons.php`. Страницы направлений ссылаются
+ * на этот паттерн (раньше — копия блоков, `inc/SubjectPages.php`, раскладка 5).
  */
-?>
-<!-- wp:group {"className":"fs-section"} -->
-<div id="lessons" class="wp-block-group fs-section">
-	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
-	<div class="wp-block-columns">
-		<!-- wp:column -->
-		<div class="wp-block-column">
-			<!-- wp:image {"className":"fs-aspect-4-3","style":{"border":{"radius":"var:preset|spacing|md"}}} -->
-			<figure class="wp-block-image fs-aspect-4-3" style="border-radius:var(--wp--preset--spacing--md)"><img src="<?php echo esc_url( get_theme_file_uri( 'img/photo.png' ) ); ?>" alt="Фото занятия" /></figure>
-			<!-- /wp:image -->
-		</div>
-		<!-- /wp:column -->
 
-		<!-- wp:column {"width":"480px"} -->
-		<div class="wp-block-column" style="flex-basis:480px">
-			<!-- wp:heading {"fontSize":"xxl"} -->
-			<h2 class="wp-block-heading has-xxl-font-size">Как устроены занятия</h2>
-			<!-- /wp:heading -->
+$fs_lessons = FS_LMS_Theme_Showcase::lessons();
 
-			<!-- wp:paragraph {"textColor":"text-secondary","fontSize":"base"} -->
-			<p class="has-text-secondary-color has-text-color has-base-font-size">Формат одинаковый на всех направлениях — меняется только программа.</p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:group {"className":"fs-checklist"} -->
-			<div class="wp-block-group fs-checklist">
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Занятия 2 раза в неделю</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Параллельная онлайн-трансляция каждого занятия</p>
-				<!-- /wp:paragraph -->
-
-                <!-- wp:paragraph {"className":"fs-checklist__item"} -->
-                <p class="fs-checklist__item">Видеозаписи занятий в личном кабинете</p>
-                <!-- /wp:paragraph -->
-
-                <!-- wp:paragraph {"className":"fs-checklist__item"} -->
-                <p class="fs-checklist__item">Домашнее задание после каждого занятия</p>
-                <!-- /wp:paragraph -->
-
-                <!-- wp:paragraph {"className":"fs-checklist__item"} -->
-                <p class="fs-checklist__item">Регулярные контрольные и пробные экзамены</p>
-                <!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Индивидуальные консультации с преподавателем</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Вся теория и шпаргалки в личном кабинете</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"className":"fs-checklist__item"} -->
-				<p class="fs-checklist__item">Дополнительные материалы по каждой теме</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:group -->
-
-			<!-- wp:group {"className":"fs-price-plaque"} -->
-			<div class="wp-block-group fs-price-plaque">
-				<!-- wp:group {"className":"fs-price-plaque__part"} -->
-				<div class="wp-block-group fs-price-plaque__part">
-					<!-- wp:paragraph {"className":"fs-price-plaque__value"} -->
-					<p class="fs-price-plaque__value">2 часа</p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-price-plaque__label"} -->
-					<p class="fs-price-plaque__label">одно занятие</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-
-				<!-- wp:group {"className":"fs-price-plaque__part"} -->
-				<div class="wp-block-group fs-price-plaque__part">
-					<!-- wp:paragraph {"className":"fs-price-plaque__value fs-price-plaque__value--accent"} -->
-					<p class="fs-price-plaque__value fs-price-plaque__value">800 ₽</p>
-					<!-- /wp:paragraph -->
-
-					<!-- wp:paragraph {"className":"fs-price-plaque__label"} -->
-					<p class="fs-price-plaque__label">за час</p>
-					<!-- /wp:paragraph -->
-				</div>
-				<!-- /wp:group -->
-			</div>
-			<!-- /wp:group -->
-
-			<!-- wp:buttons -->
-			<div class="wp-block-buttons">
-				<!-- wp:button {"backgroundColor":"accent-2"} -->
-				<div class="wp-block-button"><a class="wp-block-button__link has-accent-2-background-color has-background wp-element-button" href="#signup">Записаться</a></div>
-				<!-- /wp:button -->
-
-				<!-- wp:button {"backgroundColor":"white","textColor":"text-secondary","className":"is-style-outline"} -->
-				<div class="wp-block-button is-style-outline"><a class="wp-block-button__link has-text-secondary-color has-white-background-color has-text-color has-background wp-element-button" href="<?php echo esc_url( home_url( '/courses/' ) ); ?>">Все направления</a></div>
-				<!-- /wp:button -->
-			</div>
-			<!-- /wp:buttons -->
-		</div>
-		<!-- /wp:column -->
-	</div>
-	<!-- /wp:columns -->
-</div>
-<!-- /wp:group -->
+echo $fs_lessons->section_markup( $fs_lessons->current_place() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранирование в inc/Showcase/views/lessons.php.
