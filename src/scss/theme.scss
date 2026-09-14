@@ -58,10 +58,23 @@
  * Брейкпоинты сознательно оставлены в `px`: они должны срабатывать по
  * реальной ширине экрана, а не ехать вместе с масштабом — иначе на
  * планшете десктопная раскладка включалась бы не вовремя.
+ *
+ * 2026-09-14: полные 120% — только от 1600px окна. На 14" ноутбуках с
+ * масштабом ОС 150% окно ~1280 CSS px, и колонка 1200px с крупной
+ * типографикой занимала весь экран. От 1280px до 1600px множитель плавно
+ * растёт 105% → 120% (`45% + .75vw`: 16.8px на 1280, 19.2px на 1600), ниже
+ * держится 105%. Телефоны (≤767px) не трогаем — у них свои переопределения
+ * шрифтов ниже, подобранные под 120%.
  */
 html {
 	font-size: 120%;
 	scroll-behavior: smooth;
+}
+
+@media ( min-width: 768px ) {
+	html {
+		font-size: clamp( 105%, calc( 45% + .75vw ), 120% );
+	}
 }
 
 @media ( prefers-reduced-motion: reduce ) {
@@ -281,8 +294,13 @@ $fs-gap-containers:
  * по вьюпорту сам по себе (в отличие от `wp:columns`, которая стекается
  * ниже 960px через общее правило выше) — поэтому здесь `!important`, тем
  * же приёмом, что и у стекинга колонок.
+ *
+ * 2026-09-14: одна колонка — уже с 960px, а не с 767px. Вместе с секцией
+ * (`.fs-features-columns`, см. стекинг `wp-block-columns` ниже в файле)
+ * карточки уходят под кнопку «О занятиях» — по одной в ряд на всю ширину.
+ * На 900px в две колонки рядом с текстом в карточке оставалось ~130px.
  */
-@media ( max-width: 767px ) {
+@media ( max-width: 960px ) {
 	.fs-features-grid {
 		grid-template-columns: 1fr !important;
 	}
@@ -562,6 +580,25 @@ $fs-gap-containers:
 	> .wp-block-column:last-child {
 		display: flex;
 		flex-direction: column;
+	}
+}
+
+/**
+ * 2026-09-14 (по указанию пользователя): hero страницы направления
+ * (`inc/Showcase/views/subject-hero.php`) складывается в один столбец —
+ * текст направления, под ним форма — уже с 1035px, а не с 781px ядра
+ * (и не с общих 960px темы). В половине ширины крупный h1 не помещал
+ * «Программирование» и рвал слово по буквам. `!important` — перебить
+ * `flex-wrap: nowrap !important` ядра и инлайновый `flex-basis` колонок,
+ * см. стекинг `wp-block-columns` ниже в файле. Hero главной не трогаем.
+ */
+@media ( max-width: 1035px ) {
+	.fs-subject-hero-columns {
+		flex-wrap: wrap !important;
+
+		> .wp-block-column {
+			flex-basis: 100% !important;
+		}
 	}
 }
 
@@ -1745,14 +1782,38 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 	.wp-block-columns:not( .is-not-stacked-on-mobile ) > .wp-block-column {
 		flex-basis: 100% !important;
 	}
+
+	/**
+	 * 2026-09-14: `flex-basis: 100%` выше сам по себе колонки не переносит —
+	 * ядро от 782px держит `.wp-block-columns { flex-wrap: nowrap !important }`
+	 * (`wp-includes/blocks/columns/style.min.css`), и на 782–960px колонки
+	 * просто сжимаются в одну строку. Перенос включён точечно, для секций,
+	 * где это просил пользователь: «Сделаем вместе» (карточки — под кнопкой
+	 * «О занятиях») и «Как устроены занятия» (текст — под фото, на всю
+	 * ширину). Остальные секции на этих ширинах не проверялись.
+	 */
+	.fs-features-columns,
+	.fs-lessons-columns {
+		flex-wrap: wrap !important;
+	}
+
+	// Фото «Как устроены занятия» над текстом — 75% ширины по центру (по
+	// указанию пользователя). Пропорцию 4:3 держит `.fs-aspect-4-3`, так что
+	// высота уменьшается на те же 75%.
+	.fs-lessons-columns .fs-aspect-4-3 {
+		width: 75%;
+		margin-right: auto;
+		margin-left: auto;
+	}
 }
 
 /**
  * Адаптив бокового отступа контейнера (Фаза 11) — `theme.json`
- * (`styles.spacing.padding`) задаёт базовое значение 2.5rem (48px,
- * ≥1200px), здесь — 2rem (38.4px, 768–1199px) и 1rem (19.2px, ≤767px)
- * поверх той же CSS-переменной, которую использует
- * `useRootPaddingAwareAlignments` (`.has-global-padding`).
+ * (`styles.spacing.padding`) задаёт резиновое значение
+ * `clamp(1.5rem, 5vw, 4rem)` (2026-09-14: ~64px на 1280px окна вместо
+ * прежних фиксированных 48px; ступень 2rem на 768–1199px им заменена),
+ * здесь — только 1rem (19.2px, ≤767px) поверх той же CSS-переменной,
+ * которую использует `useRootPaddingAwareAlignments` (`.has-global-padding`).
  *
  * BugFix (tasks.md, 2026-09-13, п.2): переменные раньше переопределялись
  * на `:root` и не работали ни на одной ширине — ядро объявляет их на
@@ -1762,13 +1823,6 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
  * выигрывает при любом порядке стилей (WP Rocket умеет их склеивать и
  * переставлять).
  */
-@media ( max-width: 1199px ) {
-	.wp-site-blocks {
-		--wp--style--root--padding-left: 2rem;
-		--wp--style--root--padding-right: 2rem;
-	}
-}
-
 @media ( max-width: 767px ) {
 	.wp-site-blocks {
 		--wp--style--root--padding-left: 1rem;
@@ -1801,9 +1855,16 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
  * текст оставалось ~208px. Два класса перебивают `:where()` без
  * `!important`; вертикальные паддинги групп заданы инлайном и не меняются.
  * Задача — только про мобильную версию, десктопную шапку/подвал не трогаем.
+ *
+ * 2026-09-14: у шапки паддинг снят на всех ширинах — см. выравнивание
+ * логотипа по линии контента у `.fs-header-row`.
  */
+.fs-header-band.has-background {
+	padding-right: 0;
+	padding-left: 0;
+}
+
 @media ( max-width: 767px ) {
-	.fs-header-band.has-background,
 	.fs-footer.has-background {
 		padding-right: 0;
 		padding-left: 0;
@@ -1908,6 +1969,69 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 }
 
 /**
+ * 2026-09-14: логотип и кнопки шапки — на одной линии с контентом страницы.
+ * Отступ обёрток берётся из той же переменной, что у `.has-global-padding`
+ * (`theme.json` → `styles.spacing.padding`, на телефоне — 1rem): раньше
+ * инлайновый `xxl` складывался с паддингом ядра у группы с фоном
+ * (`.fs-header-band`, снят выше), и на 1280px логотип стоял на 58px от
+ * края, а контент — на 64px. Паддинг обёрток задан инлайном в атрибутах
+ * блока (`patterns/header-nav.php`) — отсюда `!important`.
+ */
+.fs-site-header .fs-header-container {
+	padding-right: var( --wp--style--root--padding-right ) !important;
+	padding-left: var( --wp--style--root--padding-left ) !important;
+}
+
+/**
+ * 2026-09-14 (по указанию пользователя): шапка всегда в одну строку.
+ *
+ * С 6 пунктами меню ряд «лого + меню + кнопки» переносился уже ниже
+ * ~1100px. На средних ширинах прячется пункт «Контакты» (последний, а
+ * страница контактов есть в подвале), а ниже 860px вместо меню — бургер,
+ * как на телефоне: пять пунктов с логотипом и кнопкой не влезают уже на
+ * ~800px даже с уплотнёнными зазорами. Внутри бургера «Контакты» остаются —
+ * правило ограничено снизу 860px.
+ *
+ * Селектор по `href`, а не по классу: пункт живёт в записи `wp_navigation`
+ * (`inc/Navigation.php`), её разметку редактор может пересобрать, а путь
+ * `/contacts/` задаёт сама тема (`fs_lms_theme_nav_relative_url()`).
+ */
+@media ( min-width: 860px ) and ( max-width: 1099px ) {
+	.fs-header-row .wp-block-navigation-item:has( > a[href$="/contacts/"] ) {
+		display: none;
+	}
+
+	// Без «Контактов» пять пунктов всё равно не влезали ниже ~970px — зазор
+	// между пунктами-табами снят (у каждого свой внутренний паддинг), зазор
+	// ряда уменьшен. Два класса — перебить `gap` из layout-правил ядра.
+	.fs-header-row {
+		column-gap: var( --wp--preset--spacing--md );
+	}
+
+	.fs-header-row .wp-block-navigation__container {
+		gap: 0;
+	}
+}
+
+/**
+ * Бургер на планшетах (600–859px). Ядро переключает `core/navigation`
+ * (`overlayMenu:"mobile"`) только ниже 600px (`min-width: 600px` — уже
+ * меню в строке), а мобильная раскладка темы — `max-width: 600px`: ровно
+ * на 600px меню в строке сталкивалось с ней и давало горизонтальный скролл. Здесь то же переключение сдвинуто до 859px;
+ * открытие/закрытие оверлея по-прежнему делает скрипт ядра, а раскрытый
+ * оверлей (`.is-menu-open`) ядро стилизует без медиазапроса.
+ */
+@media ( min-width: 600px ) and ( max-width: 859px ) {
+	.fs-header-row .wp-block-navigation__responsive-container-open:not( .always-shown ) {
+		display: flex;
+	}
+
+	.fs-header-row .wp-block-navigation__responsive-container:not( .hidden-by-default, .is-menu-open ) {
+		display: none;
+	}
+}
+
+/**
  * Мобильная шапка (2026-09-07). Раньше ниже 600px ряд просто переносился
  * (`flex-wrap: wrap`): бургер оставался в первой строке рядом с логотипом,
  * а «Записаться» и иконка кабинета уезжали во вторую — во всю ширину, в
@@ -1923,15 +2047,16 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
  * 2026-09-07; при желании перенести это делается только JS-переносом
  * узла в оверлей, от которого сознательно отказались.
  *
- * Порядок в разметке — логотип, навигация, кнопки; на мобильном бургер
- * уезжает в конец через `order`, кнопки прижимаются к нему `margin-left`.
+ * Порядок в разметке — логотип, навигация, кнопки; с бургером (≤859px,
+ * 2026-09-14 — было ≤600px) он уезжает в конец через `order`, кнопки
+ * прижимаются к нему `margin-left`. Компактные логотип и кнопка — только
+ * на телефоне (≤600px), на планшете им хватает места.
  * Селекторы из двух классов — `gap` группы ядро печатает отдельным
  * правилом `.wp-container-core-group-is-layout-*` (тоже один класс), и
  * оно может оказаться в `<head>` после стилей темы.
  */
-@media ( max-width: 600px ) {
+@media ( max-width: 859px ) {
 	.fs-header-row {
-		flex-wrap: nowrap;
 		column-gap: var( --wp--preset--spacing--sm );
 	}
 
@@ -1951,7 +2076,9 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 	.fs-header-row .fs-header-logo {
 		min-width: 0;
 	}
+}
 
+@media ( max-width: 600px ) {
 	/**
 	 * Ширина логотипа (220px) записана инлайном в атрибутах `wp:image`
 	 * (`patterns/header-nav.php`) — перебить можно только `!important`.
@@ -1970,14 +2097,6 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 		padding-right: var( --wp--preset--spacing--md );
 		padding-left: var( --wp--preset--spacing--md );
 		font-size: var( --wp--preset--font-size--xs );
-	}
-
-	// Паддинг обёрток шапки задан инлайном — отсюда `!important`.
-	// BugFix (tasks.md, 2026-09-13): было только ниже 400px — теперь на всём
-	// мобильном, логотип стоит на той же линии 1rem, что и контент страницы.
-	.fs-site-header .fs-header-container {
-		padding-right: var( --wp--preset--spacing--lg ) !important;
-		padding-left: var( --wp--preset--spacing--lg ) !important;
 	}
 }
 
@@ -2010,6 +2129,19 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 
 	&.is-hidden {
 		transform: translateY( -100% );
+	}
+}
+
+/**
+ * 2026-09-14: слоган инфо-полосы прячется вместе с переходом шапки на
+ * бургер (≤859px, см. `.fs-header-row`), а не только на телефоне: на
+ * 601–800px он не помещался рядом с телефоном/почтой/корзиной, и полоса
+ * становилась двухстрочной. Контакты остаются прижаты вправо инлайновым
+ * `margin-left:auto`; центрирование — ниже, только на телефоне.
+ */
+@media ( max-width: 859px ) {
+	.fs-topbar .fs-topbar__slogan {
+		display: none;
 	}
 }
 

@@ -21,8 +21,8 @@ $fs_box_class = 'fs-subject-hero-box fs-subject-hero-box--' . $hero_modifier;
 ?>
 <!-- wp:group {"className":"fs-section"} -->
 <div class="wp-block-group fs-section">
-	<!-- wp:columns {"className":"fs-hero-columns","style":{"spacing":{"blockGap":{"left":"2.5rem"}}}} -->
-	<div class="wp-block-columns fs-hero-columns">
+	<!-- wp:columns {"className":"fs-hero-columns fs-subject-hero-columns","style":{"spacing":{"blockGap":{"left":"2.5rem"}}}} -->
+	<div class="wp-block-columns fs-hero-columns fs-subject-hero-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:group {"className":"<?php echo esc_attr( $fs_box_class ); ?>","layout":{"type":"constrained"}} -->

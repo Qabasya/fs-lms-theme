@@ -956,11 +956,7 @@ form.checkout_coupon {
 			}
 
 			.product-price {
-				grid-column: 3;
-			}
-
-			.product-quantity {
-				grid-column: 4;
+				grid-column: 3 / span 2;
 			}
 
 			.product-subtotal {
@@ -1008,8 +1004,18 @@ form.checkout_coupon {
 			}
 		}
 
+		/**
+		 * 2026-09-14: колонки «Количество» нет — все товары продаются по
+		 * одному (`woocommerce_is_sold_individually`, `inc/WooCommerce.php`),
+		 * вместо счётчика WooCommerce выводит скрытое поле, и ячейка пустела.
+		 * Её трек (4-й) отдан цене, как и в шапке таблицы выше.
+		 */
+		.product-quantity {
+			display: none;
+		}
+
 		.product-price {
-			grid-column: 3;
+			grid-column: 3 / span 2;
 			font-size: var( --wp--preset--font-size--sm );
 			color: var( --wp--preset--color--text-secondary );
 		}
@@ -1793,7 +1799,6 @@ form.checkout_coupon {
 		grid-template-areas:
 			"thumb name remove"
 			"price price price"
-			"qty qty qty"
 			"subtotal subtotal subtotal";
 		row-gap: var( --wp--preset--spacing--xs );
 
@@ -1805,7 +1810,6 @@ form.checkout_coupon {
 		// цена/количество/подытог возвращались в первую (узкую) колонку —
 		// суммы ломались на две строки.
 		.product-price { grid-area: price; }
-		.product-quantity { grid-area: qty; }
 		.product-subtotal { grid-area: subtotal; text-align: left; }
 	}
 
@@ -1880,6 +1884,20 @@ form.checkout_coupon {
 			gap: var( --wp--preset--spacing--md );
 			margin: var( --wp--preset--spacing--lg ) 0;
 
+			// Счётчика количества нет (товар продаётся по одному, скрытое поле
+			// в `.quantity`) — пустая обёртка иначе съедала `gap` перед кнопкой.
+			.quantity:has( > input[type="hidden"] ) {
+				display: none;
+			}
+
+			// Clearfix плагина (`form.cart::before/::after { content: " "; display: table }`)
+			// во flex-ряду — отдельные элементы со своим `gap`: кнопка стояла
+			// на 12px правее края текста. Флоатов внутри формы нет.
+			&::before,
+			&::after {
+				display: none;
+			}
+
 			.quantity .qty {
 				width: 4.5rem;
 				height: 2.75rem;
@@ -1922,5 +1940,32 @@ form.checkout_coupon {
 				color: inherit;
 			}
 		}
+	}
+}
+
+/**
+ * 2026-09-14: ниже 960px (тот же брейкпоинт сеток, что в `theme.scss`)
+ * страница товара — в один столбец: картинка, под ней заголовок, цена,
+ * описание и кнопка. `woocommerce-layout.css` держит галерею и описание
+ * флоатами по 48% вплоть до своего `smallscreen` (768px); селекторы на
+ * класс длиннее, чем у плагина, — перебиваем без `!important`.
+ */
+@media ( max-width: 960px ) {
+	.woocommerce.single-product div.product div.images,
+	.woocommerce.single-product div.product div.summary {
+		float: none;
+		width: 100%;
+	}
+
+	// Фото в один столбец — 75% ширины по центру (по указанию пользователя):
+	// во всю ширину квадратная картинка занимала экран целиком.
+	.woocommerce.single-product div.product div.images {
+		width: 75%;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.woocommerce.single-product div.product div.summary {
+		margin-top: var( --wp--preset--spacing--xl );
 	}
 }

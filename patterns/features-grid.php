@@ -30,8 +30,8 @@
 ?>
 <!-- wp:group {"className":"fs-section"} -->
 <div class="wp-block-group fs-section">
-	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
-	<div class="wp-block-columns">
+	<!-- wp:columns {"className":"fs-features-columns","style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
+	<div class="wp-block-columns fs-features-columns">
 		<!-- wp:column {"width":"360px"} -->
 		<div class="wp-block-column" style="flex-basis:360px">
 			<!-- wp:heading {"fontSize":"xxl"} -->

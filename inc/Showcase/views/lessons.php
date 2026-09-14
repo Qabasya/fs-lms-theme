@@ -23,8 +23,8 @@ $fs_price_class = 'fs-price-plaque__value' . ( $accent ? ' fs-price-plaque__valu
 ?>
 <!-- wp:group {"className":"fs-section"} -->
 <div id="lessons" class="wp-block-group fs-section">
-	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
-	<div class="wp-block-columns">
+	<!-- wp:columns {"className":"fs-lessons-columns","style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
+	<div class="wp-block-columns fs-lessons-columns">
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:image {"className":"fs-aspect-4-3","style":{"border":{"radius":"var:preset|spacing|md"}}} -->
