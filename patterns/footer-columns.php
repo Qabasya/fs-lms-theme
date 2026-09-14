@@ -54,7 +54,7 @@ $fs_settings = FS_LMS_Theme_Showcase::settings();
 				<!-- /wp:image -->
 
 				<!-- wp:paragraph {"className":"fs-footer-grid__lead"} -->
-				<p class="fs-footer-grid__lead">Школа программирования и&nbsp;робототехники в Калининграде</p>
+				<p class="fs-footer-grid__lead">Школа программирования и&nbsp;робототехники в&nbsp;Калининграде</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:group {"className":"fs-footer-grid__contacts"} -->

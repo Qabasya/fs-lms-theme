@@ -49,8 +49,8 @@
 		</div>
 		<!-- /wp:column -->
 
-		<!-- wp:column {"width":"520px"} -->
-		<div class="wp-block-column" style="flex-basis:520px">
+		<!-- wp:column {"width":"27.0833rem"} -->
+		<div class="wp-block-column" style="flex-basis:27.0833rem">
 			<!-- wp:html -->
 			<div class="fs-code-card">
 				<div class="fs-code-card__bar">

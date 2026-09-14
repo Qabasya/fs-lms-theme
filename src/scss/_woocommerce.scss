@@ -21,6 +21,21 @@
 }
 
 /**
+ * 2026-09-14: остальные ограничения того же правила — заголовок страниц
+ * WooCommerce и обёртка «Моего аккаунта», `max-width: 1000px` — в `rem`.
+ * В `px` они не уменьшались вместе со страницей (см. `html` в `theme.scss`)
+ * и на окне 1280px выходили за колонку 800px: заголовок «Мой аккаунт»
+ * начинался левее контента. `.fs-main` — перебить правило плагина при
+ * любом порядке стилей; форма входа гостя сужается своим правилом ниже.
+ */
+.woocommerce-account .fs-main .wp-block-post-title,
+.woocommerce-account .fs-main .woocommerce,
+.woocommerce-cart .fs-main .wp-block-post-title,
+.woocommerce-checkout .fs-main .wp-block-post-title {
+	max-width: fs-rem( 1000 );
+}
+
+/**
  * BugFix (2026-09-04): `.woocommerce-breadcrumb a{color:#767676}` — правило
  * самого плагина (`woocommerce.css`), специфичнее нашего общего `a{color:
  * accent}` (`theme.scss`), поэтому ссылки в хлебных крошках были серыми, а
@@ -290,8 +305,8 @@
 	&__num {
 		display: grid;
 		place-items: center;
-		width: 18px;
-		height: 18px;
+		width: fs-rem( 18 );
+		height: fs-rem( 18 );
 		flex: 0 0 auto;
 		border: 1px solid var( --wp--preset--color--muted-2 );
 		border-radius: var( --wp--custom--radius--pill );
@@ -363,6 +378,25 @@
 .woocommerce-account:not(.logged-in) .fs-main .woocommerce {
 	max-width: 35rem;
 	margin-inline: auto;
+}
+
+/**
+ * 2026-09-14: размеры форм WooCommerce, заданные плагином в `px`, — в `rem`,
+ * чтобы уменьшаться вместе со страницей (см. `html` в `theme.scss`). На окне
+ * от 1920px всё как было: паддинг формы входа 20px (`woocommerce.css`),
+ * шрифт полей 13px (пресет `small`, `woocommerce-blocktheme.css`).
+ */
+.woocommerce-page .fs-main form.login,
+.woocommerce-page .fs-main form.register {
+	padding: fs-rem( 20 );
+}
+
+.woocommerce-page .fs-main form .form-row {
+	input.input-text,
+	select,
+	textarea.input-text {
+		font-size: fs-rem( 13 );
+	}
 }
 
 /**
@@ -497,6 +531,10 @@
 	border: 1px solid var( --wp--preset--color--border );
 	border-left-width: 3px;
 	color: var( --wp--preset--color--text );
+
+	// 2026-09-14: паддинг плагина `16px !important` — те же 16px, но в `rem`,
+	// чтобы уменьшаться вместе со страницей (см. `html` в `theme.scss`).
+	padding: fs-rem( 16 ) !important;
 }
 
 .woocommerce-message,
@@ -642,7 +680,7 @@
 @media ( min-width: 992px ) {
 	.woocommerce-checkout:not( .woocommerce-order-received ) .woocommerce {
 		display: grid;
-		grid-template-columns: minmax( 0, 1fr ) 500px;
+		grid-template-columns: minmax( 0, 1fr ) fs-rem( 500 );
 		gap: var( --wp--preset--spacing--lg ) var( --wp--preset--spacing--xl );
 		align-items: start;
 
@@ -684,6 +722,14 @@
 		> form.checkout > .fs-checkout-order-review {
 			grid-column: 2;
 			grid-row: 4 / span 3;
+		}
+
+		// BugFix (tasks.md, 2026-09-14, п.4): пустые обёртки уведомлений (первая
+		// и последняя строка сетки) занимали строку и добавляли `row-gap` 1rem
+		// под шапкой и над подвалом. Как только WooCommerce вставит в обёртку
+		// уведомление, `:has()` вернёт её в сетку.
+		> .woocommerce-notices-wrapper:not( :has( * ) ) {
+			display: none;
 		}
 	}
 }
@@ -829,7 +875,7 @@ form.checkout_coupon {
 // обёртки в разметке, раскладка колонками через явный `grid-column`.
 .fs-cart-layout {
 	display: grid;
-	grid-template-columns: minmax( 0, 1fr ) 380px;
+	grid-template-columns: minmax( 0, 1fr ) fs-rem( 380 );
 	gap: var( --wp--preset--spacing--lg );
 	align-items: start;
 
@@ -916,7 +962,7 @@ form.checkout_coupon {
 		 */
 		tr {
 			display: grid;
-			grid-template-columns: 64px minmax( 0, 1fr ) 120px 130px 120px 26px;
+			grid-template-columns: fs-rem( 64 ) minmax( 0, 1fr ) fs-rem( 120 ) fs-rem( 130 ) fs-rem( 120 ) fs-rem( 26 );
 			align-items: center;
 			gap: var( --wp--preset--spacing--md );
 			padding: var( --wp--preset--spacing--md ) var( --wp--preset--spacing--xl );
@@ -978,8 +1024,8 @@ form.checkout_coupon {
 			// Квадрат 64×64 с обрезкой по центру — как плитка товара в макете.
 			img {
 				display: block;
-				width: 64px;
-				height: 64px;
+				width: fs-rem( 64 );
+				height: fs-rem( 64 );
 				max-width: none;
 				border-radius: var( --wp--custom--radius--md );
 				object-fit: cover;
@@ -1053,8 +1099,8 @@ form.checkout_coupon {
 			a.remove {
 				display: grid;
 				place-items: center;
-				width: 26px;
-				height: 26px;
+				width: fs-rem( 26 );
+				height: fs-rem( 26 );
 				margin: 0 auto;
 				border-radius: var( --wp--custom--radius--sm );
 
@@ -1158,7 +1204,7 @@ form.checkout_coupon {
 	 * больше ни на что не влияет.
 	 */
 	.cart-collaterals .cart_totals table.shop_table {
-		padding: 10px 20px;
+		padding: fs-rem( 10 ) fs-rem( 20 );
 	}
 
 	// Сводка заказа (`.cart_totals`, `cart/cart-totals.php`) — карточка
@@ -1235,7 +1281,7 @@ form.checkout_coupon {
 			 */
 			tr.order-total {
 				align-items: center;
-				min-height: 50px; // высота строки «Итого» — по указанию пользователя
+				min-height: fs-rem( 50 ); // 50px, высота строки «Итого» — по указанию пользователя
 				margin-top: var( --wp--preset--spacing--xs );
 				padding-top: var( --wp--preset--spacing--md );
 				border-top: 1px solid var( --wp--preset--color--border );
@@ -1435,7 +1481,7 @@ form.checkout_coupon {
 	 */
 	.woocommerce-checkout-review-order-table.shop_table td,
 	.woocommerce-checkout-review-order-table.shop_table th {
-		padding: 0 8px;
+		padding: 0 fs-rem( 8 );
 	}
 
 	/**
@@ -1668,7 +1714,7 @@ form.checkout_coupon {
 
 			&.order-total {
 				align-items: center;
-				min-height: 50px; // высота строки «Итого» — по указанию пользователя
+				min-height: fs-rem( 50 ); // 50px, высота строки «Итого» — по указанию пользователя
 				padding-top: var( --wp--preset--spacing--sm );
 				margin-top: var( --wp--preset--spacing--xs );
 				border-top: 1px solid var( --wp--preset--color--border );
@@ -1740,8 +1786,8 @@ form.checkout_coupon {
 
 		input.input-checkbox {
 			flex: 0 0 auto;
-			width: 16px;
-			height: 16px;
+			width: fs-rem( 16 );
+			height: fs-rem( 16 );
 			margin-top: .125rem;
 		}
 	}
@@ -1795,7 +1841,7 @@ form.checkout_coupon {
 	}
 
 	.woocommerce table.cart tr {
-		grid-template-columns: 64px minmax( 0, 1fr ) auto;
+		grid-template-columns: fs-rem( 64 ) minmax( 0, 1fr ) auto;
 		grid-template-areas:
 			"thumb name remove"
 			"price price price"
@@ -1968,4 +2014,41 @@ form.checkout_coupon {
 	.woocommerce.single-product div.product div.summary {
 		margin-top: var( --wp--preset--spacing--xl );
 	}
+}
+
+/**
+ * BugFix (tasks.md, 2026-09-14, п.4): над подвалом — только нижний паддинг
+ * `.fs-main` (3.5rem, см. `theme.scss`). Последние элементы разметки
+ * WooCommerce добавляли к нему свои нижние отступы:
+ *  - страница товара: `2em` у галереи и описания (и 24px у `.product_meta`),
+ *    а если есть вкладки — `2em` у панели и 16px у её последнего абзаца;
+ *  - «Мой аккаунт» для гостя: `margin: 2em 0` у формы входа;
+ *  - пустая корзина: 16px у абзаца с кнопкой «Вернуться в магазин» и строка
+ *    текста вокруг кнопки.
+ * Отступы между галереей/описанием и вкладками, если вкладки есть, остаются.
+ */
+.single-product .fs-main div.product {
+	> .summary:last-child,
+	> .summary:last-child > :last-child,
+	> .woocommerce-tabs:last-child .panel,
+	> .woocommerce-tabs:last-child .panel > :last-child {
+		margin-bottom: 0;
+	}
+}
+
+// Галерея стоит рядом с описанием только от 961px (см. выше) — ниже её
+// отступ отделяет её от описания.
+@media ( min-width: 961px ) {
+	.single-product .fs-main div.product > .images:has( + .summary:last-child ) {
+		margin-bottom: 0;
+	}
+}
+
+.fs-main .woocommerce > form.login:last-child {
+	margin-bottom: 0;
+}
+
+.fs-main .woocommerce > .return-to-shop:last-child {
+	display: flex;
+	margin-bottom: 0;
 }

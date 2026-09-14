@@ -160,8 +160,8 @@ $fs_settings = FS_LMS_Theme_Showcase::settings();
 		</div>
 		<!-- /wp:column -->
 
-		<!-- wp:column {"width":"480px"} -->
-		<div class="wp-block-column" style="flex-basis:480px">
+		<!-- wp:column {"width":"25rem"} -->
+		<div class="wp-block-column" style="flex-basis:25rem">
 			<!-- wp:html -->
 			<form class="fs-apply-form" id="contacts-apply-form" data-fs-form>
 				<div class="fs-apply-form__title">Записаться на пробное занятие</div>

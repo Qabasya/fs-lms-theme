@@ -32,8 +32,8 @@
 <div class="wp-block-group fs-section">
 	<!-- wp:columns {"className":"fs-features-columns","style":{"spacing":{"blockGap":{"left":"2.75rem"}}}} -->
 	<div class="wp-block-columns fs-features-columns">
-		<!-- wp:column {"width":"360px"} -->
-		<div class="wp-block-column" style="flex-basis:360px">
+		<!-- wp:column {"width":"18.75rem"} -->
+		<div class="wp-block-column" style="flex-basis:18.75rem">
 			<!-- wp:heading {"fontSize":"xxl"} -->
 			<h2 class="wp-block-heading has-xxl-font-size">Сделаем вместе<br><span style="color:var(--wp--preset--color--accent)">Шаг в будущее</span></h2>
 			<!-- /wp:heading -->

@@ -33,8 +33,8 @@ $fs_price_class = 'fs-price-plaque__value' . ( $accent ? ' fs-price-plaque__valu
 		</div>
 		<!-- /wp:column -->
 
-		<!-- wp:column {"width":"480px"} -->
-		<div class="wp-block-column" style="flex-basis:480px">
+		<!-- wp:column {"width":"25rem"} -->
+		<div class="wp-block-column" style="flex-basis:25rem">
 			<!-- wp:heading {"fontSize":"xxl"} -->
 			<h2 class="wp-block-heading has-xxl-font-size"><?php echo esc_html( $lessons['heading'] ); ?></h2>
 			<!-- /wp:heading -->

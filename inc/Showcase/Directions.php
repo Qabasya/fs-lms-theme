@@ -315,7 +315,13 @@ final class FS_LMS_Theme_Directions extends FS_LMS_Theme_Content_Type {
 	 * Разметка
 	 * ------------------------------------------------------------------ */
 
-	/** Пункты списка «Направления подготовки» первого экрана главной. */
+	/**
+	 * Пункты списка «Направления подготовки» первого экрана главной.
+	 *
+	 * Название и класс — в общей группе `fs-hero-dirs__text` (2026-09-14):
+	 * стрелка пункта (`::before`) стоит слева от неё и всегда в одной строке
+	 * с названием, текст переносится внутри своей колонки (`theme.scss`).
+	 */
 	public function hero_list_markup(): string {
 		$directions = $this->published();
 		$last       = count( $directions ) - 1;
@@ -336,10 +342,16 @@ final class FS_LMS_Theme_Directions extends FS_LMS_Theme_Content_Type {
 				sprintf( '<p class="fs-hero-dirs__grade">%s</p>', esc_html( $direction['grade_label'] ) )
 			);
 
+			$text = get_comment_delimited_block_content(
+				'core/group',
+				array( 'className' => 'fs-hero-dirs__text' ),
+				sprintf( '<div class="wp-block-group fs-hero-dirs__text">%s%s</div>', $name, $grade )
+			);
+
 			$items[] = get_comment_delimited_block_content(
 				'core/group',
 				array( 'className' => $class_name ),
-				sprintf( '<div class="wp-block-group %s">%s%s</div>', esc_attr( $class_name ), $name, $grade )
+				sprintf( '<div class="wp-block-group %s">%s</div>', esc_attr( $class_name ), $text )
 			);
 		}
 
