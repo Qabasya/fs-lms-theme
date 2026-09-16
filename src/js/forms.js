@@ -182,17 +182,36 @@ export function formatPhoneValue( raw ) {
  */
 function initAnchorAutofocus() {
 	document.querySelectorAll( 'a[href^="#"]' ).forEach( ( link ) => {
-		link.addEventListener( 'click', () => {
-			focusFormNameField( link.getAttribute( 'href' ) );
+		link.addEventListener( 'click', ( event ) => {
+			focusFormNameField( link.getAttribute( 'href' ), event );
 		} );
 	} );
 
 	if ( window.location.hash ) {
-		focusFormNameField( window.location.hash );
+		// Браузер сам прокручивает к якорю после загрузки — докручиваем после него.
+		window.addEventListener( 'load', () => {
+			window.requestAnimationFrame( () => focusFormNameField( window.location.hash ) );
+		}, { once: true } );
 	}
 }
 
-function focusFormNameField( hash ) {
+/** Отступ над формой при докрутке к ней, px. */
+const FORM_SCROLL_GAP = 16;
+
+/**
+ * BugFix (2026-09-16): на телефоне колонки секции идут одна под другой, и
+ * форма оказывается ниже текста/контактов (`#signup` на `/contacts/` —
+ * `patterns/contacts-info.php`): переход к якорю останавливается на верху
+ * секции, а поле ФИО остаётся за экраном. Раньше до него докручивал сам
+ * `focus()`, но мобильные браузеры (iOS Safari) не прокручивают к полю при
+ * фокусе из `setTimeout`, вне жеста пользователя. Поэтому если поле не
+ * помещается в экран после перехода к якорю — прокручиваем к форме сами, а
+ * фокус ставим уже без прокрутки (`preventScroll`).
+ *
+ * @param {string}     hash  Якорь ссылки (`#signup`, `#hero-form`).
+ * @param {Event|null} event Клик по ссылке, если переход — по клику.
+ */
+function focusFormNameField( hash, event = null ) {
 	let target;
 
 	try {
@@ -212,7 +231,27 @@ function focusFormNameField( hash ) {
 		return;
 	}
 
-	window.setTimeout( () => nameField.focus(), 500 );
+	const targetTop = target.getBoundingClientRect().top;
+	const fieldBottom = nameField.getBoundingClientRect().bottom;
+
+	if ( fieldBottom - targetTop > window.innerHeight ) {
+		if ( event ) {
+			event.preventDefault();
+			window.history.pushState( null, '', hash );
+		}
+
+		const formTop = window.scrollY + form.getBoundingClientRect().top - FORM_SCROLL_GAP;
+		// При прокрутке вверх липкая шапка показывается (`header-scroll.js`)
+		// и закрыла бы верх формы.
+		const header = document.querySelector( '.fs-site-header' );
+		const headerOffset = header && formTop < window.scrollY ? header.offsetHeight : 0;
+
+		// `behavior` не задан — берётся `scroll-behavior` из `theme.scss`
+		// (плавно, либо сразу при `prefers-reduced-motion`).
+		window.scrollTo( { top: formTop - headerOffset } );
+	}
+
+	window.setTimeout( () => nameField.focus( { preventScroll: true } ), 500 );
 }
 
 function initPhoneMask() {
