@@ -195,8 +195,16 @@ function initAnchorAutofocus() {
 	}
 }
 
-/** Отступ над формой при докрутке к ней, px. */
+/** Зазор под полем ФИО, когда форма не помещается целиком, px. */
 const FORM_SCROLL_GAP = 16;
+
+/**
+ * Отступ над блоком при переходе к якорю — `scroll-padding-top` у `html`
+ * (`theme.scss`): браузер останавливается на нём сам, докрутка — тоже.
+ */
+function anchorOffset() {
+	return parseFloat( window.getComputedStyle( document.documentElement ).scrollPaddingTop ) || 0;
+}
 
 /**
  * BugFix (2026-09-16): на телефоне колонки секции идут одна под другой, и
@@ -231,24 +239,26 @@ function focusFormNameField( hash, event = null ) {
 		return;
 	}
 
+	const offset = anchorOffset();
 	const targetTop = target.getBoundingClientRect().top;
 	const fieldBottom = nameField.getBoundingClientRect().bottom;
 
-	if ( fieldBottom - targetTop > window.innerHeight ) {
+	// Браузер ставит блок на `offset` от верха экрана — поле ФИО должно влезть ниже.
+	if ( fieldBottom - targetTop > window.innerHeight - offset ) {
 		if ( event ) {
 			event.preventDefault();
 			window.history.pushState( null, '', hash );
 		}
 
-		const formTop = window.scrollY + form.getBoundingClientRect().top - FORM_SCROLL_GAP;
-		// При прокрутке вверх липкая шапка показывается (`header-scroll.js`)
-		// и закрыла бы верх формы.
-		const header = document.querySelector( '.fs-site-header' );
-		const headerOffset = header && formTop < window.scrollY ? header.offsetHeight : 0;
+		// Форма — на том же отступе, что и переход к якорю (в нём помещается и
+		// липкая шапка, `header-scroll.js`), но не ниже, чем нужно, чтобы поле
+		// ФИО осталось в экране: на телефоне 200px — треть высоты.
+		const formTop = window.scrollY + form.getBoundingClientRect().top - offset;
+		const fieldVisibleTop = window.scrollY + nameField.getBoundingClientRect().bottom + FORM_SCROLL_GAP - window.innerHeight;
 
 		// `behavior` не задан — берётся `scroll-behavior` из `theme.scss`
 		// (плавно, либо сразу при `prefers-reduced-motion`).
-		window.scrollTo( { top: formTop - headerOffset } );
+		window.scrollTo( { top: Math.max( formTop, fieldVisibleTop ) } );
 	}
 
 	window.setTimeout( () => nameField.focus( { preventScroll: true } ), 500 );
