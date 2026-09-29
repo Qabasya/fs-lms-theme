@@ -137,6 +137,27 @@ final class FS_LMS_Theme_Site_Settings {
 		return $stats;
 	}
 
+	/**
+	 * Подпись факта (`.fs-hero-stats__label`) с первым словом в отдельном
+	 * `<span>`: на телефоне он становится блоком, и подпись всегда идёт в две
+	 * строки — «средний / балл», «человек / в группе» (2026-09-29, по
+	 * указанию пользователя). На десктопе `<span>` строчный и ни на что не
+	 * влияет. Общая для главной (`patterns/hero.php`) и направлений
+	 * (`views/subject-hero.php`).
+	 *
+	 * @param string $label Подпись как есть из настроек.
+	 * @return string Экранированная разметка.
+	 */
+	public static function stat_label_html( string $label ): string {
+		$words = preg_split( '/\s+/u', trim( $label ), 2 );
+
+		if ( ! is_array( $words ) || count( $words ) < 2 ) {
+			return esc_html( $label );
+		}
+
+		return sprintf( '<span class="fs-hero-stats__label-head">%s</span> %s', esc_html( $words[0] ), esc_html( $words[1] ) );
+	}
+
 	/* --------------------------------------------------------------------
 	 * Плашка «Как устроены занятия»
 	 * ------------------------------------------------------------------ */

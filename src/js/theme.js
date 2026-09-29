@@ -15,6 +15,7 @@ import { initCourseFilter } from './course-filter.js';
 import { initHeaderScroll } from './header-scroll.js';
 import { initCardLinks } from './card-links.js';
 import { initCouponAccordion } from './coupon-accordion.js';
+import { initDetailsAccordion } from './details-accordion.js';
 
 initCarousels();
 initForms();
@@ -22,3 +23,4 @@ initCourseFilter();
 initHeaderScroll();
 initCardLinks();
 initCouponAccordion();
+initDetailsAccordion();

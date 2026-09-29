@@ -89,7 +89,7 @@
 					<!-- /wp:paragraph -->
 
 					<!-- wp:paragraph {"className":"fs-hero-stats__label"} -->
-					<p class="fs-hero-stats__label"><?php echo esc_html( $fs_stat[1] ); ?></p>
+					<p class="fs-hero-stats__label"><?php echo FS_LMS_Theme_Site_Settings::stat_label_html( $fs_stat[1] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано в stat_label_html(). ?></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->

@@ -758,6 +758,17 @@ $fs-gap-containers:
 			font-size: var( --wp--preset--font-size--lead );
 			white-space: nowrap;
 		}
+
+		/* 2026-09-29: подпись всегда в две строки — первое слово отдельной
+		   строкой (`stat_label_html()`), однословная подпись всё равно
+		   занимает высоту двух строк, чтобы ячейки не разнились. */
+		&__label {
+			min-block-size: 2lh;
+		}
+
+		&__label-head {
+			display: block;
+		}
 	}
 }
 
@@ -2752,6 +2763,42 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 		&::details-content {
 			transition: none;
 		}
+	}
+}
+
+/**
+ * 2026-09-29: в Safari (в том числе на iPhone) и Firefox нет
+ * `interpolate-size`, а запасной путь через `max-block-size` в Safari не
+ * срабатывал — пункты открывались скачком. Там раскрытие анимирует
+ * `src/js/details-accordion.js` (высота самого `<details>` через Web
+ * Animations API) и ставит на `<html>` класс `fs-details-js`; CSS-переход
+ * `::details-content` при этом выключаем, чтобы он не мешал замеру высоты.
+ *
+ * `.is-closing` — пункт ещё `[open]`, пока сворачивается: шеврон и цвет
+ * вопроса возвращаются сразу, а не после анимации.
+ */
+.fs-details-js {
+	.fs-faq-item,
+	.fs-legal-accordion__item {
+		&::details-content,
+		&[open]::details-content {
+			block-size: auto;
+			max-block-size: none;
+			overflow: visible;
+			transition: none;
+		}
+	}
+
+	.fs-faq-item.is-closing .fs-faq-item__question {
+		color: var( --wp--preset--color--text );
+
+		&::after {
+			transform: none;
+		}
+	}
+
+	.fs-legal-accordion__item.is-closing .fs-legal-accordion__question::after {
+		transform: none;
 	}
 }
 
