@@ -64,8 +64,8 @@ $fs_box_class = 'fs-subject-hero-box fs-subject-hero-box--' . $hero_modifier;
 				<input type="hidden" name="fs_form_token" value="<?php echo esc_attr( fs_lms_theme_form_timestamp_token() ); ?>">
 				<input type="text" name="<?php echo esc_attr( fs_lms_theme_honeypot_field() ); ?>" class="fs-form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
 				<?php echo fs_lms_theme_captcha_slot_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- разметка виджета капчи. ?>
-				<button type="submit" class="fs-hero-form__submit">Отправить</button>
 				<div class="fs-hero-form__note"><?php echo fs_lms_theme_form_consent_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- ссылка собрана с esc_url. ?></div>
+				<button type="submit" class="fs-hero-form__submit">Отправить</button>
 				<div class="fs-form-message" role="status"></div>
 			</form>
 			<!-- /wp:html -->

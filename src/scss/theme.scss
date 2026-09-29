@@ -80,15 +80,24 @@
  * 120% к 1600px). Телефоны (≤767px) не трогаем — у них свои
  * переопределения шрифтов ниже, подобранные под 120%.
  *
- * `scroll-padding-top`: переход к якорю (`/#hero-form`, `#signup`)
+ * `--fs-anchor-offset`: переход к якорю (`/#hero-form`, `#signup`)
  * останавливается на 200px выше блока, а не впритык к верху экрана — видно,
- * куда пришли, и липкая шапка не закрывает начало. Тот же отступ читает
- * докрутка до поля ФИО (`forms.js`).
+ * куда пришли, и липкая шапка не закрывает начало. Отступ получает только
+ * цель перехода (`:target`, ниже), а не вся страница: `scroll-padding-top`
+ * у `html` сдвигал и якорение прокрутки браузера — раскрытие длинного
+ * условия в тренажёре уводило страницу вверх на всю его высоту
+ * (tasks.md, 2026-09-29, п.4). Тот же отступ читает докрутка до поля ФИО
+ * (`forms.js`).
  */
 html {
+	--fs-anchor-offset: 200px;
+
 	font-size: 120%;
 	scroll-behavior: smooth;
-	scroll-padding-top: 200px;
+}
+
+:target {
+	scroll-margin-top: var( --fs-anchor-offset );
 }
 
 @media ( min-width: 768px ) {
@@ -613,7 +622,7 @@ $fs-gap-containers:
 	}
 
 	&__note {
-		margin-top: .875rem;
+		margin-bottom: .875rem;
 		font-size: var( --wp--preset--font-size--xxs );
 		font-weight: 300;
 		color: var( --wp--preset--color--muted-2 );
@@ -1502,6 +1511,23 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 	.fs-apply-form {
 		padding: 1.25rem;
 	}
+}
+
+/**
+ * Согласие на обработку ПД — над кнопкой отправки (tasks.md, 2026-09-29, п.2):
+ * галочку ставят до того, как жмут кнопку. В паттернах разметка уже в этом
+ * порядке, но формы, сохранённые в содержимом страниц (инсёртер, см.
+ * `inc/Forms.php`), остались «кнопка, потом согласие» — порядок на экране
+ * задаёт `order`: обе формы — flex-колонки. Сообщение об отправке — последним.
+ */
+.fs-hero-form__submit,
+.fs-apply-form__submit {
+	order: 1;
+}
+
+.fs-hero-form .fs-form-message,
+.fs-apply-form .fs-form-message {
+	order: 2;
 }
 
 /**

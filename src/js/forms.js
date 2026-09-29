@@ -199,11 +199,11 @@ function initAnchorAutofocus() {
 const FORM_SCROLL_GAP = 16;
 
 /**
- * Отступ над блоком при переходе к якорю — `scroll-padding-top` у `html`
- * (`theme.scss`): браузер останавливается на нём сам, докрутка — тоже.
+ * Отступ над блоком при переходе к якорю — `--fs-anchor-offset` у `html`
+ * (`theme.scss`): браузер останавливается на нём сам (`:target`), докрутка — тоже.
  */
 function anchorOffset() {
-	return parseFloat( window.getComputedStyle( document.documentElement ).scrollPaddingTop ) || 0;
+	return parseFloat( window.getComputedStyle( document.documentElement ).getPropertyValue( '--fs-anchor-offset' ) ) || 0;
 }
 
 /**
