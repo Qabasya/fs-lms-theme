@@ -94,13 +94,31 @@ final class FS_LMS_Theme_Alumni extends FS_LMS_Theme_Showcase_Type {
 			'<div class="wp-block-fs-lms-alumni-card fs-alumni-card splide__slide"><div class="fs-alumni-card__media">%s</div><div class="fs-alumni-card__body"><div class="fs-alumni-card__score">%s</div><div class="fs-alumni-card__name">%s</div><p class="fs-alumni-card__quote">%s</p></div></div>',
 			$this->image_html( $post, 'medium', self::FALLBACK_PHOTO, $name ),
 			esc_html( $score ),
-			esc_html( $name ),
+			$this->name_html( $name ),
 			nl2br( esc_html( $quote ) )
 		);
 
 		// Комментарий блока — чтобы ядро подключило стили `fs-lms/alumni-card`
 		// (стили блока грузятся, только когда блок встречается при рендере).
 		return get_comment_delimited_block_content( 'fs-lms/alumni-card', array(), $html );
+	}
+
+	/**
+	 * Фамилия и имя — каждое на своей строке (2026-09-29, по указанию
+	 * пользователя). Заголовок записи — «Фамилия Имя»: переносим строку
+	 * после первого слова, остальное (имя, отчество) — на второй строке.
+	 * Одно слово — выводится как есть.
+	 *
+	 * @param string $name Заголовок записи выпускника.
+	 */
+	private function name_html( string $name ): string {
+		$parts = preg_split( '/\s+/u', trim( $name ), 2 );
+
+		if ( ! is_array( $parts ) || count( $parts ) < 2 ) {
+			return esc_html( $name );
+		}
+
+		return esc_html( $parts[0] ) . '<br>' . esc_html( $parts[1] );
 	}
 
 	public function register_meta(): void {
