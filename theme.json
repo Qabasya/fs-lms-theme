@@ -59,14 +59,14 @@
 				}
 			],
 			"fontSizes": [
-				{ "name": "2XS (14px)", "slug": "xxs", "size": "max(12px, calc(14rem / 19.2))" },
-				{ "name": "XS (15px)", "slug": "xs", "size": "max(12px, calc(15rem / 19.2))" },
-				{ "name": "SM (14px)", "slug": "sm", "size": "max(12px, calc(14rem / 19.2))" },
-				{ "name": "Base (16px)", "slug": "base", "size": "max(14px, calc(16rem / 19.2))" },
-				{ "name": "MD (18px)", "slug": "md", "size": "max(14px, calc(18rem / 19.2))" },
-				{ "name": "Lead (21px)", "slug": "lead", "size": "max(16px, calc(21rem / 19.2))" },
-				{ "name": "LG (22px)", "slug": "lg", "size": "max(16px, calc(22rem / 19.2))" },
-				{ "name": "XL (24px)", "slug": "xl", "size": "max(18px, calc(24rem / 19.2))" },
+				{ "name": "2XS (14px)", "slug": "xxs", "size": "calc(14rem / 19.2)" },
+				{ "name": "XS (15px)", "slug": "xs", "size": "calc(15rem / 19.2)" },
+				{ "name": "SM (14px)", "slug": "sm", "size": "calc(14rem / 19.2)" },
+				{ "name": "Base (16px)", "slug": "base", "size": "calc(16rem / 19.2)" },
+				{ "name": "MD (18px)", "slug": "md", "size": "calc(18rem / 19.2)" },
+				{ "name": "Lead (21px)", "slug": "lead", "size": "calc(21rem / 19.2)" },
+				{ "name": "LG (22px)", "slug": "lg", "size": "calc(22rem / 19.2)" },
+				{ "name": "XL (24px)", "slug": "xl", "size": "calc(24rem / 19.2)" },
 				{ "name": "2XL (36px, заголовок)", "slug": "xxl", "size": "calc(36rem / 19.2)" },
 				{ "name": "3XL (56px)", "slug": "xxxl", "size": "calc(56rem / 19.2)" }
 			],
