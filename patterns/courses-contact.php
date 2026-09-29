@@ -84,7 +84,7 @@ $fs_settings = FS_LMS_Theme_Showcase::settings();
 				<input type="text" name="<?php echo esc_attr( fs_lms_theme_honeypot_field() ); ?>" class="fs-form-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
 				<?php echo fs_lms_theme_captcha_slot_html(); ?>
 				<button type="submit" class="fs-apply-form__submit">Отправить заявку</button>
-				<div class="fs-apply-form__note"><?php echo fs_lms_theme_form_consent_html(); ?>.</div>
+				<div class="fs-apply-form__note"><?php echo fs_lms_theme_form_consent_html(); ?></div>
 				<div class="fs-form-message" role="status"></div>
 			</form>
 			<!-- /wp:html -->

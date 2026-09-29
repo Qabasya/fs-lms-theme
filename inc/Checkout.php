@@ -363,6 +363,72 @@ add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $or
 } );
 
 /**
+ * Согласие на обработку ПДн на оформлении заказа (152-ФЗ, 2026-09-29) — тот
+ * же чекбокс и текст, что у лид-форм (`fs_lms_theme_pd_consent_text_html()`,
+ * `inc/Forms.php`): форма собирает ФИО родителя и ребёнка, телефон и почту.
+ *
+ * Сразу под полями покупателя, а не у кнопки «Оплатить»: блок оплаты
+ * (`#payment`, там же штатный чекбокс условий) WooCommerce перерисовывает
+ * AJAX-фрагментом на каждом `update_checkout` и восстанавливает отметку
+ * только у своего `#terms` — наша галочка там сбрасывалась бы.
+ */
+const FS_LMS_THEME_CHECKOUT_CONSENT_META = '_fs_pd_consent';
+
+add_action( 'woocommerce_after_checkout_billing_form', function (): void {
+	// Кнопка «i» с поповером — после `<label>`, не внутри (см.
+	// `fs_lms_theme_pd_consent_info_html()`).
+	printf(
+		'<p class="form-row validate-required fs-checkout-consent fs-form-consent"><label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox fs-form-consent__label"><input type="checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" name="%1$s" id="%1$s" value="1"> <span>%2$s</span>&nbsp;<abbr class="required" title="%3$s">*</abbr></label>%4$s</p>',
+		esc_attr( FS_LMS_THEME_FORM_CONSENT_FIELD ),
+		fs_lms_theme_pd_consent_text_html(), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- ссылка собрана с esc_url.
+		esc_attr__( 'обязательно', 'fs-lms-theme' ),
+		fs_lms_theme_pd_consent_info_html( __( 'Данные из формы нужны, чтобы оформить заказ и организовать обучение.', 'fs-lms-theme' ) ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- собрано с экранированием.
+	);
+} );
+
+/**
+ * Без отметки заказ не создаётся — ошибка уходит в `WP_Error`, WooCommerce
+ * покажет её над формой. Поле не зарегистрировано в
+ * `woocommerce_checkout_fields`, поэтому его нет в `$data` — читаем POST
+ * (nonce оформления заказа WooCommerce уже проверил).
+ */
+add_action( 'woocommerce_after_checkout_validation', function ( array $data, WP_Error $errors ): void {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- проверен в WC_Checkout::process_checkout().
+	$consent = isset( $_POST[ FS_LMS_THEME_FORM_CONSENT_FIELD ] ) ? sanitize_text_field( wp_unslash( $_POST[ FS_LMS_THEME_FORM_CONSENT_FIELD ] ) ) : '';
+
+	if ( '1' !== $consent ) {
+		$errors->add( 'validation', __( 'Подтвердите согласие на обработку персональных данных.', 'fs-lms-theme' ) );
+	}
+}, 10, 2 );
+
+/**
+ * Фиксируем в заказе, какую редакцию документа согласия принял покупатель
+ * (та же строка, что в письме лид-формы, `fs_lms_theme_form_consent_note()`);
+ * дата согласия — дата создания заказа.
+ */
+add_action( 'woocommerce_checkout_create_order', function ( WC_Order $order ): void {
+	$order->update_meta_data( FS_LMS_THEME_CHECKOUT_CONSENT_META, fs_lms_theme_form_consent_note() );
+} );
+
+add_action( 'woocommerce_admin_order_data_after_billing_address', function ( $order ): void {
+	if ( ! $order instanceof WC_Order ) {
+		return;
+	}
+
+	$consent = (string) $order->get_meta( FS_LMS_THEME_CHECKOUT_CONSENT_META );
+
+	if ( '' === $consent ) {
+		return;
+	}
+
+	printf(
+		'<p><strong>%s:</strong> %s</p>',
+		esc_html__( 'Согласие на обработку ПДн', 'fs-lms-theme' ),
+		esc_html( $consent )
+	);
+}, 20 );
+
+/**
  * Страница «Заказ получен» (thank-you) — по указанию пользователя
  * (2026-09-05) и макету `Спасибо за заказ - мокап.dc.html` на ней остаётся
  * только благодарность: галочка, заголовок, две строки текста и кнопка на

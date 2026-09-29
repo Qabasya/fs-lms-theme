@@ -7,10 +7,10 @@
  * зона ответственности (см. tasks.md):
  *   - Setup.php    — поддержка темы (theme supports), стили блоков дизайн-системы
  *   - Patterns.php — категории паттернов
- *   - Assets.php   — шрифты и собранные CSS/JS (assets/, см. gulpfile.js)
+ *   - Assets.php   — локальные шрифты и собранные CSS/JS (assets/, см. gulpfile.js)
  *   - Blocks.php   — регистрация кастомных блоков (src/blocks/*, Фаза 4)
- *   - Seo.php      — description/Open Graph, микроразметка организации,
- *                     preconnect к CDN шрифтов (молчит, если стоит SEO-плагин)
+ *   - Seo.php      — description/Open Graph, микроразметка организации
+ *                     (молчит, если стоит SEO-плагин)
  *   - PluginRoutes.php — резолвер URL служебных страниц плагина (Фаза 7)
  *   - SubjectPages.php — автосборка пустых страниц направлений (Фаза 13)
  *   - ResourcePages.php — страницы-хабы «Учебник»/«Тренажёр» (задача 10, tasks.md)
@@ -25,6 +25,8 @@
  *                     HMAC-таймер + rate-limit (Фаза 14)
  *   - Updates.php  — обновление темы из GitHub Releases кнопкой в админке
  *   - Showcase.php — «Выпускники» и «Вузы»: записи в админке для каруселей главной
+ *   - CookieConsent.php — баннер согласия на cookie, Яндекс Метрика только
+ *                     после согласия (152-ФЗ)
  */
 
 declare(strict_types=1);
@@ -33,6 +35,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'Seo', 'PluginRoutes', 'SubjectPages', 'ResourcePages', 'Navigation', 'WooCommerce', 'Checkout', 'SmartCaptcha', 'SubjectCardIcons', 'ContentUpgrades', 'Forms', 'Updates', 'Showcase' ) as $module ) {
+foreach ( array( 'Setup', 'Patterns', 'Assets', 'Blocks', 'Seo', 'PluginRoutes', 'SubjectPages', 'ResourcePages', 'Navigation', 'WooCommerce', 'Checkout', 'SmartCaptcha', 'SubjectCardIcons', 'ContentUpgrades', 'Forms', 'Updates', 'Showcase', 'CookieConsent' ) as $module ) {
 	require_once get_template_directory() . "/inc/{$module}.php";
 }

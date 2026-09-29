@@ -1510,6 +1510,114 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 }
 
 /**
+ * Чекбокс согласия на обработку ПДн в той же подписи (152-ФЗ, 2026-09-29,
+ * `fs_lms_theme_form_consent_html()`): галочка слева, текст переносится
+ * рядом с ней, а не под неё; справа — кнопка «i» с поповером подробностей.
+ * В лид-формах ряд по центру (как вся подпись), на оформлении заказа — от
+ * левого края (`.fs-checkout-consent`).
+ */
+.fs-form-consent {
+	display: flex;
+	gap: .375rem;
+	align-items: flex-start;
+	justify-content: center;
+
+	&__label {
+		display: flex;
+		gap: .5rem;
+		align-items: flex-start;
+		text-align: left;
+		cursor: pointer;
+
+		input[type="checkbox"] {
+			flex: 0 0 auto;
+			width: 1em;
+			height: 1em;
+			margin: .2em 0 0;
+			accent-color: var( --wp--preset--color--accent );
+			cursor: pointer;
+		}
+	}
+
+	&__info {
+		flex: 0 0 auto;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.15em;
+		height: 1.15em;
+		margin: .12em 0 0;
+		padding: 0;
+		border: 1px solid currentcolor;
+		border-radius: 50%;
+		background: none;
+		color: inherit;
+		font: italic 700 .75em/1 Georgia, serif;
+		cursor: pointer;
+		opacity: .75;
+
+		&:hover,
+		&:focus-visible {
+			color: var( --wp--preset--color--accent );
+			opacity: 1;
+		}
+	}
+
+	/*
+	 * Нативный поповер: без поддержки якорного позиционирования браузер
+	 * ставит его по центру окна (стили UA для `[popover]`) — это нормальный
+	 * запасной вариант. Где якоря есть (Chrome 133+, Safari 26+), поповер
+	 * встаёт над кнопкой «i» — кнопка с `popovertarget` сама становится его
+	 * якорем. `display` не задаём: скрытием управляет UA
+	 * (`[popover]:not(:popover-open)`).
+	 */
+	&__popover {
+		max-width: min( 20rem, calc( 100vw - 2rem ) );
+		margin: auto;
+		padding: .75rem 1rem;
+		border: 1px solid var( --wp--preset--color--border );
+		border-radius: var( --wp--custom--radius--control );
+		background: var( --wp--preset--color--white );
+		box-shadow: var( --wp--custom--shadow--hover );
+		color: var( --wp--preset--color--text-secondary );
+		font-size: var( --wp--preset--font-size--xxs );
+		font-weight: 400;
+		line-height: 1.5;
+		text-align: left;
+
+		a {
+			color: var( --wp--preset--color--accent );
+			text-decoration: underline;
+		}
+	}
+
+	@supports ( position-area: top ) {
+		&__popover {
+			margin: 0 0 .5rem;
+			inset: auto;
+			position-area: top;
+			position-try-fallbacks: flip-block;
+		}
+	}
+}
+
+.fs-checkout-consent {
+	justify-content: flex-start;
+}
+
+/**
+ * Уведомление Yandex SmartCaptcha — отдельный абзац внутри поповера
+ * согласия (`fs_lms_theme_captcha_notice_html()`). Сам элемент — `<span>`
+ * (поповер стоит и внутри `<p>` оформления заказа), поэтому `display: block`.
+ */
+.fs-form-captcha-notice {
+	display: block;
+	margin-top: .5rem;
+	padding-top: .5rem;
+	border-top: 1px solid var( --wp--preset--color--border-light );
+}
+
+/**
  * Текст юридической страницы `/about/` (2026-09-13, по указанию
  * пользователя) — один стиль на все абзацы (`about-header.php`,
  * `about-accordion.php`), строки реквизитов и ответы аккордеона. Кегль —

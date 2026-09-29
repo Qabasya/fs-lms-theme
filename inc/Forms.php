@@ -137,20 +137,125 @@ function fs_lms_theme_name_field_attrs_html(): string {
 	return implode( ' ', $attributes );
 }
 
+/** Имя чекбокса согласия на обработку ПДн в лид-формах. */
+const FS_LMS_THEME_FORM_CONSENT_FIELD = 'pd_consent';
+
 /**
- * Подпись под кнопкой лид-формы — одна на все паттерны форм, без точки в
- * конце (у `.fs-apply-form__note` её ставит паттерн, у hero её не было).
+ * Согласие на обработку ПДн под кнопкой лид-формы — одно на все паттерны.
  *
- * Про SmartCaptcha здесь сознательно ничего нет: уведомление об обработке
- * данных Яндексом (значок скрыт, `hideShield` в `src/js/captcha.js`)
- * пользователь размещает на сайте сам (решение 2026-09-12).
+ * 152-ФЗ (2026-09-29): раньше здесь было «Нажимая кнопку, вы соглашаетесь с
+ * политикой конфиденциальности». С 01.09.2025 согласие на обработку ПДн
+ * оформляется отдельно от иных документов (ч. 1 ст. 9), и согласие с
+ * политикой им не является. Теперь — чекбокс (не отмечен заранее,
+ * `required`) со ссылкой на документ согласия плагина (`pd_processing`,
+ * `fs_lms_theme_pd_consent_url()`), политика — отдельной ссылкой. Сервер
+ * проверяет отметку сам (`fs_lms_theme_handle_form_submit()`).
+ *
+ * 2026-09-29 (по указанию пользователя): подпись сокращена до «Даю согласие
+ * на обработку персональных данных» (ссылка — на сам документ согласия),
+ * зачем данные и ссылка на политику — в поповере по кнопке «i»
+ * (`fs_lms_theme_pd_consent_info_html()`), там же — уведомление про
+ * SmartCaptcha (`fs_lms_theme_captcha_notice_html()`): под формой остаётся
+ * одна строка с галочкой, вёрстка hero не меняется.
  */
 function fs_lms_theme_form_consent_html(): string {
 	return sprintf(
-		'Нажимая кнопку, вы соглашаетесь с <a href="%s" target="_blank" rel="noopener">политикой конфиденциальности</a>',
-		esc_url( home_url( '/privacy-policy/' ) )
+		'<div class="fs-form-consent"><label class="fs-form-consent__label"><input type="checkbox" name="%s" value="1" required><span>%s</span></label>%s</div>',
+		esc_attr( FS_LMS_THEME_FORM_CONSENT_FIELD ),
+		fs_lms_theme_pd_consent_text_html(),
+		fs_lms_theme_pd_consent_info_html( 'Имя и телефон нужны, только чтобы связаться с вами по заявке.', fs_lms_theme_captcha_notice_html() )
 	);
 }
+
+/**
+ * Текст рядом с чекбоксом согласия — общий для лид-форм и оформления
+ * заказа WooCommerce (`inc/Checkout.php`). Ссылка — на документ согласия
+ * плагина; если его нет, текст без ссылки (политика — в поповере).
+ *
+ * @return string Готовый HTML (ссылка собрана с esc_url).
+ */
+function fs_lms_theme_pd_consent_text_html(): string {
+	$consent_url = fs_lms_theme_pd_consent_url();
+
+	return '' !== $consent_url
+		? sprintf( 'Даю <a href="%s" target="_blank" rel="noopener">согласие на обработку персональных данных</a>', esc_url( $consent_url ) )
+		: 'Даю согласие на обработку персональных данных';
+}
+
+/**
+ * Кнопка «i» и поповер с подробностями согласия (нативный `popover`, без
+ * JS): зачем нужны данные, ссылка на политику конфиденциальности и, если
+ * передано, дополнительный абзац (уведомление SmartCaptcha у лид-форм).
+ *
+ * Кнопку и поповер ставят рядом с `<label>`, а не внутрь: щелчок по тексту
+ * поповера внутри `<label>` переключал бы чекбокс. Поповер — `<span>`:
+ * на оформлении заказа блок стоит внутри `<p>`, и `<div>` разорвал бы его.
+ * `id` уникален на страницу — форм с согласием на одной странице бывает
+ * две (hero + signup).
+ *
+ * @param string $purpose Зачем форме данные — одно предложение.
+ * @param string $extra   Готовый HTML дополнительного абзаца (уже экранирован).
+ */
+function fs_lms_theme_pd_consent_info_html( string $purpose, string $extra = '' ): string {
+	static $counter = 0;
+	++$counter;
+
+	$id = 'fs-consent-info-' . $counter;
+
+	return sprintf(
+		'<button type="button" class="fs-form-consent__info" popovertarget="%1$s" aria-label="%2$s">i</button><span id="%1$s" class="fs-form-consent__popover" popover>%3$s %4$s%5$s</span>',
+		esc_attr( $id ),
+		esc_attr__( 'Подробнее об обработке данных', 'fs-lms-theme' ),
+		esc_html( $purpose ),
+		sprintf(
+			/* translators: %s — ссылка на политику конфиденциальности. */
+			esc_html__( 'Как мы храним и защищаем данные — в %s.', 'fs-lms-theme' ),
+			'<a href="' . esc_url( home_url( '/privacy-policy/' ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'политике конфиденциальности', 'fs-lms-theme' ) . '</a>'
+		),
+		$extra
+	);
+}
+
+/**
+ * Уведомление об обработке данных Yandex SmartCaptcha (2026-09-29). Значок
+ * капчи скрыт (`hideShield` в `src/js/captcha.js`), а правила сервиса
+ * требуют тогда сообщить пользователю иным способом, что его данные
+ * обрабатывает SmartCaptcha. Выводится абзацем в поповере согласия, ссылка —
+ * на «Уведомление об условиях обработки данных» Яндекса. Пусто, если ключи
+ * капчи не заданы: без капчи и сообщать не о чем. `<span>`, а не `<div>` —
+ * поповер сам `<span>` (см. `fs_lms_theme_pd_consent_info_html()`).
+ */
+function fs_lms_theme_captcha_notice_html(): string {
+	if ( ! fs_lms_theme_captcha_configured() ) {
+		return '';
+	}
+
+	return sprintf(
+		'<span class="fs-form-captcha-notice">%s <a href="https://yandex.ru/legal/smartcaptcha_notice/" target="_blank" rel="noopener">%s</a>.</span>',
+		esc_html__( 'Форма защищена от спама сервисом Yandex SmartCaptcha — он получает технические данные браузера и сведения о действиях на странице.', 'fs-lms-theme' ),
+		esc_html__( 'Условия обработки данных', 'fs-lms-theme' )
+	);
+}
+
+/**
+ * Формы, вставленные на страницы из инсёртера, сохранены в `post_content`
+ * со старой подписью «Нажимая кнопку…» (см. `inc/ContentUpgrades.php`) —
+ * правка функции выше до них не доходит, а без чекбокса сервер такие заявки
+ * теперь отклонял бы. Подменяем подпись при выводе блока, а не в базе:
+ * сохранённую страницу не трогаем, и подпись всегда совпадает с текущей
+ * функцией.
+ */
+add_filter( 'render_block_core/html', function ( string $content ): string {
+	if ( ! str_contains( $content, 'Нажимая кнопку, вы соглашаетесь с' ) ) {
+		return $content;
+	}
+
+	return (string) preg_replace_callback(
+		'#Нажимая кнопку, вы соглашаетесь с <a [^>]*>политикой конфиденциальности</a>\.?#u',
+		static fn(): string => fs_lms_theme_form_consent_html(),
+		$content
+	);
+} );
 
 /**
  * Задача 9 (tasks.md, 2026-09-04): URL кнопки «Записаться» в шапке
@@ -334,6 +439,27 @@ function fs_lms_theme_form_source( string $form_id, string $page_url ): string {
 }
 
 /**
+ * Строка «Согласие на обработку ПДн:» технического блока письма (152-ФЗ,
+ * 2026-09-29) — какую редакцию документа принял посетитель: согласие в
+ * плагине версионируется ревизиями своей страницы, поэтому фиксируем
+ * страницу и дату её последней правки на момент заявки.
+ */
+function fs_lms_theme_form_consent_note(): string {
+	$page = fs_lms_theme_pd_consent_page();
+
+	if ( ! $page ) {
+		return 'получено (чекбокс), документ — политика конфиденциальности ' . home_url( '/privacy-policy/' );
+	}
+
+	return sprintf(
+		'получено (чекбокс), документ %s (страница #%d, редакция от %s)',
+		get_permalink( $page ),
+		$page->ID,
+		get_post_modified_time( 'd.m.Y H:i', false, $page )
+	);
+}
+
+/**
  * Строка «Капча:» технического блока письма (2026-09-12, по указанию
  * пользователя) — чем закончилась проверка у этой заявки.
  *
@@ -456,6 +582,14 @@ function fs_lms_theme_handle_form_submit(): void {
 		wp_send_json_error( array( 'message' => __( 'Заполните имя и телефон.', 'fs-lms-theme' ) ), 400 );
 	}
 
+	// 152-ФЗ: без отметки согласия данные не обрабатываем (чекбокс `required`
+	// в разметке обходится прямым запросом к admin-ajax.php).
+	$pd_consent = isset( $_POST[ FS_LMS_THEME_FORM_CONSENT_FIELD ] ) && '1' === sanitize_text_field( wp_unslash( $_POST[ FS_LMS_THEME_FORM_CONSENT_FIELD ] ) );
+
+	if ( ! $pd_consent ) {
+		wp_send_json_error( array( 'message' => __( 'Подтвердите согласие на обработку персональных данных.', 'fs-lms-theme' ) ), 400 );
+	}
+
 	/**
 	 * BugFix.4 (2026-09-05): имя — только кириллица (правило и его причины —
 	 * у `FS_LMS_THEME_NAME_CHARS` выше). Проверка на сервере, а не только в
@@ -494,6 +628,7 @@ function fs_lms_theme_handle_form_submit(): void {
 		'',
 		'Техническая информация',
 		sprintf( 'Получена: %s', wp_date( 'd.m.Y H:i:s T', $received_at ) ),
+		sprintf( 'Согласие на обработку ПДн: %s', fs_lms_theme_form_consent_note() ),
 		sprintf( 'Капча: %s', fs_lms_theme_form_captcha_note( $captcha->is_configured(), $captcha_skipped, $captcha_result, $captcha_challenge ) ),
 		sprintf( 'Заполнение формы: %s', fs_lms_theme_form_fill_time( $fill_seconds ) ),
 		sprintf( 'Устройство: %s', wp_is_mobile() ? 'телефон или планшет' : 'компьютер' ),

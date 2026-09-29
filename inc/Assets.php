@@ -14,21 +14,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Интерфейсные шрифты — Ubuntu (тот же источник, что и плагин, см.
- * Inc\Core\Assets\BundleLoader::enqueueUiFont(), хендл `fs-lms-ubuntu`)
- * плюс вес 300 и JetBrains Mono, которые требует дизайн главной страницы
+ * Интерфейсные шрифты — Ubuntu 300/400/500/700 и JetBrains Mono 400/500
  * (мокап «Главная — 1a»: лид-абзацы весом 300, блок кода моноширинным).
  *
- * `BundleLoader::enqueueUiFont()` вешается на тот же `wp_enqueue_scripts`
- * безусловно на каждом фронт-запросе (см. Inc\Core\Enqueue::enqueue()) —
- * значит на любой странице, где активен плагин, Ubuntu 400/500/700 уже
- * загружен под хендлом `fs-lms-ubuntu`. Поздний приоритет (20) даёт этому
- * хуку плагина отработать первым, и если хендл уже зарегистрирован —
- * тема не заказывает те же веса Ubuntu повторно, а докидывает отдельным
- * запросом только то, чего у плагина нет (вес 300 + JetBrains Mono). Без
- * плагина (или если хендл не найден) — тема заказывает полный набор сама.
+ * 152-ФЗ (2026-09-29): шрифты отдаются с нашего домена
+ * (`src/scss/fonts.scss` → `assets/css/fonts.min.css`), а не с Google Fonts —
+ * иначе IP каждого посетителя уходит Google (США), а политика
+ * конфиденциальности (п. 10.1) заявляет, что трансграничной передачи нет.
+ *
+ * Путь относительно каталога темы.
  */
-const FS_LMS_THEME_FONT_URL = 'https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap';
+const FS_LMS_THEME_FONT_CSS = 'assets/css/fonts.min.css';
+
+/**
+ * URL локального CSS шрифтов с версией по filemtime().
+ *
+ * @return string Пустая строка — сборки ещё нет (до `npm run build`).
+ */
+function fs_lms_theme_font_css_url(): string {
+	$path = get_template_directory() . '/' . FS_LMS_THEME_FONT_CSS;
+
+	if ( ! file_exists( $path ) ) {
+		return '';
+	}
+
+	return add_query_arg( 'ver', (string) filemtime( $path ), get_template_directory_uri() . '/' . FS_LMS_THEME_FONT_CSS );
+}
 
 /**
  * CSS-бандл темы в порядке подключения — один список на фронт и на редактор.
@@ -58,18 +69,18 @@ function fs_lms_theme_style_bundle(): array {
 	);
 }
 
+/**
+ * У плагина fs-lms свой локальный файл шрифтов (хендл `fs-lms-fonts`,
+ * Ubuntu 400/500/700 + JetBrains Mono + Roboto) — тема подключает свой
+ * всегда: веса 300 у плагина нет. Одинаковые @font-face двух файлов браузер
+ * не качает дважды — берёт последнее объявленное правило.
+ */
 add_action( 'wp_enqueue_scripts', function (): void {
-	if ( wp_style_is( 'fs-lms-ubuntu', 'registered' ) || wp_style_is( 'fs-lms-ubuntu', 'enqueued' ) ) {
-		wp_enqueue_style(
-			'fs-lms-theme-ubuntu-extra',
-			'https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&family=JetBrains+Mono:wght@400;500&display=swap',
-			array(),
-			null
-		);
-		return;
-	}
+	$url = fs_lms_theme_font_css_url();
 
-	wp_enqueue_style( 'fs-lms-theme-ubuntu', FS_LMS_THEME_FONT_URL, array(), null );
+	if ( '' !== $url ) {
+		wp_enqueue_style( 'fs-lms-theme-fonts', $url, array(), null );
+	}
 }, 20 );
 
 /**
@@ -135,15 +146,19 @@ add_action( 'wp_enqueue_scripts', function (): void {
  * `editor.min.css` последним — только правки, осмысленные лишь в холсте
  * (`src/scss/editor.scss`), они должны перебивать общий бандл.
  *
- * `add_editor_style()` сам скоупит правила под `.editor-styles-wrapper` и
- * умеет внешние URL (`get_editor_stylesheets()`, `wp-includes/theme.php`,
- * ветка `preg_match( '~^(https?:)?//~' )`) — шрифт нужен здесь отдельно:
- * `wp_enqueue_scripts` внутри iframe редактора не отрабатывает, поэтому ни
- * подключение темы, ни `BundleLoader` плагина в холст не попадают, и текст
- * рисовался бы запасной гарнитурой.
+ * `add_editor_style()` сам скоупит правила под `.editor-styles-wrapper` —
+ * шрифт нужен здесь отдельно: `wp_enqueue_scripts` внутри iframe редактора
+ * не отрабатывает, поэтому ни подключение темы, ни `BundleLoader` плагина в
+ * холст не попадают, и текст рисовался бы запасной гарнитурой. Локальный
+ * файл редактор инлайнит с `baseURL` = URL файла, так что относительные
+ * `url('../fonts/…')` в @font-face резолвятся верно.
  */
 add_action( 'after_setup_theme', function (): void {
-	$styles = array_merge( array( FS_LMS_THEME_FONT_URL ), fs_lms_theme_style_bundle() );
+	$styles = fs_lms_theme_style_bundle();
+
+	if ( file_exists( get_template_directory() . '/' . FS_LMS_THEME_FONT_CSS ) ) {
+		array_unshift( $styles, FS_LMS_THEME_FONT_CSS );
+	}
 
 	if ( file_exists( get_template_directory() . '/assets/css/editor.min.css' ) ) {
 		$styles[] = 'assets/css/editor.min.css';

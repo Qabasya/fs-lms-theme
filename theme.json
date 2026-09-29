@@ -50,15 +50,7 @@
 				{
 					"fontFamily": "'Ubuntu', arial, helvetica, sans-serif",
 					"name": "Ubuntu (интерфейс)",
-					"slug": "ui",
-					"fontFace": [
-						{
-							"fontFamily": "Ubuntu",
-							"fontWeight": "400",
-							"fontStyle": "normal",
-							"src": [ "https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" ]
-						}
-					]
+					"slug": "ui"
 				},
 				{
 					"fontFamily": "'Courier New', courier, monospace",

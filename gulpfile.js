@@ -41,10 +41,23 @@ const paths = {
 	scss: {
 		theme: './src/scss/theme.scss',
 		editor: './src/scss/editor.scss',
+		/**
+		 * Самостоятельные CSS (не в theme.min.css): локальные шрифты (нужны и
+		 * редактору, `add_editor_style()`) и баннер cookie (печатается и на
+		 * bare-шеллах плагина, где бандла темы нет).
+		 * <имя>.scss → assets/css/<имя>.min.css.
+		 */
+		standalone: [ './src/scss/fonts.scss', './src/scss/cookie-consent.scss' ],
 		watch: './src/scss/**/*.scss',
 	},
+	/**
+	 * Локальные woff2 (152-ФЗ, 2026-09-29, см. src/scss/fonts.scss) — копия
+	 * в assets/fonts/ без обработки.
+	 */
+	fonts: './src/fonts/*.woff2',
 	js: {
-		theme: './src/js/theme.js',
+		// cookie-consent.js — отдельная точка входа, см. inc/CookieConsent.php.
+		theme: [ './src/js/theme.js', './src/js/cookie-consent.js' ],
 		watch: './src/js/**/*.js',
 	},
 	blocks: {
@@ -67,6 +80,7 @@ const paths = {
 	output: {
 		css: './assets/css/',
 		js: './assets/js/',
+		fonts: './assets/fonts/',
 		maps: './maps/',
 	},
 };
@@ -208,6 +222,26 @@ function stylesVendor() {
 }
 
 /**
+ * САМОСТОЯТЕЛЬНЫЕ CSS — локальные шрифты и баннер cookie (152-ФЗ,
+ * 2026-09-29), см. `paths.scss.standalone`. Сами woff2 — копия
+ * src/fonts/ → assets/fonts/ (`encoding: false` — бинарники, иначе gulp 5
+ * прогонит их через utf-8 и испортит).
+ */
+function stylesStandalone() {
+	return gulp.src( paths.scss.standalone )
+		.pipe( guard() )
+		.pipe( sass() )
+		.pipe( postcss( [ autoprefixer(), cssnano() ] ) )
+		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( gulp.dest( paths.output.css ) );
+}
+
+function fontsCopy() {
+	return gulp.src( paths.fonts, { encoding: false } )
+		.pipe( gulp.dest( paths.output.fonts ) );
+}
+
+/**
  * ОБРАБОТКА CSS — стили внутри редактора (editor-styles-wrapper)
  */
 function stylesEditor() {
@@ -325,19 +359,22 @@ function scriptsBlocks( done ) {
  */
 function watchFiles() {
 	watching = true;
-	gulp.watch( paths.scss.watch, gulp.parallel( stylesTheme, stylesEditor ) );
+	gulp.watch( paths.scss.watch, gulp.parallel( stylesTheme, stylesEditor, stylesStandalone ) );
+	gulp.watch( paths.fonts, fontsCopy );
 	gulp.watch( [ paths.blocks.watchScss ], gulp.parallel( stylesBlocksFront, stylesBlocksEditor ) );
 	gulp.watch( paths.js.watch, scriptsTheme );
 	gulp.watch( [ paths.blocks.watchJs ], scriptsBlocks );
 	console.log( 'Gulp is watching and building fs-lms-theme assets...' );
 }
 
-const build = gulp.parallel( stylesTheme, stylesEditor, stylesBlocksFront, stylesBlocksEditor, stylesVendor, scriptsTheme, scriptsBlocks );
+const build = gulp.parallel( stylesTheme, stylesEditor, stylesStandalone, fontsCopy, stylesBlocksFront, stylesBlocksEditor, stylesVendor, scriptsTheme, scriptsBlocks );
 
 exports[ 'styles:theme' ] = stylesTheme;
 exports[ 'styles:editor' ] = stylesEditor;
 exports[ 'styles:blocks' ] = gulp.parallel( stylesBlocksFront, stylesBlocksEditor );
 exports[ 'styles:vendor' ] = stylesVendor;
+exports[ 'styles:standalone' ] = stylesStandalone;
+exports[ 'fonts:copy' ] = fontsCopy;
 exports[ 'scripts:theme' ] = scriptsTheme;
 exports[ 'scripts:blocks' ] = scriptsBlocks;
 exports.build = build;

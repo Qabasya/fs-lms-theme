@@ -5,6 +5,7 @@
 # не регистрируются (ни один register_block_type() не вызовется).
 /src/scss/
 /src/js/
+/src/fonts/
 /src/blocks/shared/
 /src/blocks/*/*.js
 /src/blocks/*/*.scss

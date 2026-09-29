@@ -141,21 +141,3 @@ add_action( 'wp_head', function (): void {
 		wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES )
 	);
 }, 5 );
-
-/**
- * Шрифты грузятся с Google Fonts (`inc/Assets.php`) — заранее открываем
- * соединение с CDN, иначе браузер тратит на это время уже во время
- * отрисовки текста.
- */
-add_filter( 'wp_resource_hints', function ( array $hints, string $relation ): array {
-	if ( 'preconnect' !== $relation ) {
-		return $hints;
-	}
-
-	$hints[] = array(
-		'href'        => 'https://fonts.gstatic.com',
-		'crossorigin' => 'anonymous',
-	);
-
-	return $hints;
-}, 10, 2 );

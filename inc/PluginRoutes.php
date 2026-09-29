@@ -91,3 +91,35 @@ function fs_lms_theme_subject_url( string $subject_key, string $page ): string {
 
 	return esc_url( home_url( '/' . $subject_key . '/' . $page . '/' ) );
 }
+
+/**
+ * Страница документа «Согласие на обработку персональных данных» плагина
+ * (152-ФЗ, 2026-09-29) — ссылка под чекбоксом лид-форм темы
+ * (`fs_lms_theme_form_consent_html()`, `inc/Forms.php`).
+ *
+ * Плагин хранит определения согласий в опции `fs_lms_consent_definitions`
+ * (`IncRepositoriesOptionsRepositoriesConsentDefinitionsRepository`,
+ * `[key => ['name' => …, 'page_id' => …]]`) и сам берёт URL так же —
+ * `get_permalink( page_id )` для ключа `pd_processing`
+ * (`AuthPageController::consentUrl()`). Читаем опцию напрямую, не классы
+ * плагина — тот же принцип границы, что у функций выше.
+ *
+ * @return WP_Post|null Опубликованная страница согласия или null (плагина нет,
+ *                      согласие не заведено или страница не опубликована).
+ */
+function fs_lms_theme_pd_consent_page(): ?WP_Post {
+	$definitions = (array) get_option( 'fs_lms_consent_definitions', array() );
+	$page_id     = absint( $definitions['pd_processing']['page_id'] ?? 0 );
+	$page        = $page_id > 0 ? get_post( $page_id ) : null;
+
+	return $page instanceof WP_Post && 'publish' === $page->post_status ? $page : null;
+}
+
+/**
+ * @return string URL страницы согласия; пустая строка — её нет.
+ */
+function fs_lms_theme_pd_consent_url(): string {
+	$page = fs_lms_theme_pd_consent_page();
+
+	return $page ? (string) get_permalink( $page ) : '';
+}

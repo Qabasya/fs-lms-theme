@@ -109,6 +109,10 @@ $fs_settings = FS_LMS_Theme_Showcase::settings();
 					<p><a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>">Политика конфиденциальности</a></p>
 					<!-- /wp:paragraph -->
 
+					<!-- wp:html -->
+					<p><button type="button" class="fs-cookie-settings" data-fs-cookie-settings>Настройки cookie</button></p>
+					<!-- /wp:html -->
+
 					<!-- wp:paragraph -->
 					<p><a href="<?php echo esc_url( home_url( '/contacts/' ) ); ?>">Контакты</a></p>
 					<!-- /wp:paragraph -->
