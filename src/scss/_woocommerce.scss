@@ -1457,6 +1457,12 @@ form.checkout_coupon {
 		padding: 0;
 	}
 
+	// Согласие на ПД стоит после сетки полей, а не в ней — отступ сверху тот
+	// же, что между полями (`gap` у `__field-wrapper` выше).
+	form .form-row.fs-checkout-consent {
+		margin-top: var( --wp--preset--spacing--sm );
+	}
+
 	/**
 	 * BugFix (2026-09-04): границы ячеек рисует собственный CSS плагина
 	 * (`.woocommerce table.shop_table td { border-top: … }`, специфичность
