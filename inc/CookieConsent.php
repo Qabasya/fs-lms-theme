@@ -84,11 +84,23 @@ final class FS_LMS_Theme_Cookie_Consent {
 			return;
 		}
 
-		echo $this->defer_trackers( $html ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- уже готовый вывод wp_head/wp_footer других модулей, меняем только атрибуты <script>.
+		$deferred = $this->defer_trackers( $html );
+
+		// Страховка: вывод `wp_head`/`wp_footer` не должен пропасть ни при каких
+		// условиях — в нём все скрипты темы и плагинов.
+		echo '' !== $deferred || '' === $html ? $deferred : $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- уже готовый вывод wp_head/wp_footer других модулей, меняем только атрибуты <script>.
 	}
 
 	/**
 	 * Отключает счётчик Метрики в готовом HTML до согласия.
+	 *
+	 * Проход по тегам через `stripos`, без регулярного выражения по всему
+	 * выводу (BugFix 2026-09-29): прежний `preg_replace_callback` с
+	 * посимвольной проверкой `(?:(?!</script>).)*?` падал на встроенном
+	 * скрипте от ~50 КБ (у администратора — данные админ-панели и плагинов)
+	 * с «JIT stack limit exhausted», возвращал `null`, и `(string) null`
+	 * стирал весь `wp_footer` — вместе со скриптами темы и fs-lms (карусели,
+	 * аккордеоны, SPA). На стенде без Метрики до регулярки не доходило.
 	 *
 	 * @param string $html Вывод `wp_head` или `wp_footer`.
 	 */
@@ -97,21 +109,72 @@ final class FS_LMS_Theme_Cookie_Consent {
 			return $html;
 		}
 
-		$html = (string) preg_replace_callback(
-			'#<script\b([^>]*)>((?:(?!</script>).)*?' . preg_quote( self::METRIKA_TAG, '#' ) . '.*?)</script>#is',
-			static function ( array $m ): string {
-				$attrs = (string) preg_replace( '#\s+type=(["\'])[^"\']*\1#i', '', $m[1] );
-
-				return '<script type="text/plain" data-fs-consent="' . self::CATEGORY . '"' . $attrs . '>' . $m[2] . '</script>';
-			},
-			$html
+		$html = $this->map_elements(
+			$html,
+			'script',
+			fn( string $element ): string => str_contains( $element, self::METRIKA_TAG ) ? $this->disable_script( $element ) : $element
 		);
 
-		return (string) preg_replace(
-			'#<noscript\b[^>]*>(?:(?!</noscript>).)*?' . preg_quote( self::METRIKA_PIXEL, '#' ) . '.*?</noscript>#is',
-			'',
-			$html
+		// `<noscript>`-пиксель вырезается: без JS согласие спросить нельзя.
+		return $this->map_elements(
+			$html,
+			'noscript',
+			static fn( string $element ): string => str_contains( $element, self::METRIKA_PIXEL ) ? '' : $element
 		);
+	}
+
+	/**
+	 * Проходит по элементам `<$tag …>…</$tag>` и заменяет каждый результатом
+	 * `$callback`; остальной HTML не трогает.
+	 *
+	 * @param string                  $html     HTML.
+	 * @param string                  $tag      Имя тега (`script`, `noscript`).
+	 * @param callable(string):string $callback Преобразование элемента целиком.
+	 */
+	private function map_elements( string $html, string $tag, callable $callback ): string {
+		$open  = '<' . $tag;
+		$close = '</' . $tag . '>';
+		$out   = '';
+		$pos   = 0;
+
+		while ( false !== ( $start = stripos( $html, $open, $pos ) ) ) {
+			// `<script` — только как имя тега, а не префикс (`<scripts>`).
+			$next = $html[ $start + strlen( $open ) ] ?? '';
+			if ( '>' !== $next && ! ctype_space( $next ) ) {
+				$out .= substr( $html, $pos, $start + strlen( $open ) - $pos );
+				$pos  = $start + strlen( $open );
+				continue;
+			}
+
+			$end = stripos( $html, $close, $start );
+			if ( false === $end ) {
+				break;
+			}
+
+			$end += strlen( $close );
+			$out .= substr( $html, $pos, $start - $pos ) . $callback( substr( $html, $start, $end - $start ) );
+			$pos  = $end;
+		}
+
+		return $out . substr( $html, $pos );
+	}
+
+	/**
+	 * `<script …>` → `<script type="text/plain" data-fs-consent="analytics" …>`:
+	 * браузер не выполняет, `cookie-consent.js` запустит после согласия.
+	 *
+	 * @param string $element Элемент `<script>…</script>` целиком.
+	 */
+	private function disable_script( string $element ): string {
+		$gt = strpos( $element, '>' );
+		if ( false === $gt ) {
+			return $element;
+		}
+
+		// Регулярка — только по атрибутам открывающего тега (десятки символов).
+		$attrs = (string) preg_replace( '#\s+type=(["\'])[^"\']*\1#i', '', substr( $element, 7, $gt - 7 ) );
+
+		return '<script type="text/plain" data-fs-consent="' . self::CATEGORY . '"' . $attrs . substr( $element, $gt );
 	}
 
 	public function enqueue(): void {
