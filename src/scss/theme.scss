@@ -2397,6 +2397,28 @@ $fs-mask-mail: url( "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 }
 
 /**
+ * 2026-09-30: при видимой админ-панели WordPress (fixed, 32px / 46px до 782px)
+ * липкая шапка садилась на top:0 и заезжала под неё. Ниже 600px панель
+ * position:absolute и уезжает со страницей — смещение там не нужно.
+ * Прячется шапка под панель (translateY(-100%) от top бара) — зазора не видно.
+ */
+body.admin-bar .fs-site-header {
+	top: 32px;
+}
+
+@media screen and ( max-width: 782px ) {
+	body.admin-bar .fs-site-header {
+		top: 46px;
+	}
+}
+
+@media screen and ( max-width: 600px ) {
+	body.admin-bar .fs-site-header {
+		top: 0;
+	}
+}
+
+/**
  * 2026-09-14: слоган инфо-полосы прячется вместе с переходом шапки на
  * бургер (≤959px, см. `.fs-header-row`), а не только на телефоне: на
  * 601–800px он не помещался рядом с телефоном/почтой/корзиной, и полоса
