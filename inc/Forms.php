@@ -137,6 +137,64 @@ function fs_lms_theme_name_field_attrs_html(): string {
 	return implode( ' ', $attributes );
 }
 
+/**
+ * Сколько слов в поле «ФИО родителя» лид-формы минимум (2026-10-09): боты пишут
+ * одно имя («Диана»), фамилию не вводят. Правило только для лид-форм: оформление
+ * заказа проверяет имя через `fs_lms_theme_is_valid_name()` и слов не считает.
+ */
+const FS_LMS_THEME_LEAD_NAME_WORDS_MIN = 2;
+
+/**
+ * В имени лид-формы достаточно слов (имя и фамилия). Зеркало
+ * `validateLeadName()` в `src/js/forms.js`.
+ */
+function fs_lms_theme_lead_name_has_surname( string $value ): bool {
+	$words = preg_split( '/\s+/u', trim( $value ), -1, PREG_SPLIT_NO_EMPTY );
+
+	return false !== $words && count( $words ) >= FS_LMS_THEME_LEAD_NAME_WORDS_MIN;
+}
+
+/**
+ * Передаёт заявку лид-формы подписчикам (плагин fs-lms складывает её в таблицу
+ * «Пользователи → Заявки с сайта»). Тема от плагина не зависит: без подписчиков
+ * фильтр ничего не меняет, а заявка считается несохранённой.
+ *
+ * @return bool Подписчик сохранил заявку.
+ *
+ * Вызывается только после проверки согласия на обработку ПДн — без отметки
+ * данные посетителя нигде не сохраняются.
+ *
+ * @param array<string, mixed> $lead Поля заявки (см. `fs_lms_theme_handle_form_submit()`).
+ */
+function fs_lms_theme_dispatch_lead( array $lead ): bool {
+	/**
+	 * Заявка лид-формы темы (принятая или отклонённая). Фильтр, а не действие:
+	 * подписчик отвечает `true`, если заявку сохранил, — тогда принятая заявка не
+	 * считается потерянной, даже если письмо не ушло. Без подписчиков — `false`.
+	 *
+	 * @param bool                 $stored Заявка сохранена подписчиком (по умолчанию false).
+	 * @param array<string, mixed> $lead {
+	 *     @type string      $verdict           'accepted' | 'rejected'.
+	 *     @type string      $reason            Причина отказа (пусто у принятых): name_format,
+	 *                                          name_single_word, phone_format, rate_ip, rate_phone,
+	 *                                          captcha_failed, no_captcha_limit.
+	 *     @type string      $name              Имя из формы.
+	 *     @type string      $phone             Телефон из формы.
+	 *     @type string      $form_id           'hero' | 'signup'.
+	 *     @type string      $page_url          Страница, с которой отправили форму.
+	 *     @type string      $ip                IP посетителя.
+	 *     @type string      $user_agent        Браузер.
+	 *     @type int         $fill_seconds      Секунд от первого фокуса в форме до отправки.
+	 *     @type string      $captcha           'passed' | 'failed' | 'unavailable' | 'skipped' | 'off'.
+	 *     @type bool        $captcha_challenge Посетителю показали задание.
+	 *     @type bool        $mobile            Телефон или планшет.
+	 *     @type int         $received_at       Unix-время.
+	 *     @type bool|null   $mail_sent         Результат wp_mail(); null — письмо не отправлялось.
+	 * }
+	 */
+	return (bool) apply_filters( 'fs_lms_theme_lead_submitted', false, $lead );
+}
+
 /** Имя чекбокса согласия на обработку ПДн в лид-формах. */
 const FS_LMS_THEME_FORM_CONSENT_FIELD = 'pd_consent';
 
@@ -411,6 +469,48 @@ function fs_lms_theme_phone_digits( string $phone ): string {
 }
 
 /**
+ * Номер похож на настоящий (2026-10-09): отсекает случайные цифры. Не проверка
+ * на существование — это бы потребовало запроса к оператору (HLR), от него отказались.
+ *
+ * Правила: 11 цифр с кодом 7; код региона/оператора не начинается с 0, 1, 2 (городские
+ * 3xx–5xx, 8xx и мобильные 9xx проходят); в номере не меньше 4 разных цифр
+ * (9999999999, 9000000000); последние 7 цифр — не ряд подряд (1234567, 7654321).
+ * Зеркало `validatePhoneValue()` в `src/js/forms.js`.
+ */
+function fs_lms_theme_phone_looks_real( string $phone ): bool {
+	$digits = fs_lms_theme_phone_digits( $phone );
+
+	if ( 11 !== strlen( $digits ) || '7' !== $digits[0] || in_array( $digits[1], array( '0', '1', '2' ), true ) ) {
+		return false;
+	}
+
+	$national = substr( $digits, 1 );
+
+	if ( count( array_unique( str_split( $national ) ) ) < 4 ) {
+		return false;
+	}
+
+	$tail = array_map( 'intval', str_split( substr( $national, -7 ) ) );
+	$step = $tail[1] - $tail[0];
+
+	if ( 1 === abs( $step ) ) {
+		$is_run = true;
+		for ( $i = 1; $i < 7; $i++ ) {
+			if ( $tail[ $i ] - $tail[ $i - 1 ] !== $step ) {
+				$is_run = false;
+				break;
+			}
+		}
+
+		if ( $is_run ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
  * Откуда пришла заявка — для строки «Форма:» в письме: ссылка на страницу, а
  * на главной ещё и подпись формы (`FS_LMS_THEME_FRONT_PAGE_FORMS`).
  *
@@ -538,6 +638,18 @@ function fs_lms_theme_handle_form_submit(): void {
 
 	$received_at = time();
 
+	$form_id  = isset( $_POST['form_id'] ) ? sanitize_key( wp_unslash( $_POST['form_id'] ) ) : 'signup';
+	$name     = isset( $_POST['parent_name'] ) ? sanitize_text_field( wp_unslash( $_POST['parent_name'] ) ) : '';
+	$phone    = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '';
+	$page_url = isset( $_POST['page_url'] ) ? esc_url_raw( wp_unslash( $_POST['page_url'] ) ) : '';
+
+	$captcha_challenge = isset( $_POST['captcha_challenge'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['captcha_challenge'] ) );
+	$user_agent        = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+
+	// 152-ФЗ: без отметки согласия данные не обрабатываем (чекбокс `required`
+	// в разметке обходится прямым запросом к admin-ajax.php).
+	$pd_consent = isset( $_POST[ FS_LMS_THEME_FORM_CONSENT_FIELD ] ) && '1' === sanitize_text_field( wp_unslash( $_POST[ FS_LMS_THEME_FORM_CONSENT_FIELD ] ) );
+
 	$honeypot = isset( $_POST[ fs_lms_theme_honeypot_field() ] )
 		? (string) wp_unslash( $_POST[ fs_lms_theme_honeypot_field() ] )
 		: '';
@@ -551,14 +663,64 @@ function fs_lms_theme_handle_form_submit(): void {
 
 	$ip = fs_lms_theme_client_ip();
 
-	if ( fs_lms_theme_form_rate_limited( 'ip:' . $ip, FS_LMS_THEME_FORM_RATE_LIMIT, FS_LMS_THEME_FORM_RATE_WINDOW ) ) {
-		wp_send_json_error( array( 'message' => __( 'Слишком много попыток. Попробуйте немного позже.', 'fs-lms-theme' ) ), 429 );
-	}
-
 	$captcha         = new FS_LMS_Theme_Smart_Captcha();
 	$captcha_token   = isset( $_POST['smart-token'] ) ? sanitize_text_field( wp_unslash( $_POST['smart-token'] ) ) : '';
 	$captcha_skipped = $captcha->is_configured() && '' === $captcha_token;
 	$captcha_result  = '';
+
+	/**
+	 * Заявка для плагина (`fs_lms_theme_lead_submitted`): принятая и отклонённая —
+	 * обе, чтобы по отказам было видно ложные срабатывания. Только с отметкой
+	 * согласия и заполненными полями: иначе сохранять нечего и не на каком основании.
+	 *
+	 * @param string    $verdict   'accepted' | 'rejected'.
+	 * @param string    $reason    Причина отказа.
+	 * @param bool|null $mail_sent Результат wp_mail().
+	 */
+	$record = static function ( string $verdict, string $reason, ?bool $mail_sent = null ) use (
+		$pd_consent, $name, $phone, $form_id, $page_url, $ip, $user_agent, $fill_seconds, $captcha, $captcha_skipped, &$captcha_result, $captcha_challenge, $received_at
+	): bool {
+		if ( ! $pd_consent || '' === $name || '' === $phone ) {
+			return false;
+		}
+
+		if ( ! $captcha->is_configured() ) {
+			$captcha_state = 'off';
+		} elseif ( $captcha_skipped ) {
+			$captcha_state = 'skipped';
+		} else {
+			$captcha_state = '' !== $captcha_result ? $captcha_result : 'off';
+		}
+
+		return fs_lms_theme_dispatch_lead( array(
+			'verdict'           => $verdict,
+			'reason'            => $reason,
+			'name'              => $name,
+			'phone'             => $phone,
+			'form_id'           => $form_id,
+			'page_url'          => $page_url,
+			'ip'                => $ip,
+			'user_agent'        => $user_agent,
+			'fill_seconds'      => $fill_seconds,
+			'captcha'           => $captcha_state,
+			'captcha_challenge' => $captcha_challenge,
+			'mobile'            => wp_is_mobile(),
+			'received_at'       => $received_at,
+			'mail_sent'         => $mail_sent,
+		) );
+	};
+
+	/**
+	 * Единая точка отказа: фиксирует заявку для плагина и отвечает посетителю.
+	 */
+	$reject = static function ( string $reason, string $message, int $status ) use ( $record ): void {
+		$record( 'rejected', $reason );
+		wp_send_json_error( array( 'message' => $message ), $status );
+	};
+
+	if ( fs_lms_theme_form_rate_limited( 'ip:' . $ip, FS_LMS_THEME_FORM_RATE_LIMIT, FS_LMS_THEME_FORM_RATE_WINDOW ) ) {
+		$reject( 'rate_ip', __( 'Слишком много попыток. Попробуйте немного позже.', 'fs-lms-theme' ), 429 );
+	}
 
 	// Пустой токен — капча не загрузилась у посетителя, такие заявки идут под
 	// общим лимитом ниже. Присланный, но неверный токен — отказ.
@@ -566,25 +728,13 @@ function fs_lms_theme_handle_form_submit(): void {
 		$captcha_result = $captcha->verify( $captcha_token, $ip );
 
 		if ( FS_LMS_Theme_Smart_Captcha::FAILED === $captcha_result ) {
-			wp_send_json_error( array( 'message' => __( 'Проверка «Я не робот» не пройдена, попробуйте ещё раз.', 'fs-lms-theme' ) ), 400 );
+			$reject( 'captcha_failed', __( 'Проверка «Я не робот» не пройдена, попробуйте ещё раз.', 'fs-lms-theme' ), 400 );
 		}
 	}
-
-	$form_id = isset( $_POST['form_id'] ) ? sanitize_key( wp_unslash( $_POST['form_id'] ) ) : 'signup';
-	$name    = isset( $_POST['parent_name'] ) ? sanitize_text_field( wp_unslash( $_POST['parent_name'] ) ) : '';
-	$phone   = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '';
-	$page_url = isset( $_POST['page_url'] ) ? esc_url_raw( wp_unslash( $_POST['page_url'] ) ) : '';
-
-	$captcha_challenge = isset( $_POST['captcha_challenge'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['captcha_challenge'] ) );
-	$user_agent        = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 
 	if ( '' === $name || '' === $phone ) {
 		wp_send_json_error( array( 'message' => __( 'Заполните имя и телефон.', 'fs-lms-theme' ) ), 400 );
 	}
-
-	// 152-ФЗ: без отметки согласия данные не обрабатываем (чекбокс `required`
-	// в разметке обходится прямым запросом к admin-ajax.php).
-	$pd_consent = isset( $_POST[ FS_LMS_THEME_FORM_CONSENT_FIELD ] ) && '1' === sanitize_text_field( wp_unslash( $_POST[ FS_LMS_THEME_FORM_CONSENT_FIELD ] ) );
 
 	if ( ! $pd_consent ) {
 		wp_send_json_error( array( 'message' => __( 'Подтвердите согласие на обработку персональных данных.', 'fs-lms-theme' ) ), 400 );
@@ -597,14 +747,16 @@ function fs_lms_theme_handle_form_submit(): void {
 	 * обходятся прямым запросом к `admin-ajax.php`.
 	 */
 	if ( ! fs_lms_theme_is_valid_name( $name ) ) {
-		wp_send_json_error(
-			array( 'message' => __( 'В имени разрешены только буквы кириллицы, пробелы и дефис.', 'fs-lms-theme' ) ),
-			400
-		);
+		$reject( 'name_format', __( 'В имени разрешены только буквы кириллицы, пробелы и дефис.', 'fs-lms-theme' ), 400 );
 	}
 
-	if ( ! preg_match( '/^[\d\s()+\-]{5,20}$/u', $phone ) ) {
-		wp_send_json_error( array( 'message' => __( 'Проверьте номер телефона.', 'fs-lms-theme' ) ), 400 );
+	// 2026-10-09: одного имени мало — боты фамилию не вводят.
+	if ( ! fs_lms_theme_lead_name_has_surname( $name ) ) {
+		$reject( 'name_single_word', __( 'Укажите имя и фамилию.', 'fs-lms-theme' ), 400 );
+	}
+
+	if ( ! preg_match( '/^[\d\s()+\-]{5,20}$/u', $phone ) || ! fs_lms_theme_phone_looks_real( $phone ) ) {
+		$reject( 'phone_format', __( 'Проверьте номер телефона.', 'fs-lms-theme' ), 400 );
 	}
 
 	// Второй рубеж после лимита по IP: один и тот же номер, даже с разных
@@ -612,13 +764,13 @@ function fs_lms_theme_handle_form_submit(): void {
 	$phone_digits = fs_lms_theme_phone_digits( $phone );
 
 	if ( '' !== $phone_digits && fs_lms_theme_form_rate_limited( 'phone:' . $phone_digits, FS_LMS_THEME_FORM_PHONE_LIMIT, FS_LMS_THEME_FORM_PHONE_WINDOW ) ) {
-		wp_send_json_error( array( 'message' => __( 'Слишком много попыток. Попробуйте немного позже.', 'fs-lms-theme' ) ), 429 );
+		$reject( 'rate_phone', __( 'Слишком много попыток. Попробуйте немного позже.', 'fs-lms-theme' ), 429 );
 	}
 
 	// Считаем только прошедшие валидацию заявки, чтобы мусорные запросы не
 	// выедали лимит у настоящих посетителей без капчи.
 	if ( $captcha_skipped && fs_lms_theme_form_rate_limited( 'no-captcha', FS_LMS_THEME_FORM_NO_CAPTCHA_LIMIT, FS_LMS_THEME_FORM_NO_CAPTCHA_WINDOW ) ) {
-		wp_send_json_error( array( 'message' => __( 'Не получилось отправить заявку, попробуйте позже или позвоните нам: +7(995)326-44-86', 'fs-lms-theme' ) ), 429 );
+		$reject( 'no_captcha_limit', __( 'Не получилось отправить заявку, попробуйте позже или позвоните нам: +7(995)326-44-86', 'fs-lms-theme' ), 429 );
 	}
 
 	$lines = array(
@@ -636,10 +788,32 @@ function fs_lms_theme_handle_form_submit(): void {
 		sprintf( 'Браузер: %s', '' === $user_agent ? 'не передан' : $user_agent ),
 	);
 
+	// Причина сбоя письма — в лог сервера: посетителю её показывать незачем, а
+	// понять, почему почта не работает, нужно.
+	$mail_error = '';
+	$on_failure = static function ( WP_Error $error ) use ( &$mail_error ): void {
+		$mail_error = $error->get_error_message();
+	};
+	add_action( 'wp_mail_failed', $on_failure );
+
 	$sent = wp_mail( FS_LMS_Theme_Showcase::settings()->get( 'leads_email' ), FS_LMS_THEME_FORM_MAIL_SUBJECT, implode( "\n", $lines ) );
 
+	remove_action( 'wp_mail_failed', $on_failure );
+
+	// Принятая заявка сохраняется независимо от исхода письма — она не должна теряться.
+	$stored = $record( 'accepted', '', (bool) $sent );
+
 	if ( ! $sent ) {
-		wp_send_json_error( array( 'message' => __( 'Не получилось отправить заявку, попробуйте позже или позвоните нам: +7(995)326-44-86', 'fs-lms-theme' ) ), 500 );
+		error_log( sprintf( '[FS LMS Theme] Письмо с заявкой не отправлено: %s. Заявка %s.', '' !== $mail_error ? $mail_error : 'wp_mail() вернула false', $stored ? 'сохранена в «Пользователи → Заявки с сайта»' : 'НЕ сохранена' ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+	}
+
+	// Заявка дошла до таблицы в админке — для посетителя всё в порядке, а письмо
+	// чиним мы. Сообщаем об ошибке, только когда данные не ушли никуда.
+	if ( ! $sent && ! $stored ) {
+		wp_send_json_error(
+			array( 'message' => __( 'Заявка не дошла до нас: на сервере не работает отправка почты. Позвоните нам: +7(995)326-44-86', 'fs-lms-theme' ) ),
+			500
+		);
 	}
 
 	wp_send_json_success( array( 'message' => __( 'Спасибо! Мы перезвоним в течение рабочего дня.', 'fs-lms-theme' ) ) );
