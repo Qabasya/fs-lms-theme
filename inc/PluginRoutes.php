@@ -123,3 +123,33 @@ function fs_lms_theme_pd_consent_url(): string {
 
 	return $page ? (string) get_permalink( $page ) : '';
 }
+
+/**
+ * Контакты центра для публичных страниц экзаменов плагина (запись, вход, результат).
+ *
+ * Плагин спрашивает их фильтром `fs_lms_center_contacts` и знает только форму ответа
+ * (`phone`, `email`, `hours`, `city`, `street`); значения — из «Настроек сайта» темы,
+ * тех же, что в топбаре и подвале, поэтому телефон и адрес на странице записи всегда
+ * совпадают с остальным сайтом. Пустое значение плагин заменяет запасным текстом
+ * из своих настроек.
+ *
+ * @param array<string, string> $defaults Запасные значения плагина.
+ *
+ * @return array<string, string>
+ */
+function fs_lms_theme_center_contacts( $defaults ) {
+	if ( ! class_exists( 'FS_LMS_Theme_Showcase' ) ) {
+		return $defaults;
+	}
+
+	$settings = FS_LMS_Theme_Showcase::settings();
+
+	return array(
+		'phone'  => $settings->get( 'phone' ),
+		'email'  => $settings->get( 'email' ),
+		'hours'  => $settings->get( 'hours' ),
+		'city'   => $settings->get( 'city' ),
+		'street' => $settings->get( 'street' ),
+	);
+}
+add_filter( 'fs_lms_center_contacts', 'fs_lms_theme_center_contacts' );
