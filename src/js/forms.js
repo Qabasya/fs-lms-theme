@@ -290,6 +290,51 @@ export function validateNameField( value ) {
 	return NAME_PATTERN.test( value.trim() );
 }
 
+/**
+ * 2026-10-09: в лид-форме одного имени мало — боты фамилию не вводят. Зеркало
+ * `fs_lms_theme_lead_name_has_surname()` в `inc/Forms.php`.
+ */
+const LEAD_NAME_WORDS_MIN = 2;
+const LEAD_NAME_ERROR = 'Укажите имя и фамилию.';
+
+export function validateLeadName( value ) {
+	return value.trim().split( /\s+/u ).filter( Boolean ).length >= LEAD_NAME_WORDS_MIN;
+}
+
+/**
+ * 2026-10-09: номер должен быть похож на настоящий — зеркало
+ * `fs_lms_theme_phone_looks_real()` в `inc/Forms.php`: 11 цифр с кодом 7, код не
+ * на 0/1/2, не меньше 4 разных цифр, последние 7 — не ряд подряд.
+ */
+const PHONE_ERROR = 'Проверьте номер телефона.';
+
+export function validatePhoneValue( value ) {
+	let digits = value.replace( /\D/g, '' );
+
+	if ( digits.length === 11 && digits[ 0 ] === '8' ) {
+		digits = '7' + digits.slice( 1 );
+	}
+
+	if ( digits.length !== 11 || digits[ 0 ] !== '7' || '012'.includes( digits[ 1 ] ) ) {
+		return false;
+	}
+
+	const national = digits.slice( 1 );
+
+	if ( new Set( national ).size < 4 ) {
+		return false;
+	}
+
+	const tail = national.slice( -7 ).split( '' ).map( Number );
+	const step = tail[ 1 ] - tail[ 0 ];
+
+	if ( Math.abs( step ) === 1 && tail.every( ( digit, i ) => i === 0 || digit - tail[ i - 1 ] === step ) ) {
+		return false;
+	}
+
+	return true;
+}
+
 function submitForm( form ) {
 	const message = form.querySelector( '.fs-form-message' );
 	const submitButton = form.querySelector( 'button[type="submit"]' );
@@ -303,6 +348,22 @@ function submitForm( form ) {
 	if ( nameField && ! validateNameField( nameField.value ) ) {
 		showMessage( message, NAME_ERROR, false );
 		nameField.focus();
+
+		return;
+	}
+
+	if ( nameField && ! validateLeadName( nameField.value ) ) {
+		showMessage( message, LEAD_NAME_ERROR, false );
+		nameField.focus();
+
+		return;
+	}
+
+	const phoneField = form.querySelector( 'input[name="phone"]' );
+
+	if ( phoneField && ! validatePhoneValue( phoneField.value ) ) {
+		showMessage( message, PHONE_ERROR, false );
+		phoneField.focus();
 
 		return;
 	}
