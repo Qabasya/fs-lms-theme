@@ -394,7 +394,63 @@ function fs_lms_theme_paragraphs_md_to_base( array $block, bool &$changed ): arr
  * 5 (2026-09-13) — копия «Как устроены занятия» → ссылка на паттерн
  * (`fs_lms_theme_subject_intensive_to_pattern()`), текст и фото — в админке.
  */
-const FS_LMS_THEME_SUBJECT_PAGES_LAYOUT = 5;
+const FS_LMS_THEME_SUBJECT_PAGES_LAYOUT = 6;
+
+/**
+ * Раскладка 6 (2026-10-21): «Частые вопросы» на странице направления.
+ *
+ * Паттерн сам берёт вопросы своей страницы (`FS_LMS_Theme_Questions::current_place()`),
+ * а их текст и микроразметка `FAQPage` идут из тех же записей «Вопросы». Блок
+ * встаёт перед формой записи — после всех смысловых секций, как на главной.
+ * Уже стоящий на странице блок не дублируется.
+ *
+ * @param string $content Содержимое страницы направления.
+ */
+function fs_lms_theme_subject_add_faq( string $content ): string {
+	if ( str_contains( $content, 'fs-lms-theme/faq' ) ) {
+		return $content;
+	}
+
+	$faq     = '<!-- wp:pattern {"slug":"fs-lms-theme/faq"} /-->';
+	$contact = '<!-- wp:pattern {"slug":"fs-lms-theme/subject-contact"} /-->';
+
+	if ( ! str_contains( $content, $contact ) ) {
+		return rtrim( $content ) . "\n\n" . $faq . "\n";
+	}
+
+	return preg_replace( '/' . preg_quote( $contact, '/' ) . '/', $faq . "\n\n" . $contact, $content, 1 ) ?? $content;
+}
+
+/**
+ * Заготовки вопросов для страниц направлений — черновиками, один раз.
+ *
+ * Тексты вопросов — `inc/Showcase/seeds/direction-questions.php`. Ответов нет
+ * намеренно: их пишет школа. Пока вопрос — черновик, на сайте его нет.
+ */
+function fs_lms_theme_seed_direction_questions(): void {
+	if ( ! add_option( 'fs_lms_theme_direction_questions_seeded', '1', '', true ) ) {
+		return;
+	}
+
+	$groups = require __DIR__ . '/Showcase/seeds/direction-questions.php';
+
+	foreach ( $groups as $place => $titles ) {
+		foreach ( array_values( $titles ) as $order => $title ) {
+			wp_insert_post(
+				array(
+					'post_type'    => 'fs_question',
+					'post_status'  => 'draft',
+					'post_title'   => $title,
+					'post_content' => '',
+					'menu_order'   => $order,
+					'meta_input'   => array( '_fs_question_place' => $place ),
+				)
+			);
+		}
+	}
+}
+// Приоритет 25: тип записи регистрируется на `init` (10), его стартовые вопросы — на 20.
+add_action( 'init', 'fs_lms_theme_seed_direction_questions', 25 );
 
 /**
  * BugFix.5 (2026-09-05): разворачивает ссылки на общие паттерны в блоки
@@ -448,6 +504,7 @@ function fs_lms_theme_upgrade_subject_pages(): void {
 
 		$updated = fs_lms_theme_subject_intensive_lead_to_base( $updated );
 		$updated = fs_lms_theme_subject_intensive_to_pattern( $updated );
+		$updated = fs_lms_theme_subject_add_faq( $updated );
 
 		if ( $updated === $content ) {
 			continue;
