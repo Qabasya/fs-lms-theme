@@ -92,7 +92,7 @@ final class FS_LMS_Theme_Alumni extends FS_LMS_Theme_Showcase_Type {
 
 		$html = sprintf(
 			'<div class="wp-block-fs-lms-alumni-card fs-alumni-card splide__slide"><div class="fs-alumni-card__media">%s</div><div class="fs-alumni-card__body"><div class="fs-alumni-card__score">%s</div><div class="fs-alumni-card__name">%s</div><p class="fs-alumni-card__quote">%s</p></div></div>',
-			$this->image_html( $post, 'medium', self::FALLBACK_PHOTO, $name ),
+			$this->image_html( $post, 'medium', self::FALLBACK_PHOTO, $this->photo_alt( $name, $score ) ),
 			esc_html( $score ),
 			$this->name_html( $name ),
 			nl2br( esc_html( $quote ) )
@@ -101,6 +101,23 @@ final class FS_LMS_Theme_Alumni extends FS_LMS_Theme_Showcase_Type {
 		// Комментарий блока — чтобы ядро подключило стили `fs-lms/alumni-card`
 		// (стили блока грузятся, только когда блок встречается при рендере).
 		return get_comment_delimited_block_content( 'fs-lms/alumni-card', array(), $html );
+	}
+
+	/**
+	 * Alt фото выпускника: имя и результат («Петровский Георгий — 100 баллов на ЕГЭ по информатике»).
+	 *
+	 * Одно имя поиску ничего не говорит о картинке; результат — то, ради чего фото
+	 * на сайте. Баллов нет — остаётся имя.
+	 *
+	 * @param string $name  Заголовок записи выпускника.
+	 * @param string $score Поле «Баллы» («100 баллов»).
+	 */
+	private function photo_alt( string $name, string $score ): string {
+		$score = trim( $score );
+
+		return '' === $score
+			? $name
+			: sprintf( '%s — %s на ЕГЭ по информатике', $name, $score );
 	}
 
 	/**

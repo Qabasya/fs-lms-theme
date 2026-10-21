@@ -54,7 +54,7 @@ $fs_settings = FS_LMS_Theme_Showcase::settings();
 				<!-- /wp:image -->
 
 				<!-- wp:paragraph {"className":"fs-footer-grid__lead"} -->
-				<p class="fs-footer-grid__lead">Школа программирования и&nbsp;робототехники в&nbsp;Калининграде</p>
+				<p class="fs-footer-grid__lead"><?php echo esc_html( '' !== get_bloginfo( 'description' ) ? get_bloginfo( 'description' ) : 'IT-школа в Калининграде' ); ?></p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:group {"className":"fs-footer-grid__contacts"} -->
@@ -128,7 +128,7 @@ $fs_settings = FS_LMS_Theme_Showcase::settings();
 		<!-- /wp:group -->
 
 		<!-- wp:paragraph {"className":"fs-footer-bottom"} -->
-		<p class="fs-footer-bottom">© <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. Репетитор ЕГЭ по информатике. Россия, Калининград.</p>
+		<p class="fs-footer-bottom">© <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. Россия, Калининград.</p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->

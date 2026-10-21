@@ -22,6 +22,15 @@ final class FS_LMS_Theme_Questions extends FS_LMS_Theme_Content_Type {
 	public const PLACE_HOME  = 'home';
 	public const PLACE_ABOUT = 'about';
 
+	/**
+	 * Страницы направлений: значение места = слаг страницы (`/inf_ege/` и т.д.),
+	 * по нему «Частые вопросы» сами находят свои вопросы на странице направления.
+	 */
+	private const DIRECTION_PLACES = array( 'inf_ege', 'inf_oge', 'python', 'robo' );
+
+	/** Слаг паттерна «Частые вопросы» — по нему узнаём, что аккордеон стоит на странице. */
+	private const FAQ_PATTERN_SLUG = 'fs-lms-theme/faq';
+
 	private const META_PLACE = '_fs_question_place';
 	private const META_OPEN  = '_fs_question_open';
 	private const NONCE      = 'fs_lms_theme_question_meta';
@@ -42,6 +51,10 @@ final class FS_LMS_Theme_Questions extends FS_LMS_Theme_Content_Type {
 		return array(
 			self::PLACE_HOME  => __( 'Главная — «Частые вопросы»', 'fs-lms-theme' ),
 			self::PLACE_ABOUT => __( '«О нас» — сведения об организации', 'fs-lms-theme' ),
+			'inf_ege'         => __( 'Страница «ЕГЭ по информатике» — «Частые вопросы»', 'fs-lms-theme' ),
+			'inf_oge'         => __( 'Страница «ОГЭ по информатике» — «Частые вопросы»', 'fs-lms-theme' ),
+			'python'          => __( 'Страница «Python» — «Частые вопросы»', 'fs-lms-theme' ),
+			'robo'            => __( 'Страница «Робототехника» — «Частые вопросы»', 'fs-lms-theme' ),
 		);
 	}
 
@@ -118,8 +131,60 @@ final class FS_LMS_Theme_Questions extends FS_LMS_Theme_Content_Type {
 		);
 	}
 
-	/** Пункты «Частых вопросов» главной — блоки `fs-lms/faq-item`. */
-	public function faq_markup(): string {
+	/**
+	 * Место показа для открытой страницы: страница направления — её слаг,
+	 * всё остальное (главная, шаблон) — «Главная».
+	 */
+	public function current_place(): string {
+		$page = is_page() ? get_queried_object() : null;
+
+		if ( $page instanceof WP_Post && in_array( $page->post_name, self::DIRECTION_PLACES, true ) ) {
+			return $page->post_name;
+		}
+
+		return self::PLACE_HOME;
+	}
+
+	/**
+	 * Есть ли на открытой странице аккордеон «Частые вопросы»: на главной он
+	 * стоит в шаблоне, на странице направления — паттерном в тексте страницы.
+	 */
+	public function faq_is_displayed(): bool {
+		if ( is_front_page() ) {
+			return true;
+		}
+
+		$page = is_page() ? get_queried_object() : null;
+
+		return $page instanceof WP_Post && str_contains( $page->post_content, self::FAQ_PATTERN_SLUG );
+	}
+
+	/**
+	 * Вопросы и ответы открытой страницы простым текстом — для микроразметки `FAQPage`.
+	 *
+	 * Те же записи и тот же порядок, что в `faq_markup()`, поэтому разметка и
+	 * видимый на странице текст совпадают (требование поисковиков к FAQ).
+	 *
+	 * @return array<int, array{question: string, answer: string}>
+	 */
+	public function faq_schema_items(): array {
+		return array_map(
+			function ( WP_Post $post ): array {
+				return array(
+					'question' => get_the_title( $post ),
+					'answer'   => trim( preg_replace( '/\s+/u', ' ', wp_strip_all_tags( $this->answer_html( $post ) ) ) ?? '' ),
+				);
+			},
+			$this->items_for( $this->current_place() )
+		);
+	}
+
+	/**
+	 * Пункты «Частых вопросов» — блоки `fs-lms/faq-item`.
+	 *
+	 * @param string|null $place Место показа; null — по открытой странице.
+	 */
+	public function faq_markup( ?string $place = null ): string {
 		$blocks = array_map(
 			function ( WP_Post $post ): string {
 				$html = sprintf(
@@ -132,7 +197,7 @@ final class FS_LMS_Theme_Questions extends FS_LMS_Theme_Content_Type {
 				// Комментарий блока — чтобы ядро подключило стили `fs-lms/faq-item`.
 				return get_comment_delimited_block_content( 'fs-lms/faq-item', array(), $html );
 			},
-			$this->items_for( self::PLACE_HOME )
+			$this->items_for( $place ?? $this->current_place() )
 		);
 
 		return implode( "\n\n", $blocks );
@@ -173,10 +238,16 @@ final class FS_LMS_Theme_Questions extends FS_LMS_Theme_Content_Type {
 	public function purge_page_cache(): void {
 		parent::purge_page_cache();
 
-		$about = get_page_by_path( 'about' );
+		if ( ! function_exists( 'rocket_clean_post' ) ) {
+			return;
+		}
 
-		if ( $about instanceof WP_Post && function_exists( 'rocket_clean_post' ) ) {
-			rocket_clean_post( $about->ID );
+		foreach ( array_merge( array( 'about' ), self::DIRECTION_PLACES ) as $slug ) {
+			$page = get_page_by_path( $slug );
+
+			if ( $page instanceof WP_Post ) {
+				rocket_clean_post( $page->ID );
+			}
 		}
 	}
 

@@ -84,7 +84,8 @@ add_action( 'wp_head', function (): void {
 
 	$description = fs_lms_theme_seo_description();
 	$title       = wp_get_document_title();
-	$url         = home_url( add_query_arg( array() ) );
+	// Без строки запроса: адрес страницы с фильтрами или меткой — тот же документ, что и без них.
+	$url         = home_url( (string) strtok( add_query_arg( array() ), '?' ) );
 
 	if ( '' !== $description ) {
 		printf( '<meta name="description" content="%s" />' . "\n", esc_attr( $description ) );
@@ -141,3 +142,155 @@ add_action( 'wp_head', function (): void {
 		wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES )
 	);
 }, 5 );
+
+
+/**
+ * Значение настройки Rank Math; null — плагина нет или значение пустое.
+ *
+ * @param string $key Ключ вида `titles.price_range`.
+ *
+ * @return mixed
+ */
+function fs_lms_theme_seo_rank_math_setting( string $key ) {
+	if ( ! class_exists( '\RankMath\Helper' ) ) {
+		return null;
+	}
+
+	$value = \RankMath\Helper::get_settings( $key );
+
+	return ( '' === $value || array() === $value ) ? null : $value;
+}
+
+/**
+ * Часы работы из «Местное SEO» Rank Math в виде `OpeningHoursSpecification`.
+ *
+ * Для типа «Образовательная организация» Rank Math часы в разметку не выводит,
+ * хотя редактор их заполнил: берём те же данные, чтобы не вести их в двух местах.
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function fs_lms_theme_seo_opening_hours(): array {
+	$rows = fs_lms_theme_seo_rank_math_setting( 'titles.opening_hours' );
+
+	if ( ! is_array( $rows ) ) {
+		return array();
+	}
+
+	$specs = array();
+
+	foreach ( $rows as $row ) {
+		$day   = is_array( $row ) ? trim( (string) ( $row['day'] ?? '' ) ) : '';
+		$parts = is_array( $row ) ? explode( '-', (string) ( $row['time'] ?? '' ) ) : array();
+
+		if ( '' === $day || 2 !== count( $parts ) ) {
+			continue;
+		}
+
+		$specs[] = array(
+			'@type'     => 'OpeningHoursSpecification',
+			'dayOfWeek' => $day,
+			'opens'     => trim( $parts[0] ),
+			'closes'    => trim( $parts[1] ),
+		);
+	}
+
+	return $specs;
+}
+
+/**
+ * Дополнение к организации: часы работы и ценовой диапазон.
+ *
+ * Тот же `@id`, что у организации Rank Math, — поисковики соединяют узлы с одним
+ * идентификатором. Только главная, как и сама организация.
+ */
+add_action(
+	'wp_head',
+	function (): void {
+		if ( ! is_front_page() || ! class_exists( '\RankMath\Helper' ) ) {
+			return;
+		}
+
+		$hours = fs_lms_theme_seo_opening_hours();
+		$price = fs_lms_theme_seo_rank_math_setting( 'titles.price_range' );
+
+		if ( array() === $hours && ! is_string( $price ) ) {
+			return;
+		}
+
+		$node = array(
+			'@context' => 'https://schema.org',
+			'@type'    => 'EducationalOrganization',
+			'@id'      => home_url( '/#organization' ),
+		);
+
+		if ( array() !== $hours ) {
+			$node['openingHoursSpecification'] = $hours;
+		}
+
+		if ( is_string( $price ) ) {
+			$node['priceRange'] = $price;
+		}
+
+		printf(
+			'<script type="application/ld+json">%s</script>' . "\n",
+			wp_json_encode( $node, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG )
+		);
+	},
+	6
+);
+
+/**
+ * `FAQPage` для аккордеона «Частые вопросы» — на главной и страницах направлений.
+ *
+ * Разметка строится из тех же записей «Вопросы», что и аккордеон на странице, —
+ * текст в разметке и на экране совпадает. От SEO-плагина не зависит: свой
+ * аккордеон Rank Math не знает.
+ */
+add_action(
+	'wp_head',
+	function (): void {
+		if ( is_admin() || ! class_exists( 'FS_LMS_Theme_Showcase' ) ) {
+			return;
+		}
+
+		$questions = FS_LMS_Theme_Showcase::questions();
+
+		if ( ! $questions->faq_is_displayed() ) {
+			return;
+		}
+
+		$entities = array();
+
+		foreach ( $questions->faq_schema_items() as $item ) {
+			if ( '' === $item['question'] || '' === $item['answer'] ) {
+				continue;
+			}
+
+			$entities[] = array(
+				'@type'          => 'Question',
+				'name'           => $item['question'],
+				'acceptedAnswer' => array(
+					'@type' => 'Answer',
+					'text'  => $item['answer'],
+				),
+			);
+		}
+
+		if ( array() === $entities ) {
+			return;
+		}
+
+		printf(
+			'<script type="application/ld+json">%s</script>' . "\n",
+			wp_json_encode(
+				array(
+					'@context'   => 'https://schema.org',
+					'@type'      => 'FAQPage',
+					'mainEntity' => $entities,
+				),
+				JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG
+			)
+		);
+	},
+	6
+);
