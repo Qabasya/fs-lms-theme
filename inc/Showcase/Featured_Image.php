@@ -46,6 +46,15 @@ trait FS_LMS_Theme_Featured_Image {
 			}
 		}
 
+		// Старые записи могут хранить PNG-путь: используем готовый AVIF из темы.
+		if ( null !== $fallback_uri && str_starts_with( $fallback_uri, 'img/' ) && str_ends_with( $fallback_uri, '.png' ) ) {
+			$avif_uri = substr( $fallback_uri, 0, -4 ) . '.avif';
+
+			if ( file_exists( get_theme_file_path( $avif_uri ) ) ) {
+				$fallback_uri = $avif_uri;
+			}
+		}
+
 		if ( null === $fallback_uri || '' === $fallback_uri || ! file_exists( get_theme_file_path( $fallback_uri ) ) ) {
 			return '';
 		}

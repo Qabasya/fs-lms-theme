@@ -248,10 +248,10 @@ add_filter( 'woocommerce_get_image_size_thumbnail', function ( array $size ): ar
  */
 function fs_lms_theme_product_fallback_image( WC_Product $product ): string {
 	$image_by_category_slug = array(
-		'kege'      => 'shop-ege.png',
-		'koge'      => 'shop-oge.png',
-		'python-10' => 'shop-py.png',
-		'robo'      => 'shop-robo.png',
+		'kege'      => 'shop-ege.avif',
+		'koge'      => 'shop-oge.avif',
+		'python-10' => 'shop-py.avif',
+		'robo'      => 'shop-robo.avif',
 	);
 
 	$terms = get_the_terms( $product->get_id(), 'product_cat' );

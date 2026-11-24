@@ -21,9 +21,6 @@ final class FS_LMS_Theme_Alumni extends FS_LMS_Theme_Showcase_Type {
 	private const META_QUOTE = '_fs_alumnus_quote';
 	private const NONCE      = 'fs_lms_theme_alumnus_meta';
 
-	/** Заглушка фото — та же картинка, что стояла в паттерне. */
-	private const FALLBACK_PHOTO = 'img/alumni.png';
-
 	public function post_type(): string {
 		return 'fs_alumnus';
 	}
@@ -92,7 +89,7 @@ final class FS_LMS_Theme_Alumni extends FS_LMS_Theme_Showcase_Type {
 
 		$html = sprintf(
 			'<div class="wp-block-fs-lms-alumni-card fs-alumni-card splide__slide"><div class="fs-alumni-card__media">%s</div><div class="fs-alumni-card__body"><div class="fs-alumni-card__score">%s</div><div class="fs-alumni-card__name">%s</div><p class="fs-alumni-card__quote">%s</p></div></div>',
-			$this->image_html( $post, 'medium', self::FALLBACK_PHOTO, $this->photo_alt( $name, $score ) ),
+			$this->image_html( $post, 'medium', null, $this->photo_alt( $name, $score ) ),
 			esc_html( $score ),
 			$this->name_html( $name ),
 			nl2br( esc_html( $quote ) )
